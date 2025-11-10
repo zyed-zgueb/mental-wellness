@@ -1,8 +1,8 @@
 [theme]
-primaryColor = "#6B46C1"           # Violet pour bien-être mental
-backgroundColor = "#F7FAFC"        # Gris clair
-secondaryBackgroundColor = "#EDF2F7"
-textColor = "#1A202C"
+primaryColor = "#1E3A8A"           # Bleu foncé professionnel
+backgroundColor = "#FFFFFF"        # Blanc
+secondaryBackgroundColor = "#F8F9FA"
+textColor = "#1F2937"
 font = "sans serif"
 
 [server]

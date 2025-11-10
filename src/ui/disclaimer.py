@@ -4,33 +4,31 @@ import streamlit as st
 
 def show_disclaimer():
     """Afficher l'écran d'avertissement et de consentement."""
-    st.title("🌸 Bienvenue sur Serene")
-
-    st.warning("⚠️ Avertissement Important")
+    st.title("Serene")
+    st.subheader("Avertissement important")
 
     st.markdown("""
-    ### À propos de Serene
+    ### À propos
 
-    Serene est un **compagnon d'IA** conçu pour vous accompagner dans votre bien-être mental.
+    Serene est un compagnon d'intelligence artificielle conçu pour accompagner votre bien-être mental.
 
-    **IMPORTANT :**
-    - ❌ Serene **n'est PAS** un professionnel de santé mentale
-    - ❌ Serene **ne remplace PAS** une thérapie ou un traitement médical
-    - ❌ Serene **ne peut PAS** diagnostiquer des conditions médicales
+    ### Limitations
 
-    ### Ressources d'Urgence 🆘
+    - Serene n'est pas un professionnel de santé mentale
+    - Serene ne remplace pas une thérapie ou un traitement médical
+    - Serene ne peut pas diagnostiquer des conditions médicales
 
-    Si vous êtes en crise ou avez des pensées suicidaires, contactez immédiatement :
+    ### Ressources d'urgence
 
-    - **3114** : Numéro national de prévention du suicide (24/7, gratuit)
-    - **15** : SAMU (urgences médicales)
-    - **SOS Amitié** : 09 72 39 40 50 (24/7, écoute bienveillante)
+    Si vous êtes en situation de crise ou avez des pensées suicidaires, contactez immédiatement :
 
-    ### Vie Privée 🔒
+    - **3114** - Numéro national de prévention du suicide (24/7, gratuit)
+    - **15** - SAMU (urgences médicales)
+    - **SOS Amitié** - 09 72 39 40 50 (24/7, écoute)
 
-    Toutes vos données sont stockées **localement** sur votre appareil. Aucune donnée n'est envoyée vers le cloud.
+    ### Vie privée
 
-    [Lire la politique de confidentialité complète](#)
+    Toutes vos données sont stockées localement sur votre appareil. Aucune donnée n'est envoyée vers le cloud.
     """)
 
     # Bouton de consentement
