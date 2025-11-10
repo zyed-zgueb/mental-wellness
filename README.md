@@ -1,28 +1,37 @@
 # Serene - Mental Wellness AI Companion
 
-Un assistant IA bienveillant qui aide à prévenir le burnout et maintenir un bien-être mental optimal grâce à des check-ins réguliers, de l'écoute empathique, et des insights personnalisés.
+Application de bien-être mental qui aide à prévenir le burnout et maintenir un équilibre optimal grâce à des check-ins réguliers, de l'écoute empathique, et des insights personnalisés.
 
 ## À propos
 
-Serene est une application Streamlit développée avec Python et l'API Claude (Anthropic) pour offrir un accompagnement au bien-être mental, respectueux de la vie privée.
+Serene est une application Streamlit développée avec Python pour offrir un accompagnement au bien-être mental, respectueux de la vie privée avec stockage local des données.
 
 ## Fonctionnalités
 
-- 🌸 **Conversation Empathique** : Discutez avec un compagnon IA bienveillant
-- 📊 **Quick Check-in** : Enregistrez votre humeur quotidienne
-- 📈 **Dashboard** : Visualisez vos tendances de bien-être
-- 💡 **AI Insights** : Recevez des insights personnalisés basés sur vos données
-- 🔒 **Vie Privée** : Toutes les données sont stockées localement (SQLite)
+**Actuellement disponible (Story 1.1) :**
+- Interface de base avec navigation
+- Écran de disclaimer avec ressources d'urgence
+
+**En développement :**
+- **Quick Check-in** (Story 1.2) : Enregistrement de l'humeur quotidienne
+- **Conversation Empathique** (Story 1.3) : Discussion avec un compagnon IA
+- **Dashboard** (Story 1.4) : Visualisation des tendances de bien-être
+- **Insights** (Story 1.4) : Analyses personnalisées basées sur les données
 
 ## Technologies
 
+**Actuellement utilisées :**
 - Python 3.11+
 - Streamlit 1.40+
-- Anthropic Claude API (claude-3-5-sonnet-20241022)
-- SQLite
-- Plotly
+
+**À venir :**
+- Anthropic Claude API (Story 1.3)
+- SQLite (Story 1.2)
+- Plotly (Story 1.4)
 
 ## Installation
+
+### Story 1.1 (Version actuelle)
 
 ```bash
 # Cloner le repository
@@ -36,32 +45,39 @@ source venv/bin/activate  # Sur Windows: venv\Scripts\activate
 # Installer les dépendances
 pip install -r requirements.txt
 
-# Configurer les variables d'environnement
-cp .env.example .env
-# Éditer .env et ajouter votre ANTHROPIC_API_KEY
-
 # Lancer l'application
 streamlit run app.py
 ```
 
-## Configuration
+L'application sera accessible sur `http://localhost:8501`
 
-Créez un fichier `.env` à la racine du projet:
+### Configuration (pour stories futures)
+
+À partir de Story 1.3, vous devrez configurer les variables d'environnement :
 
 ```bash
-ANTHROPIC_API_KEY=votre_clé_api_ici
-DATABASE_PATH=serene.db
+# Copier le fichier d'exemple
+cp .env.example .env
+
+# Éditer .env et ajouter votre clé API Anthropic
+# ANTHROPIC_API_KEY=votre_clé_api_ici
 ```
 
 ## Statut du Projet
 
-🚧 **En développement actif** - MVP en cours de construction (7 jours)
+**En développement actif** - MVP en cours de construction (7 jours)
+
+**Avancement :**
+- Story 1.1 (Foundation + Disclaimers) : Terminée
+- Story 1.2 (Quick Check-in + Database) : À venir
+- Story 1.3 (Conversation) : À venir
+- Story 1.4 (Dashboard + Insights) : À venir
 
 ## Avertissement
 
-⚠️ Serene est un compagnon IA, **pas un professionnel de santé mentale**. Il ne remplace pas une thérapie ou un traitement médical.
+Serene est un compagnon IA, **pas un professionnel de santé mentale**. Il ne remplace pas une thérapie ou un traitement médical.
 
-En cas de crise, contactez:
+En cas de crise, contactez :
 - **3114** : Numéro national de prévention du suicide (24/7)
 - **15** : SAMU (urgences médicales)
 
