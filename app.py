@@ -4,6 +4,7 @@ Main Streamlit application entry point
 """
 import streamlit as st
 from src.ui.disclaimer import show_disclaimer
+from src.ui.checkin import show_checkin
 
 # Configuration de la page
 st.set_page_config(
@@ -29,9 +30,9 @@ def show_home():
 
     **Disponible :**
     - Home
+    - Quick Check-in
 
     **En développement :**
-    - Quick Check-in (Story 2)
     - Conversation (Story 3)
     - Dashboard (Story 4)
     """)
@@ -63,13 +64,7 @@ def main():
         if page == "Home":
             show_home()
         elif page == "Quick Check-in":
-            st.info("Quick Check-in sera disponible dans Story 2")
-            st.markdown("""
-            Cette fonctionnalité vous permettra de :
-            - Enregistrer votre humeur quotidienne (échelle 1-10)
-            - Ajouter des notes personnelles
-            - Suivre l'historique de vos check-ins
-            """)
+            show_checkin()
         elif page == "Conversation":
             st.info("Conversation sera disponible dans Story 3")
             st.markdown("""
