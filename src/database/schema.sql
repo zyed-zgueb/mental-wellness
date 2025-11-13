@@ -11,3 +11,16 @@ CREATE TABLE IF NOT EXISTS check_ins (
 
 -- Index pour améliorer les performances des requêtes par date
 CREATE INDEX IF NOT EXISTS idx_check_ins_timestamp ON check_ins(timestamp);
+
+-- Table: conversations - Enregistrement des conversations avec l'IA
+CREATE TABLE IF NOT EXISTS conversations (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+    user_message TEXT NOT NULL,
+    ai_response TEXT NOT NULL,
+    tokens_used INTEGER,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Index pour améliorer les performances des requêtes par date
+CREATE INDEX IF NOT EXISTS idx_conversations_timestamp ON conversations(timestamp);

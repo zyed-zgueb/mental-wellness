@@ -35,6 +35,16 @@ class DatabaseManager:
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP
             );
             CREATE INDEX IF NOT EXISTS idx_check_ins_timestamp ON check_ins(timestamp);
+
+            CREATE TABLE IF NOT EXISTS conversations (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+                user_message TEXT NOT NULL,
+                ai_response TEXT NOT NULL,
+                tokens_used INTEGER,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            );
+            CREATE INDEX IF NOT EXISTS idx_conversations_timestamp ON conversations(timestamp);
             """
         else:
             # Pour les DB sur disque, charger depuis schema.sql
@@ -97,6 +107,62 @@ class DatabaseManager:
             ORDER BY timestamp DESC
             """,
             (cutoff_date,),
+        )
+
+        return [dict(row) for row in cursor.fetchall()]
+
+    def save_conversation(
+        self, user_message: str, ai_response: str, tokens_used: int = 0
+    ) -> int:
+        """
+        Enregistrer une conversation.
+
+        Args:
+            user_message: Message de l'utilisateur.
+            ai_response: Réponse de l'IA.
+            tokens_used: Nombre de tokens utilisés (optionnel).
+
+        Returns:
+            ID de la conversation créée.
+
+        Raises:
+            ValueError: Si les messages sont vides.
+        """
+        if not user_message or not ai_response:
+            raise ValueError("Les messages ne peuvent pas être vides")
+
+        try:
+            cursor = self.conn.execute(
+                """
+                INSERT INTO conversations (user_message, ai_response, tokens_used)
+                VALUES (?, ?, ?)
+                """,
+                (user_message, ai_response, tokens_used),
+            )
+            self.conn.commit()
+            return cursor.lastrowid
+        except sqlite3.IntegrityError as e:
+            raise ValueError(f"Erreur d'intégrité de la base de données: {e}")
+
+    def get_conversation_history(self, limit: int = 50) -> List[Dict[str, Any]]:
+        """
+        Récupérer l'historique des conversations.
+
+        Args:
+            limit: Nombre maximum de conversations à récupérer (défaut: 50).
+
+        Returns:
+            Liste de dicts contenant: id, timestamp, user_message, ai_response, tokens_used, created_at.
+            Trié du plus récent au plus ancien.
+        """
+        cursor = self.conn.execute(
+            """
+            SELECT id, timestamp, user_message, ai_response, tokens_used, created_at
+            FROM conversations
+            ORDER BY timestamp DESC
+            LIMIT ?
+            """,
+            (limit,),
         )
 
         return [dict(row) for row in cursor.fetchall()]
