@@ -5,6 +5,7 @@ Main Streamlit application entry point
 import streamlit as st
 from src.ui.disclaimer import show_disclaimer
 from src.ui.checkin import show_checkin
+from src.ui.conversation import show_conversation
 
 # Configuration de la page
 st.set_page_config(
@@ -31,9 +32,9 @@ def show_home():
     **Disponible :**
     - Home
     - Quick Check-in
+    - Conversation
 
     **En développement :**
-    - Conversation (Story 3)
     - Dashboard (Story 4)
     """)
 
@@ -66,13 +67,7 @@ def main():
         elif page == "Quick Check-in":
             show_checkin()
         elif page == "Conversation":
-            st.info("Conversation sera disponible dans Story 3")
-            st.markdown("""
-            Cette fonctionnalité vous permettra de :
-            - Discuter avec Serene
-            - Recevoir du soutien empathique
-            - Exprimer vos émotions en toute sécurité
-            """)
+            show_conversation()
         elif page == "Dashboard":
             st.info("Dashboard sera disponible dans Story 4")
             st.markdown("""
