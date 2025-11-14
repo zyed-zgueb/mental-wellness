@@ -18,11 +18,17 @@ def get_database():
 
 def show_checkin():
     """Afficher la page de check-in avec formulaire et historique."""
-    st.title("🌸 Quick Check-in")
+    st.markdown("""
+    <div style='animation: fadeInDown 0.5s ease-out;'>
+        <h1 style='font-size: 2.5rem; color: #1A202C; font-weight: 600; margin-bottom: 0.5rem;'>
+            🌸 Quick Check-in
+        </h1>
+    </div>
+    """, unsafe_allow_html=True)
 
     st.markdown(
         """
-        <p style='font-size: 1.1rem; color: #4A5568; margin-bottom: 2rem;'>
+        <p style='font-size: 1.1rem; color: #4A5568; margin-bottom: 2rem; animation: fadeIn 0.7s ease-out;'>
         Prenez un moment pour enregistrer votre état émotionnel.
         Cela vous aidera à suivre votre bien-être au fil du temps.
         </p>
@@ -53,10 +59,14 @@ def show_checkin():
         # Afficher un emoji selon le mood_score avec animation
         mood_emoji = _get_mood_emoji(mood_score)
         mood_label = _get_mood_label(mood_score)
+        mood_color = _get_mood_color(mood_score)
         st.markdown(f"""
-        <div style='text-align: center; margin: 1.5rem 0;'>
-            <div style='font-size: 4rem; margin-bottom: 0.5rem;'>{mood_emoji}</div>
-            <div style='font-size: 1.2rem; font-weight: 500; color: #6B46C1;'>{mood_label}</div>
+        <div style='text-align: center; margin: 1.5rem 0; padding: 2rem;
+                    background: linear-gradient(135deg, #F7FAFC 0%, {mood_color}15 100%);
+                    border-radius: 16px; animation: scaleIn 0.3s ease-out;'>
+            <div style='font-size: 5rem; margin-bottom: 1rem; animation: bounce 0.6s ease-out;'>{mood_emoji}</div>
+            <div style='font-size: 1.4rem; font-weight: 600; color: {mood_color};'>{mood_label}</div>
+            <div style='font-size: 0.9rem; color: #718096; margin-top: 0.5rem;'>Score: {mood_score}/10</div>
         </div>
         """, unsafe_allow_html=True)
 
@@ -97,15 +107,20 @@ def show_checkin():
 
     if history:
         st.markdown(f"""
-        <p style='color: #4A5568; margin-bottom: 1.5rem;'>
-        <strong>{len(history)} check-in(s)</strong> enregistré(s) ce mois-ci
-        </p>
+        <div style='background: linear-gradient(135deg, #6B46C1 0%, #805AD5 100%);
+                    padding: 1rem 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;
+                    animation: fadeInUp 0.5s ease-out;'>
+            <p style='color: white; margin: 0; font-size: 1.05rem; font-weight: 500;'>
+                📊 <strong>{len(history)} check-in(s)</strong> enregistré(s) ce mois-ci
+            </p>
+        </div>
         """, unsafe_allow_html=True)
 
         for i, checkin in enumerate(history):
             # Card pour chaque check-in
             mood_emoji = _get_mood_emoji(checkin["mood_score"])
             mood_label = _get_mood_label(checkin["mood_score"])
+            mood_color = _get_mood_color(checkin["mood_score"])
 
             # Formater le timestamp
             timestamp_str = checkin["timestamp"]
@@ -117,19 +132,24 @@ def show_checkin():
                 formatted_date = timestamp_str
                 formatted_time = ""
 
-            # Couleur de fond alternée pour distinction visuelle
-            bg_color = "#F7FAFC" if i % 2 == 0 else "#FFFFFF"
+            # Animation delay basée sur l'index
+            animation_delay = i * 0.05
 
-            notes_html = f"<p style='color: #4A5568; margin-top: 0.5rem; line-height: 1.6;'>{checkin['notes']}</p>" if checkin["notes"] else ""
+            notes_html = f"<p style='color: #4A5568; margin-top: 0.5rem; line-height: 1.6; font-size: 0.95rem;'>{checkin['notes']}</p>" if checkin["notes"] else ""
 
             st.markdown(f"""
-            <div style='background-color: {bg_color}; padding: 1.25rem; border-radius: 12px; margin-bottom: 0.75rem; border-left: 4px solid #6B46C1;'>
+            <div style='background-color: #F7FAFC; padding: 1.25rem; border-radius: 12px; margin-bottom: 0.75rem;
+                        border-left: 4px solid {mood_color}; box-shadow: 0 2px 8px rgba(107, 70, 193, 0.08);
+                        animation: fadeInUp {0.5 + animation_delay}s ease-out;
+                        transition: all 0.3s ease-out;'
+                 onmouseover='this.style.transform="translateX(4px)"; this.style.boxShadow="0 4px 12px rgba(107, 70, 193, 0.12)";'
+                 onmouseout='this.style.transform="translateX(0)"; this.style.boxShadow="0 2px 8px rgba(107, 70, 193, 0.08)";'>
                 <div style='display: flex; align-items: center; margin-bottom: 0.5rem;'>
-                    <div style='font-size: 2rem; margin-right: 1rem;'>{mood_emoji}</div>
+                    <div style='font-size: 2.5rem; margin-right: 1rem;'>{mood_emoji}</div>
                     <div style='flex: 1;'>
-                        <div style='font-weight: 600; font-size: 1.1rem; color: #6B46C1;'>{mood_label}</div>
-                        <div style='font-size: 0.9rem; color: #718096;'>
-                            {formatted_date} à {formatted_time} · Score: {checkin["mood_score"]}/10
+                        <div style='font-weight: 600; font-size: 1.1rem; color: {mood_color};'>{mood_label}</div>
+                        <div style='font-size: 0.85rem; color: #718096;'>
+                            📅 {formatted_date} à {formatted_time} · <span style='color: {mood_color}; font-weight: 500;'>Score: {checkin["mood_score"]}/10</span>
                         </div>
                     </div>
                 </div>
@@ -137,10 +157,31 @@ def show_checkin():
             </div>
             """, unsafe_allow_html=True)
     else:
-        st.info(
-            "📭 Aucun check-in enregistré. "
-            "Commencez par soumettre votre premier check-in ci-dessus!"
-        )
+        # État vide engageant avec animation
+        st.markdown("""
+        <div style='background: linear-gradient(135deg, #F7FAFC 0%, #EBF4FF 100%);
+                    padding: 3rem 2rem; border-radius: 16px;
+                    text-align: center; border: 2px dashed #CBD5E0;
+                    animation: fadeInUp 0.5s ease-out;'>
+            <div style='font-size: 4rem; margin-bottom: 1.5rem; animation: pulse 2s infinite;'>📝</div>
+            <div style='font-size: 1.2rem; font-weight: 600; color: #6B46C1; margin-bottom: 0.75rem;'>
+                Votre journal de bien-être vous attend
+            </div>
+            <div style='font-size: 1rem; color: #4A5568; margin-bottom: 1rem; line-height: 1.6;'>
+                Créez votre premier check-in ci-dessus pour commencer à suivre votre humeur.<br/>
+                Chaque check-in est une étape vers une meilleure connaissance de soi.
+            </div>
+            <div style='background-color: white; padding: 1.5rem; border-radius: 12px;
+                        box-shadow: 0 2px 8px rgba(107, 70, 193, 0.1); margin-top: 1.5rem;
+                        display: inline-block;'>
+                <div style='color: #6B46C1; font-weight: 500; font-size: 0.9rem; margin-bottom: 0.5rem;'>💡 Le saviez-vous ?</div>
+                <div style='color: #4A5568; font-size: 0.85rem;'>
+                    Suivre son humeur quotidiennement aide à identifier<br/>
+                    les patterns et améliorer son bien-être mental
+                </div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
 
 
 def _get_mood_emoji(mood_score: int) -> str:
@@ -185,3 +226,25 @@ def _get_mood_label(mood_score: int) -> str:
         return "Bien"
     else:
         return "Excellent"
+
+
+def _get_mood_color(mood_score: int) -> str:
+    """
+    Retourner une couleur correspondant au mood_score.
+
+    Args:
+        mood_score: Score d'humeur (1-10).
+
+    Returns:
+        Code couleur hexadécimal.
+    """
+    if mood_score <= 2:
+        return "#F56565"  # Rouge (très mal)
+    elif mood_score <= 4:
+        return "#ED8936"  # Orange (difficile)
+    elif mood_score <= 6:
+        return "#718096"  # Gris (neutre)
+    elif mood_score <= 8:
+        return "#6B46C1"  # Violet (bien)
+    else:
+        return "#48BB78"  # Vert (excellent)
