@@ -1,8 +1,8 @@
 [theme]
-primaryColor = "#6B46C1"           # Violet pour bien-être mental
-backgroundColor = "#F7FAFC"        # Gris clair
-secondaryBackgroundColor = "#EDF2F7"
-textColor = "#1A202C"
+primaryColor = "#6CB4A4"           # Purple (mental wellness)
+backgroundColor = "#FAFAFA"        # Pure white (sobriété luxueuse)
+secondaryBackgroundColor = "#F5FAF9"  # Light gray for cards
+textColor = "#1A202C"              # Dark gray
 font = "sans serif"
 
 [server]

@@ -289,3 +289,177 @@ class TestGetConversationHistory:
         assert conv["user_message"] == "Test complet"
         assert conv["ai_response"] == "Réponse complète"
         assert conv["tokens_used"] == 75
+
+
+class TestGetConversationCount:
+    """Tests pour la méthode get_conversation_count."""
+
+    def test_get_conversation_count_empty(self, mock_db):
+        """Tester comptage avec aucune conversation."""
+        count = mock_db.get_conversation_count()
+
+        assert count == 0
+
+    def test_get_conversation_count_returns_correct_number(self, mock_db):
+        """Tester que le comptage retourne le bon nombre."""
+        mock_db.save_conversation("Message 1", "Réponse 1", 10)
+        mock_db.save_conversation("Message 2", "Réponse 2", 20)
+        mock_db.save_conversation("Message 3", "Réponse 3", 30)
+
+        count = mock_db.get_conversation_count()
+
+        assert count == 3
+
+    def test_get_conversation_count_filters_by_days(self, mock_db):
+        """Tester filtrage par nombre de jours."""
+        # Insérer une conversation "vieille" (10 jours)
+        old_date = datetime.now() - timedelta(days=10)
+        mock_db.conn.execute(
+            "INSERT INTO conversations (user_message, ai_response, tokens_used, timestamp) VALUES (?, ?, ?, ?)",
+            ("Old message", "Old response", 10, old_date),
+        )
+        mock_db.conn.commit()
+
+        # Insérer une conversation récente
+        mock_db.save_conversation("Recent message", "Recent response", 20)
+
+        # Compter seulement les 7 derniers jours
+        count = mock_db.get_conversation_count(days=7)
+
+        # Ne devrait avoir que la conversation récente
+        assert count == 1
+
+    def test_get_conversation_count_default_7_days(self, mock_db):
+        """Tester que la valeur par défaut est 7 jours."""
+        # Insérer conversations à différentes dates
+        mock_db.save_conversation("Recent", "Response 1", 10)
+
+        old_date = datetime.now() - timedelta(days=8)
+        mock_db.conn.execute(
+            "INSERT INTO conversations (user_message, ai_response, tokens_used, timestamp) VALUES (?, ?, ?, ?)",
+            ("Old", "Response 2", 20, old_date),
+        )
+        mock_db.conn.commit()
+
+        # Sans paramètre, devrait utiliser days=7
+        count = mock_db.get_conversation_count()
+
+        assert count == 1
+
+
+class TestSaveInsight:
+    """Tests pour la méthode save_insight."""
+
+    def test_save_insight_success(self, mock_db):
+        """Tester l'enregistrement réussi d'un insight."""
+        insight_id = mock_db.save_insight(
+            insight_type="weekly",
+            content="Votre humeur s'améliore cette semaine!",
+            based_on_data='{"checkins": 7, "avg_mood": 7.5}',
+            tokens_used=150
+        )
+
+        assert insight_id > 0
+
+    def test_save_insight_returns_id(self, mock_db):
+        """Tester que save_insight retourne un ID valide."""
+        id1 = mock_db.save_insight("weekly", "Insight 1", "", 100)
+        id2 = mock_db.save_insight("monthly", "Insight 2", "", 200)
+
+        assert id2 > id1
+
+    def test_save_insight_with_optional_fields(self, mock_db):
+        """Tester l'enregistrement avec champs optionnels."""
+        insight_id = mock_db.save_insight(
+            insight_type="weekly",
+            content="Contenu de test"
+        )
+
+        latest = mock_db.get_latest_insight("weekly")
+        assert latest is not None
+        assert latest["based_on_data"] == ""
+        assert latest["tokens_used"] == 0
+
+    def test_save_insight_empty_type(self, mock_db):
+        """Tester validation: insight_type vide (invalide)."""
+        with pytest.raises(ValueError, match="insight_type et content ne peuvent pas être vides"):
+            mock_db.save_insight("", "Contenu", "", 10)
+
+    def test_save_insight_empty_content(self, mock_db):
+        """Tester validation: content vide (invalide)."""
+        with pytest.raises(ValueError, match="insight_type et content ne peuvent pas être vides"):
+            mock_db.save_insight("weekly", "", "", 10)
+
+
+class TestGetLatestInsight:
+    """Tests pour la méthode get_latest_insight."""
+
+    def test_get_latest_insight_empty(self, mock_db):
+        """Tester récupération avec aucun insight."""
+        latest = mock_db.get_latest_insight("weekly")
+
+        assert latest is None
+
+    def test_get_latest_insight_returns_most_recent(self, mock_db):
+        """Tester que la méthode retourne le plus récent."""
+        # Insérer avec des timestamps contrôlés pour garantir l'ordre
+        old_date_1 = datetime.now() - timedelta(days=3)
+        old_date_2 = datetime.now() - timedelta(days=2)
+        recent_date = datetime.now() - timedelta(days=1)
+
+        mock_db.conn.execute(
+            "INSERT INTO insights_log (insight_type, content, tokens_used, created_at) VALUES (?, ?, ?, ?)",
+            ("weekly", "Insight 1", 100, old_date_1),
+        )
+        mock_db.conn.execute(
+            "INSERT INTO insights_log (insight_type, content, tokens_used, created_at) VALUES (?, ?, ?, ?)",
+            ("weekly", "Insight 2", 200, old_date_2),
+        )
+        mock_db.conn.execute(
+            "INSERT INTO insights_log (insight_type, content, tokens_used, created_at) VALUES (?, ?, ?, ?)",
+            ("weekly", "Insight 3", 300, recent_date),
+        )
+        mock_db.conn.commit()
+
+        latest = mock_db.get_latest_insight("weekly")
+
+        assert latest is not None
+        assert latest["content"] == "Insight 3"
+        assert latest["tokens_used"] == 300
+
+    def test_get_latest_insight_filters_by_type(self, mock_db):
+        """Tester filtrage par type d'insight."""
+        mock_db.save_insight("weekly", "Weekly insight", "", 100)
+        mock_db.save_insight("monthly", "Monthly insight", "", 200)
+
+        latest_weekly = mock_db.get_latest_insight("weekly")
+        latest_monthly = mock_db.get_latest_insight("monthly")
+
+        assert latest_weekly["content"] == "Weekly insight"
+        assert latest_monthly["content"] == "Monthly insight"
+
+    def test_get_latest_insight_includes_all_fields(self, mock_db):
+        """Tester que l'insight inclut tous les champs."""
+        mock_db.save_insight(
+            insight_type="weekly",
+            content="Insight complet",
+            based_on_data='{"test": "data"}',
+            tokens_used=250
+        )
+
+        latest = mock_db.get_latest_insight("weekly")
+
+        assert latest is not None
+        # Vérifier que tous les champs sont présents
+        assert "id" in latest
+        assert "created_at" in latest
+        assert "insight_type" in latest
+        assert "content" in latest
+        assert "based_on_data" in latest
+        assert "tokens_used" in latest
+
+        # Vérifier les valeurs
+        assert latest["insight_type"] == "weekly"
+        assert latest["content"] == "Insight complet"
+        assert latest["based_on_data"] == '{"test": "data"}'
+        assert latest["tokens_used"] == 250

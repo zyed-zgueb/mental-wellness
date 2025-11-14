@@ -24,15 +24,24 @@ def get_conversation_manager():
 
 
 def show_conversation():
-    """Afficher la page de conversation."""
+    """Afficher la page de conversation avec design empathique."""
     st.title("💬 Conversation")
-    st.markdown("Parlez librement de ce que vous ressentez.")
+    st.markdown("""
+    <p style='font-size: 1.1rem; color: #4A5568; margin-bottom: 2rem;'>
+    Un espace d'écoute bienveillant et sans jugement. Parlez librement de ce que vous ressentez.
+    </p>
+    """, unsafe_allow_html=True)
 
     try:
         manager = get_conversation_manager()
     except ValueError as e:
-        st.error(f"❌ Erreur de configuration: {e}")
-        st.info("💡 Veuillez configurer votre ANTHROPIC_API_KEY dans un fichier .env")
+        # Error state élégant
+        st.markdown("""
+        <div style='background-color: #FFF5F5; padding: 2rem; border-radius: 12px; border-left: 4px solid #F56565;'>
+            <h3 style='color: #C53030; margin-top: 0;'>❌ Configuration manquante</h3>
+            <p style='color: #742A2A;'>Veuillez configurer votre ANTHROPIC_API_KEY dans un fichier .env</p>
+        </div>
+        """, unsafe_allow_html=True)
         st.code("ANTHROPIC_API_KEY=sk-ant-your-key-here", language="bash")
         return
 

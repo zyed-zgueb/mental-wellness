@@ -24,3 +24,16 @@ CREATE TABLE IF NOT EXISTS conversations (
 
 -- Index pour améliorer les performances des requêtes par date
 CREATE INDEX IF NOT EXISTS idx_conversations_timestamp ON conversations(timestamp);
+
+-- Table: insights_log - Enregistrement des insights IA générés
+CREATE TABLE IF NOT EXISTS insights_log (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    insight_type VARCHAR(50) NOT NULL,
+    content TEXT NOT NULL,
+    based_on_data TEXT,
+    tokens_used INTEGER
+);
+
+-- Index pour améliorer les performances des requêtes par type et date
+CREATE INDEX IF NOT EXISTS idx_insights_log_type_created ON insights_log(insight_type, created_at DESC);

@@ -110,7 +110,7 @@ class TestSendMessage:
         # Vérifier que stream a été appelé avec le system prompt
         call_args = mock_anthropic_stream.return_value.messages.stream.call_args
         assert call_args[1]['system'] == manager.system_prompt
-        assert call_args[1]['model'] == "claude-3-5-sonnet-20241022"
+        assert call_args[1]['model'] == "claude-sonnet-4-20250514"
         assert call_args[1]['max_tokens'] == 1024
 
 

@@ -1,0 +1,316 @@
+/* Serene - Sobriété Luxueuse (Apple Watch Style) */
+
+/* ===== GLOBAL REFINEMENTS ===== */
+
+/* Remove default Streamlit padding for cleaner layout */
+.block-container {
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+    max-width: 1200px !important;
+}
+
+/* Premium spacing between sections */
+.element-container {
+    margin-bottom: 1.5rem;
+}
+
+/* ===== TYPOGRAPHY ===== */
+
+/* Elegant headings */
+h1, h2, h3 {
+    font-weight: 600 !important;
+    letter-spacing: -0.02em;
+    color: #1A202C;
+}
+
+h1 {
+    font-size: 2.5rem !important;
+    margin-bottom: 0.5rem !important;
+}
+
+h2 {
+    font-size: 1.75rem !important;
+    margin-top: 2rem !important;
+    margin-bottom: 1rem !important;
+}
+
+h3 {
+    font-size: 1.25rem !important;
+}
+
+/* Body text refinement */
+p, .stMarkdown {
+    color: #4A5568;
+    line-height: 1.7;
+}
+
+/* ===== CARDS & CONTAINERS ===== */
+
+/* Premium cards with subtle shadows */
+.stMarkdown > div,
+div[data-testid="stVerticalBlock"] > div {
+    border-radius: 12px;
+}
+
+/* Metric cards - Apple Health style */
+div[data-testid="stMetric"] {
+    background-color: #F7FAFC;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(107, 70, 193, 0.08);
+    transition: all 0.2s ease-out;
+}
+
+div[data-testid="stMetric"]:hover {
+    box-shadow: 0 4px 12px rgba(107, 70, 193, 0.12);
+    transform: translateY(-1px);
+}
+
+/* Large metric value */
+div[data-testid="stMetric"] [data-testid="stMetricValue"] {
+    font-size: 2.5rem !important;
+    font-weight: 600 !important;
+    color: #6B46C1;
+}
+
+/* ===== BUTTONS ===== */
+
+/* Primary button - refined */
+.stButton > button[kind="primary"],
+button[kind="primary"] {
+    background-color: #6B46C1;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 500;
+    box-shadow: 0 2px 8px rgba(107, 70, 193, 0.2);
+    transition: all 0.15s ease-out;
+}
+
+.stButton > button[kind="primary"]:hover,
+button[kind="primary"]:hover {
+    background-color: #553399;
+    box-shadow: 0 4px 12px rgba(107, 70, 193, 0.3);
+    transform: translateY(-1px);
+}
+
+.stButton > button[kind="primary"]:active,
+button[kind="primary"]:active {
+    transform: translateY(0);
+}
+
+/* Secondary button */
+.stButton > button {
+    border-radius: 8px;
+    border: 1px solid #E2E8F0;
+    padding: 0.75rem 1.5rem;
+    font-weight: 500;
+    transition: all 0.15s ease-out;
+}
+
+.stButton > button:hover {
+    border-color: #6B46C1;
+    color: #6B46C1;
+    box-shadow: 0 2px 8px rgba(107, 70, 193, 0.1);
+}
+
+/* ===== FORM INPUTS ===== */
+
+/* Text inputs and text areas */
+input, textarea, .stTextInput > div > div > input, .stTextArea > div > div > textarea {
+    border-radius: 8px !important;
+    border: 1px solid #E2E8F0 !important;
+    padding: 0.75rem !important;
+    transition: all 0.15s ease-out !important;
+}
+
+input:focus, textarea:focus {
+    border-color: #6B46C1 !important;
+    box-shadow: 0 0 0 3px rgba(107, 70, 193, 0.1) !important;
+    outline: none !important;
+}
+
+/* Slider - Apple style */
+.stSlider > div > div > div {
+    background-color: #6B46C1 !important;
+}
+
+.stSlider > div > div > div > div {
+    background-color: #6B46C1 !important;
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgba(107, 70, 193, 0.3);
+}
+
+/* ===== ALERTS & NOTIFICATIONS ===== */
+
+/* Info alert */
+div[data-baseweb="notification"][kind="info"] {
+    background-color: #EBF4FF;
+    border-left: 4px solid #6B46C1;
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+/* Success alert */
+div[data-baseweb="notification"][kind="success"] {
+    background-color: #F0FFF4;
+    border-left: 4px solid #48BB78;
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+/* Warning alert */
+div[data-baseweb="notification"][kind="warning"] {
+    background-color: #FFFAF0;
+    border-left: 4px solid #ED8936;
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+/* Error alert */
+div[data-baseweb="notification"][kind="error"] {
+    background-color: #FFF5F5;
+    border-left: 4px solid #F56565;
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+/* ===== DIVIDERS ===== */
+
+hr {
+    margin: 2rem 0;
+    border: none;
+    height: 1px;
+    background: linear-gradient(to right, transparent, #E2E8F0, transparent);
+}
+
+/* ===== SIDEBAR ===== */
+
+/* Refined sidebar */
+section[data-testid="stSidebar"] {
+    background-color: #F7FAFC;
+    border-right: 1px solid #E2E8F0;
+}
+
+section[data-testid="stSidebar"] h1 {
+    font-size: 1.5rem !important;
+    color: #6B46C1;
+    margin-bottom: 1.5rem !important;
+}
+
+/* Radio buttons in sidebar - refined */
+div[role="radiogroup"] label {
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    transition: all 0.15s ease-out;
+    margin-bottom: 0.25rem;
+}
+
+div[role="radiogroup"] label:hover {
+    background-color: rgba(107, 70, 193, 0.05);
+}
+
+div[role="radiogroup"] label[data-selected="true"] {
+    background-color: rgba(107, 70, 193, 0.1);
+    color: #6B46C1;
+    font-weight: 500;
+}
+
+/* ===== CHAT MESSAGES ===== */
+
+/* Chat container */
+.stChatMessage {
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* User message */
+.stChatMessage[data-testid="chat-message-user"] {
+    background-color: #6B46C1;
+    color: white;
+    margin-left: 2rem;
+}
+
+/* Assistant message */
+.stChatMessage[data-testid="chat-message-assistant"] {
+    background-color: #F7FAFC;
+    color: #1A202C;
+    margin-right: 2rem;
+}
+
+/* ===== PLOTS & CHARTS ===== */
+
+/* Chart container - subtle elevation */
+div[data-testid="stPlotlyChart"] {
+    background-color: #F7FAFC;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(107, 70, 193, 0.08);
+}
+
+/* ===== EXPANDER ===== */
+
+/* Expander - refined */
+.streamlit-expanderHeader {
+    background-color: #F7FAFC;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-weight: 500;
+    transition: all 0.15s ease-out;
+}
+
+.streamlit-expanderHeader:hover {
+    background-color: rgba(107, 70, 193, 0.05);
+}
+
+/* ===== FORMS ===== */
+
+/* Form container */
+form {
+    background-color: #F7FAFC;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 1px 3px rgba(107, 70, 193, 0.08);
+}
+
+/* ===== ANIMATIONS ===== */
+
+/* Subtle fade-in for new elements */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.element-container {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* ===== SCROLLBAR ===== */
+
+/* Custom scrollbar - minimal and elegant */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #F7FAFC;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #CBD5E0;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #6B46C1;
+}

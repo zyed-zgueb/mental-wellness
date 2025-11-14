@@ -2,7 +2,7 @@
 
 import sqlite3
 import os
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 from datetime import datetime, timedelta
 
 
@@ -45,6 +45,16 @@ class DatabaseManager:
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP
             );
             CREATE INDEX IF NOT EXISTS idx_conversations_timestamp ON conversations(timestamp);
+
+            CREATE TABLE IF NOT EXISTS insights_log (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                insight_type VARCHAR(50) NOT NULL,
+                content TEXT NOT NULL,
+                based_on_data TEXT,
+                tokens_used INTEGER
+            );
+            CREATE INDEX IF NOT EXISTS idx_insights_log_type_created ON insights_log(insight_type, created_at DESC);
             """
         else:
             # Pour les DB sur disque, charger depuis schema.sql
@@ -166,6 +176,93 @@ class DatabaseManager:
         )
 
         return [dict(row) for row in cursor.fetchall()]
+
+    def get_conversation_count(self, days: int = 7) -> int:
+        """
+        Compter le nombre de conversations (derniers N jours).
+
+        Args:
+            days: Nombre de jours à considérer (défaut: 7).
+
+        Returns:
+            Nombre total de conversations dans la période.
+        """
+        cutoff_date = datetime.now() - timedelta(days=days)
+
+        cursor = self.conn.execute(
+            """
+            SELECT COUNT(*) as count
+            FROM conversations
+            WHERE timestamp >= ?
+            """,
+            (cutoff_date,),
+        )
+
+        result = cursor.fetchone()
+        return result["count"] if result else 0
+
+    def save_insight(
+        self,
+        insight_type: str,
+        content: str,
+        based_on_data: str = "",
+        tokens_used: int = 0,
+    ) -> int:
+        """
+        Enregistrer un insight IA.
+
+        Args:
+            insight_type: Type d'insight (ex: "weekly", "monthly").
+            content: Contenu de l'insight généré.
+            based_on_data: Métadonnées sur les données utilisées (JSON string optionnel).
+            tokens_used: Nombre de tokens utilisés pour la génération.
+
+        Returns:
+            ID de l'insight créé.
+
+        Raises:
+            ValueError: Si les paramètres sont invalides.
+        """
+        if not insight_type or not content:
+            raise ValueError("insight_type et content ne peuvent pas être vides")
+
+        try:
+            cursor = self.conn.execute(
+                """
+                INSERT INTO insights_log (insight_type, content, based_on_data, tokens_used)
+                VALUES (?, ?, ?, ?)
+                """,
+                (insight_type, content, based_on_data, tokens_used),
+            )
+            self.conn.commit()
+            return cursor.lastrowid
+        except sqlite3.IntegrityError as e:
+            raise ValueError(f"Erreur d'intégrité de la base de données: {e}")
+
+    def get_latest_insight(self, insight_type: str) -> Optional[Dict[str, Any]]:
+        """
+        Récupérer le dernier insight d'un type donné.
+
+        Args:
+            insight_type: Type d'insight à récupérer.
+
+        Returns:
+            Dict contenant l'insight (id, created_at, insight_type, content, based_on_data, tokens_used),
+            ou None si aucun insight trouvé.
+        """
+        cursor = self.conn.execute(
+            """
+            SELECT id, created_at, insight_type, content, based_on_data, tokens_used
+            FROM insights_log
+            WHERE insight_type = ?
+            ORDER BY created_at DESC
+            LIMIT 1
+            """,
+            (insight_type,),
+        )
+
+        result = cursor.fetchone()
+        return dict(result) if result else None
 
     def close(self):
         """Fermer la connexion à la base de données."""
