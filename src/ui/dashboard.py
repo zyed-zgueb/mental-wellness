@@ -88,7 +88,11 @@ def show_dashboard():
         with col1:
             st.markdown(f"""
             <div style='background-color: #F7FAFC; padding: 1.5rem; border-radius: 12px; text-align: center;
-                        box-shadow: 0 1px 3px rgba(107, 70, 193, 0.08);'>
+                        box-shadow: 0 1px 3px rgba(107, 70, 193, 0.08);
+                        animation: fadeInUp 0.5s ease-out;
+                        transition: all 0.3s ease-out;'
+                 onmouseover='this.style.transform="translateY(-4px)"; this.style.boxShadow="0 8px 24px rgba(107, 70, 193, 0.12)";'
+                 onmouseout='this.style.transform="translateY(0)"; this.style.boxShadow="0 1px 3px rgba(107, 70, 193, 0.08)";'>
                 <div style='color: #718096; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;'>
                     Moyenne
                 </div>
@@ -104,7 +108,11 @@ def show_dashboard():
         with col2:
             st.markdown(f"""
             <div style='background-color: #F7FAFC; padding: 1.5rem; border-radius: 12px; text-align: center;
-                        box-shadow: 0 1px 3px rgba(107, 70, 193, 0.08);'>
+                        box-shadow: 0 1px 3px rgba(107, 70, 193, 0.08);
+                        animation: fadeInUp 0.6s ease-out;
+                        transition: all 0.3s ease-out;'
+                 onmouseover='this.style.transform="translateY(-4px)"; this.style.boxShadow="0 8px 24px rgba(245, 101, 101, 0.12)";'
+                 onmouseout='this.style.transform="translateY(0)"; this.style.boxShadow="0 1px 3px rgba(107, 70, 193, 0.08)";'>
                 <div style='color: #718096; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;'>
                     Minimum
                 </div>
@@ -120,7 +128,11 @@ def show_dashboard():
         with col3:
             st.markdown(f"""
             <div style='background-color: #F7FAFC; padding: 1.5rem; border-radius: 12px; text-align: center;
-                        box-shadow: 0 1px 3px rgba(107, 70, 193, 0.08);'>
+                        box-shadow: 0 1px 3px rgba(107, 70, 193, 0.08);
+                        animation: fadeInUp 0.7s ease-out;
+                        transition: all 0.3s ease-out;'
+                 onmouseover='this.style.transform="translateY(-4px)"; this.style.boxShadow="0 8px 24px rgba(72, 187, 120, 0.12)";'
+                 onmouseout='this.style.transform="translateY(0)"; this.style.boxShadow="0 1px 3px rgba(107, 70, 193, 0.08)";'>
                 <div style='color: #718096; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;'>
                     Maximum
                 </div>
@@ -171,7 +183,21 @@ def show_dashboard():
         st.plotly_chart(fig_mood, use_container_width=True)
 
     else:
-        st.info("📭 Aucune donnée d'humeur disponible. Commencez par soumettre un check-in !")
+        # État vide amélioré pour les données d'humeur
+        st.markdown("""
+        <div style='background: linear-gradient(135deg, #F7FAFC 0%, #F0FFF4 100%);
+                    padding: 2rem; border-radius: 12px;
+                    text-align: center; border-left: 4px solid #48BB78;
+                    animation: fadeInUp 0.5s ease-out;'>
+            <div style='font-size: 3rem; margin-bottom: 1rem; animation: bounce 2s infinite;'>🌸</div>
+            <div style='font-size: 1.1rem; font-weight: 600; color: #2F855A; margin-bottom: 0.5rem;'>
+                Commencez votre suivi d'humeur
+            </div>
+            <div style='font-size: 0.95rem; color: #4A5568;'>
+                Créez votre premier check-in pour visualiser vos tendances de bien-être
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
 
     # Divider élégant
     st.markdown("<div style='margin: 3rem 0;'></div>", unsafe_allow_html=True)
@@ -230,7 +256,21 @@ def show_dashboard():
             """, unsafe_allow_html=True)
 
     else:
-        st.info("📭 Aucune conversation enregistrée. Commencez une conversation pour voir vos statistiques !")
+        # État vide amélioré pour les conversations
+        st.markdown("""
+        <div style='background: linear-gradient(135deg, #F7FAFC 0%, #EBF4FF 100%);
+                    padding: 2rem; border-radius: 12px;
+                    text-align: center; border-left: 4px solid #6B46C1;
+                    animation: fadeInUp 0.5s ease-out;'>
+            <div style='font-size: 3rem; margin-bottom: 1rem; animation: pulse 2s infinite;'>💬</div>
+            <div style='font-size: 1.1rem; font-weight: 600; color: #6B46C1; margin-bottom: 0.5rem;'>
+                Démarrez votre première conversation
+            </div>
+            <div style='font-size: 0.95rem; color: #4A5568;'>
+                Partagez vos pensées avec votre compagnon IA empathique
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
 
     # Divider élégant
     st.markdown("<div style='margin: 3rem 0;'></div>", unsafe_allow_html=True)
@@ -252,30 +292,51 @@ def show_dashboard():
         st.markdown("""
         <div style='background: linear-gradient(135deg, #EBF4FF 0%, #F7FAFC 100%);
                     padding: 2rem; border-radius: 16px; border-left: 4px solid #6B46C1;
-                    box-shadow: 0 4px 12px rgba(107, 70, 193, 0.12); margin-bottom: 1rem;'>
+                    box-shadow: 0 4px 12px rgba(107, 70, 193, 0.12); margin-bottom: 1rem;
+                    animation: fadeInUp 0.5s ease-out;'>
         """, unsafe_allow_html=True)
 
-        with st.spinner("✨ Génération de vos insights personnalisés..."):
-            try:
-                insights_gen = get_insights_generator()
-                insight_content = insights_gen.get_adaptive_insight()
+        # Loading skeleton pendant la génération
+        loading_placeholder = st.empty()
+        with loading_placeholder.container():
+            st.markdown("""
+            <div style='margin-bottom: 1rem;'>
+                <div class='skeleton' style='height: 1.5rem; width: 70%; margin-bottom: 1rem;'></div>
+                <div class='skeleton' style='height: 1rem; width: 100%; margin-bottom: 0.5rem;'></div>
+                <div class='skeleton' style='height: 1rem; width: 95%; margin-bottom: 0.5rem;'></div>
+                <div class='skeleton' style='height: 1rem; width: 85%;'></div>
+            </div>
+            <p style='color: #6B46C1; font-size: 0.9rem; text-align: center; margin-top: 1.5rem;'>
+                ✨ Génération de vos insights personnalisés...
+            </p>
+            """, unsafe_allow_html=True)
 
-                # Afficher l'insight avec style élégant
-                st.markdown(f"""
-                <div style='color: #2D3748; line-height: 1.8; font-size: 1.05rem;'>
-                {insight_content}
-                </div>
-                """, unsafe_allow_html=True)
+        # Générer les insights
+        try:
+            insights_gen = get_insights_generator()
+            insight_content = insights_gen.get_adaptive_insight()
 
-            except ValueError as e:
-                st.markdown("</div>", unsafe_allow_html=True)
-                st.error(f"❌ Configuration manquante: {e}")
-                st.info("💡 Assurez-vous que ANTHROPIC_API_KEY est définie dans votre fichier .env")
-                return
-            except Exception as e:
-                st.markdown("</div>", unsafe_allow_html=True)
-                st.error(f"❌ Erreur lors de la génération des insights: {e}")
-                return
+            # Effacer le skeleton et afficher le contenu
+            loading_placeholder.empty()
+
+            # Afficher l'insight avec style élégant et animation
+            st.markdown(f"""
+            <div style='color: #2D3748; line-height: 1.8; font-size: 1.05rem; animation: fadeIn 0.5s ease-out;'>
+            {insight_content}
+            </div>
+            """, unsafe_allow_html=True)
+
+        except ValueError as e:
+            loading_placeholder.empty()
+            st.markdown("</div>", unsafe_allow_html=True)
+            st.error(f"❌ Configuration manquante: {e}")
+            st.info("💡 Assurez-vous que ANTHROPIC_API_KEY est définie dans votre fichier .env")
+            return
+        except Exception as e:
+            loading_placeholder.empty()
+            st.markdown("</div>", unsafe_allow_html=True)
+            st.error(f"❌ Erreur lors de la génération des insights: {e}")
+            return
 
         st.markdown("</div>", unsafe_allow_html=True)
 
@@ -312,16 +373,32 @@ def show_dashboard():
                     st.warning("⚠️ Insight ancien, rechargez la page pour en générer un nouveau")
 
     else:
-        # Empty state élégant
+        # Empty state élégant avec animation
         st.markdown("""
-        <div style='background-color: #F7FAFC; padding: 3rem 2rem; border-radius: 16px;
-                    text-align: center; border: 2px dashed #CBD5E0;'>
-            <div style='font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;'>📊</div>
-            <div style='font-size: 1.1rem; font-weight: 500; color: #4A5568; margin-bottom: 0.5rem;'>
-                Pas encore de données à analyser
+        <div style='background: linear-gradient(135deg, #F7FAFC 0%, #EBF4FF 100%);
+                    padding: 3rem 2rem; border-radius: 16px;
+                    text-align: center; border: 2px dashed #CBD5E0;
+                    animation: fadeInUp 0.5s ease-out;
+                    box-shadow: 0 4px 12px rgba(107, 70, 193, 0.05);'>
+            <div style='font-size: 4rem; margin-bottom: 1.5rem; animation: pulse 2s infinite;'>📊</div>
+            <div style='font-size: 1.2rem; font-weight: 600; color: #6B46C1; margin-bottom: 0.75rem;'>
+                Aucune donnée disponible
             </div>
-            <div style='font-size: 0.95rem; color: #718096;'>
-                Commencez par un check-in ou une conversation pour recevoir vos premiers insights
+            <div style='font-size: 1rem; color: #4A5568; margin-bottom: 1.5rem; line-height: 1.6;'>
+                Commencez votre voyage vers le bien-être en créant votre premier check-in<br/>
+                ou en ayant une conversation avec votre compagnon IA
+            </div>
+            <div style='display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;'>
+                <div style='background-color: white; padding: 1rem 1.5rem; border-radius: 8px;
+                            box-shadow: 0 2px 8px rgba(107, 70, 193, 0.1); flex: 1; min-width: 200px; max-width: 250px;'>
+                    <div style='font-size: 2rem; margin-bottom: 0.5rem;'>🌸</div>
+                    <div style='color: #6B46C1; font-weight: 500; font-size: 0.9rem;'>Quick Check-in</div>
+                </div>
+                <div style='background-color: white; padding: 1rem 1.5rem; border-radius: 8px;
+                            box-shadow: 0 2px 8px rgba(107, 70, 193, 0.1); flex: 1; min-width: 200px; max-width: 250px;'>
+                    <div style='font-size: 2rem; margin-bottom: 0.5rem;'>💬</div>
+                    <div style='color: #6B46C1; font-weight: 500; font-size: 0.9rem;'>Conversation</div>
+                </div>
             </div>
         </div>
         """, unsafe_allow_html=True)
