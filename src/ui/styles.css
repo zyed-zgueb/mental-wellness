@@ -463,156 +463,6 @@ form {
     background: var(--color-primary);
 }
 
-/* ===== EMOJI SYSTEM ===== */
-
-/* Base emoji styling with performance optimizations */
-.emoji {
-    display: inline-block;
-    font-style: normal;
-    line-height: 1;
-    vertical-align: middle;
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-
-/* Emoji size utilities */
-.emoji-xs {
-    font-size: 0.875rem; /* 14px */
-}
-
-.emoji-sm {
-    font-size: 1.125rem; /* 18px */
-}
-
-.emoji-md {
-    font-size: 1.5rem; /* 24px */
-}
-
-.emoji-lg {
-    font-size: 2rem; /* 32px */
-}
-
-.emoji-xl {
-    font-size: 3rem; /* 48px */
-}
-
-.emoji-2xl {
-    font-size: 4rem; /* 64px */
-}
-
-.emoji-3xl {
-    font-size: 5rem; /* 80px */
-}
-
-/* Emoji with subtle animation - optimized */
-.emoji-animated {
-    animation: emojiFloat 3s ease-in-out infinite;
-    will-change: transform;
-}
-
-/* Gentle float animation for emojis */
-@keyframes emojiFloat {
-    0%, 100% {
-        transform: translateY(0);
-    }
-    50% {
-        transform: translateY(-8px);
-    }
-}
-
-/* Emoji hover effect */
-.emoji-interactive {
-    transition: transform var(--transition-fast);
-    cursor: default;
-}
-
-.emoji-interactive:hover {
-    transform: scale(1.15);
-}
-
-/* Mood emoji specific styles */
-.emoji-mood {
-    font-size: 3rem;
-    margin: 0.5rem;
-    transition: all var(--transition-medium);
-    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.1));
-}
-
-.emoji-mood:hover {
-    transform: scale(1.1);
-    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.15));
-}
-
-/* Emoji in buttons */
-.emoji-button {
-    margin-right: 0.5rem;
-    font-size: 1.25rem;
-}
-
-/* Accessibility: Screen reader only text */
-.emoji-label {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border-width: 0;
-}
-
-/* Emoji in hero sections */
-.emoji-hero {
-    font-size: 4rem;
-    display: block;
-    margin-bottom: var(--spacing-md);
-    animation: emojiEntrance 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-@keyframes emojiEntrance {
-    0% {
-        opacity: 0;
-        transform: scale(0.3) rotate(-15deg);
-    }
-    100% {
-        opacity: 1;
-        transform: scale(1) rotate(0deg);
-    }
-}
-
-/* Emoji grid for mood selection */
-.emoji-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-    gap: var(--spacing-md);
-    padding: var(--spacing-md);
-}
-
-.emoji-grid-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: var(--spacing-md);
-    border-radius: var(--radius-md);
-    transition: all var(--transition-medium);
-    cursor: pointer;
-    background-color: var(--bg-secondary);
-}
-
-.emoji-grid-item:hover {
-    background-color: var(--bg-white);
-    box-shadow: var(--shadow-md);
-    transform: translateY(-2px);
-}
-
-.emoji-grid-item.selected {
-    background-color: var(--color-primary);
-    color: white;
-    box-shadow: var(--shadow-lg);
-}
-
 /* ===== RESPONSIVE DESIGN ===== */
 
 /* Mobile improvements */
@@ -645,66 +495,12 @@ form {
     div[style*="gradient"] {
         padding: 2rem 1rem !important;
     }
-
-    /* Responsive emoji sizing for mobile */
-    .emoji-3xl {
-        font-size: 3rem; /* Reduce from 5rem to 3rem */
-    }
-
-    .emoji-2xl {
-        font-size: 2.5rem; /* Reduce from 4rem to 2.5rem */
-    }
-
-    .emoji-xl {
-        font-size: 2rem; /* Reduce from 3rem to 2rem */
-    }
-
-    .emoji-lg {
-        font-size: 1.5rem; /* Reduce from 2rem to 1.5rem */
-    }
-
-    .emoji-hero {
-        font-size: 2.5rem; /* Reduce from 4rem */
-    }
-
-    .emoji-mood {
-        font-size: 2rem; /* Reduce from 3rem */
-        margin: 0.25rem; /* Reduce spacing */
-    }
-
-    /* Adjust emoji grid for mobile */
-    .emoji-grid {
-        grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
-        gap: var(--spacing-sm);
-        padding: var(--spacing-sm);
-    }
-
-    .emoji-grid-item {
-        padding: var(--spacing-sm);
-    }
 }
 
 /* Tablet adjustments */
 @media (min-width: 769px) and (max-width: 1024px) {
     .block-container {
         max-width: 900px !important;
-    }
-
-    /* Tablet emoji sizing */
-    .emoji-3xl {
-        font-size: 4rem; /* Moderate reduction from 5rem */
-    }
-
-    .emoji-2xl {
-        font-size: 3rem; /* Moderate reduction from 4rem */
-    }
-
-    .emoji-hero {
-        font-size: 3rem; /* Moderate reduction from 4rem */
-    }
-
-    .emoji-mood {
-        font-size: 2.5rem; /* Moderate reduction from 3rem */
     }
 }
 
@@ -727,17 +523,6 @@ a:focus-visible {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
-    }
-
-    /* Disable emoji animations specifically */
-    .emoji-animated,
-    .emoji-hero,
-    .emoji-mood {
-        animation: none !important;
-    }
-
-    .emoji-interactive:hover {
-        transform: none !important;
     }
 }
 
