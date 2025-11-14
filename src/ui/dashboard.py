@@ -63,7 +63,7 @@ def show_dashboard():
 
         # Grande métrique centrale - Style Apple Santé
         st.markdown(f"""
-        <div style='background: linear-gradient(135deg, #6B46C1 0%, #805AD5 100%);
+        <div style='background: linear-gradient(135deg, var(--color-primary) 0%, #805AD5 100%);
                     padding: 2.5rem; border-radius: 16px; text-align: center; margin-bottom: 1.5rem;
                     box-shadow: 0 4px 12px rgba(107, 70, 193, 0.15);'>
             <div style='color: rgba(255, 255, 255, 0.9); font-size: 0.9rem; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 0.5rem;'>
@@ -88,15 +88,15 @@ def show_dashboard():
         with col1:
             st.markdown(f"""
             <div style='background-color: #F7FAFC; padding: 1.5rem; border-radius: 12px; text-align: center;
-                        box-shadow: 0 1px 3px rgba(107, 70, 193, 0.08);
+                        box-shadow: 0 1px 3px var(--color-primary-dark);
                         animation: fadeInUp 0.5s ease-out;
                         transition: all 0.3s ease-out;'
                  onmouseover='this.style.transform="translateY(-4px)"; this.style.boxShadow="0 8px 24px rgba(107, 70, 193, 0.12)";'
-                 onmouseout='this.style.transform="translateY(0)"; this.style.boxShadow="0 1px 3px rgba(107, 70, 193, 0.08)";'>
+                 onmouseout='this.style.transform="translateY(0)"; this.style.boxShadow="0 1px 3px var(--color-primary-dark)";'>
                 <div style='color: #718096; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;'>
                     Moyenne
                 </div>
-                <div style='color: #6B46C1; font-size: 2.5rem; font-weight: 600;'>
+                <div style='color: var(--color-primary); font-size: 2.5rem; font-weight: 600;'>
                     {avg_mood:.1f}
                 </div>
                 <div style='color: #A0AEC0; font-size: 0.85rem;'>
@@ -108,11 +108,11 @@ def show_dashboard():
         with col2:
             st.markdown(f"""
             <div style='background-color: #F7FAFC; padding: 1.5rem; border-radius: 12px; text-align: center;
-                        box-shadow: 0 1px 3px rgba(107, 70, 193, 0.08);
+                        box-shadow: 0 1px 3px var(--color-primary-dark);
                         animation: fadeInUp 0.6s ease-out;
                         transition: all 0.3s ease-out;'
                  onmouseover='this.style.transform="translateY(-4px)"; this.style.boxShadow="0 8px 24px rgba(245, 101, 101, 0.12)";'
-                 onmouseout='this.style.transform="translateY(0)"; this.style.boxShadow="0 1px 3px rgba(107, 70, 193, 0.08)";'>
+                 onmouseout='this.style.transform="translateY(0)"; this.style.boxShadow="0 1px 3px var(--color-primary-dark)";'>
                 <div style='color: #718096; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;'>
                     Minimum
                 </div>
@@ -128,11 +128,11 @@ def show_dashboard():
         with col3:
             st.markdown(f"""
             <div style='background-color: #F7FAFC; padding: 1.5rem; border-radius: 12px; text-align: center;
-                        box-shadow: 0 1px 3px rgba(107, 70, 193, 0.08);
+                        box-shadow: 0 1px 3px var(--color-primary-dark);
                         animation: fadeInUp 0.7s ease-out;
                         transition: all 0.3s ease-out;'
                  onmouseover='this.style.transform="translateY(-4px)"; this.style.boxShadow="0 8px 24px rgba(72, 187, 120, 0.12)";'
-                 onmouseout='this.style.transform="translateY(0)"; this.style.boxShadow="0 1px 3px rgba(107, 70, 193, 0.08)";'>
+                 onmouseout='this.style.transform="translateY(0)"; this.style.boxShadow="0 1px 3px var(--color-primary-dark)";'>
                 <div style='color: #718096; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;'>
                     Maximum
                 </div>
@@ -160,8 +160,8 @@ def show_dashboard():
         # Style Apple Santé - courbes organiques avec fill
         fig_mood.update_traces(
             mode='lines+markers',
-            marker=dict(size=10, color='#6B46C1', line=dict(color='white', width=2)),
-            line=dict(color='#6B46C1', width=3, shape='spline'),
+            marker=dict(size=10, color='var(--color-primary)', line=dict(color='white', width=2)),
+            line=dict(color='var(--color-primary)', width=3, shape='spline'),
             fill='tozeroy',
             fillcolor='rgba(107, 70, 193, 0.1)',
             hovertemplate='<b>%{x|%d/%m/%Y}</b><br>Score: %{y}/10<extra></extra>'
@@ -226,11 +226,11 @@ def show_dashboard():
         with col1:
             st.markdown(f"""
             <div style='background-color: #F7FAFC; padding: 1.5rem; border-radius: 12px; text-align: center;
-                        box-shadow: 0 1px 3px rgba(107, 70, 193, 0.08);'>
+                        box-shadow: 0 1px 3px var(--color-primary-dark);'>
                 <div style='color: #718096; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;'>
                     Total
                 </div>
-                <div style='color: #6B46C1; font-size: 2.5rem; font-weight: 600;'>
+                <div style='color: var(--color-primary); font-size: 2.5rem; font-weight: 600;'>
                     {total_conv}
                 </div>
                 <div style='color: #A0AEC0; font-size: 0.85rem;'>
@@ -242,7 +242,7 @@ def show_dashboard():
         with col2:
             st.markdown(f"""
             <div style='background-color: #F7FAFC; padding: 1.5rem; border-radius: 12px; text-align: center;
-                        box-shadow: 0 1px 3px rgba(107, 70, 193, 0.08);'>
+                        box-shadow: 0 1px 3px var(--color-primary-dark);'>
                 <div style='color: #718096; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;'>
                     Moyenne
                 </div>
@@ -260,10 +260,10 @@ def show_dashboard():
         st.markdown("""
         <div style='background: linear-gradient(135deg, #F7FAFC 0%, #EBF4FF 100%);
                     padding: 2rem; border-radius: 12px;
-                    text-align: center; border-left: 4px solid #6B46C1;
+                    text-align: center; border-left: 4px solid var(--color-primary);
                     animation: fadeInUp 0.5s ease-out;'>
             <div style='font-size: 3rem; margin-bottom: 1rem; animation: pulse 2s infinite;'>💬</div>
-            <div style='font-size: 1.1rem; font-weight: 600; color: #6B46C1; margin-bottom: 0.5rem;'>
+            <div style='font-size: 1.1rem; font-weight: 600; color: var(--color-primary); margin-bottom: 0.5rem;'>
                 Démarrez votre première conversation
             </div>
             <div style='font-size: 0.95rem; color: #4A5568;'>
@@ -291,7 +291,7 @@ def show_dashboard():
         # Card premium pour insights avec animation subtile
         st.markdown("""
         <div style='background: linear-gradient(135deg, #EBF4FF 0%, #F7FAFC 100%);
-                    padding: 2rem; border-radius: 16px; border-left: 4px solid #6B46C1;
+                    padding: 2rem; border-radius: 16px; border-left: 4px solid var(--color-primary);
                     box-shadow: 0 4px 12px rgba(107, 70, 193, 0.12); margin-bottom: 1rem;
                     animation: fadeInUp 0.5s ease-out;'>
         """, unsafe_allow_html=True)
@@ -306,7 +306,7 @@ def show_dashboard():
                 <div class='skeleton' style='height: 1rem; width: 95%; margin-bottom: 0.5rem;'></div>
                 <div class='skeleton' style='height: 1rem; width: 85%;'></div>
             </div>
-            <p style='color: #6B46C1; font-size: 0.9rem; text-align: center; margin-top: 1.5rem;'>
+            <p style='color: var(--color-primary); font-size: 0.9rem; text-align: center; margin-top: 1.5rem;'>
                 ✨ Génération de vos insights personnalisés...
             </p>
             """, unsafe_allow_html=True)
@@ -381,7 +381,7 @@ def show_dashboard():
                     animation: fadeInUp 0.5s ease-out;
                     box-shadow: 0 4px 12px rgba(107, 70, 193, 0.05);'>
             <div style='font-size: 4rem; margin-bottom: 1.5rem; animation: pulse 2s infinite;'>📊</div>
-            <div style='font-size: 1.2rem; font-weight: 600; color: #6B46C1; margin-bottom: 0.75rem;'>
+            <div style='font-size: 1.2rem; font-weight: 600; color: var(--color-primary); margin-bottom: 0.75rem;'>
                 Aucune donnée disponible
             </div>
             <div style='font-size: 1rem; color: #4A5568; margin-bottom: 1.5rem; line-height: 1.6;'>
@@ -392,12 +392,12 @@ def show_dashboard():
                 <div style='background-color: white; padding: 1rem 1.5rem; border-radius: 8px;
                             box-shadow: 0 2px 8px rgba(107, 70, 193, 0.1); flex: 1; min-width: 200px; max-width: 250px;'>
                     <div style='font-size: 2rem; margin-bottom: 0.5rem;'>🌸</div>
-                    <div style='color: #6B46C1; font-weight: 500; font-size: 0.9rem;'>Quick Check-in</div>
+                    <div style='color: var(--color-primary); font-weight: 500; font-size: 0.9rem;'>Quick Check-in</div>
                 </div>
                 <div style='background-color: white; padding: 1rem 1.5rem; border-radius: 8px;
                             box-shadow: 0 2px 8px rgba(107, 70, 193, 0.1); flex: 1; min-width: 200px; max-width: 250px;'>
                     <div style='font-size: 2rem; margin-bottom: 0.5rem;'>💬</div>
-                    <div style='color: #6B46C1; font-weight: 500; font-size: 0.9rem;'>Conversation</div>
+                    <div style='color: var(--color-primary); font-weight: 500; font-size: 0.9rem;'>Conversation</div>
                 </div>
             </div>
         </div>

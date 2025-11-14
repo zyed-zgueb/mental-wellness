@@ -3,11 +3,11 @@
 /* ===== CSS VARIABLES (Design Tokens) ===== */
 :root {
     /* Colors - Purple Palette */
-    --color-primary: #6B46C1;
-    --color-primary-dark: #553399;
-    --color-primary-light: #805AD5;
-    --color-primary-lighter: #9F7AEA;
-    --color-primary-lightest: #B794F4;
+    --color-primary: #6CB4A4;
+    --color-primary-dark: #3d776a;
+    --color-primary-light: #8bccbe;
+    --color-primary-lighter: #a7d8cd;
+    --color-primary-lightest: #c8eae2;
 
     /* Backgrounds */
     --bg-primary: #FAFAFA;
@@ -16,8 +16,8 @@
     --bg-white: #FFFFFF;
 
     /* Text Colors */
-    --text-primary: #1A202C;
-    --text-secondary: #4A5568;
+    --text-primary: #FAFAFA;
+    --text-secondary: #F5FAF9;
     --text-tertiary: #718096;
     --text-quaternary: #A0AEC0;
 
