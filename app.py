@@ -8,6 +8,7 @@ from src.ui.disclaimer import show_disclaimer
 from src.ui.checkin import show_checkin
 from src.ui.conversation import show_conversation
 from src.ui.dashboard import show_dashboard
+from src.ui.emoji_utils import emoji, emoji_hero, emoji_button
 
 # Configuration de la page
 st.set_page_config(
@@ -31,11 +32,12 @@ def show_home():
     """Afficher la page d'accueil avec design accueillant."""
 
     # Hero section avec gradient et animation
-    st.markdown("""
+    hero_emoji_html = emoji_hero("🌸", "Logo Serene - Fleur de cerisier")
+    st.markdown(f"""
     <div style='text-align: center; padding: 3rem 1rem; background: linear-gradient(135deg, #6B46C1 0%, #805AD5 100%);
                 border-radius: 16px; margin-bottom: 2rem; box-shadow: 0 4px 12px rgba(107, 70, 193, 0.15);
                 animation: fadeInDown 0.6s ease-out;'>
-        <h1 style='color: white; font-size: 3rem; margin-bottom: 0.5rem; animation: fadeIn 0.8s ease-out;'>🌸 Serene</h1>
+        <h1 style='color: white; font-size: 3rem; margin-bottom: 0.5rem; animation: fadeIn 0.8s ease-out;'>{hero_emoji_html} Serene</h1>
         <p style='color: rgba(255, 255, 255, 0.9); font-size: 1.3rem; margin-bottom: 0; animation: fadeIn 1s ease-out;'>
             Votre compagnon de bien-être mental
         </p>
@@ -51,18 +53,25 @@ def show_home():
     """, unsafe_allow_html=True)
 
     # Fonctionnalités - Cards élégantes
-    st.markdown("### ✨ Fonctionnalités")
+    features_title_emoji = emoji("✨", "Étoiles scintillantes", size="md")
+    st.markdown(f"### {features_title_emoji} Fonctionnalités", unsafe_allow_html=True)
 
     col1, col2 = st.columns(2)
 
+    # Créer les emojis accessibles pour chaque fonctionnalité
+    conversation_emoji = emoji("💬", "Bulle de conversation", size="lg")
+    checkin_emoji = emoji("🌸", "Fleur de bien-être", size="lg")
+    dashboard_emoji = emoji("📊", "Graphique de statistiques", size="lg")
+    insights_emoji = emoji("✨", "Intelligence artificielle", size="lg")
+
     with col1:
-        st.markdown("""
+        st.markdown(f"""
         <div style='background-color: #F7FAFC; padding: 2rem; border-radius: 12px; height: 100%;
                     box-shadow: 0 1px 3px rgba(107, 70, 193, 0.08); border-left: 4px solid #6B46C1;
                     transition: all 0.3s ease-out; animation: fadeInUp 0.7s ease-out;'
              onmouseover='this.style.transform="translateY(-4px)"; this.style.boxShadow="0 8px 24px rgba(107, 70, 193, 0.15)";'
              onmouseout='this.style.transform="translateY(0)"; this.style.boxShadow="0 1px 3px rgba(107, 70, 193, 0.08)";'>
-            <h4 style='color: #6B46C1; margin-top: 0;'>💬 Conversation Empathique</h4>
+            <h4 style='color: #6B46C1; margin-top: 0;'>{conversation_emoji} Conversation Empathique</h4>
             <p style='color: #4A5568; line-height: 1.7;'>
                 Un espace d'écoute bienveillant et sans jugement. Parlez librement de ce que vous ressentez
                 avec un compagnon IA qui vous écoute vraiment.
@@ -70,13 +79,13 @@ def show_home():
         </div>
         """, unsafe_allow_html=True)
 
-        st.markdown("""
+        st.markdown(f"""
         <div style='background-color: #F7FAFC; padding: 2rem; border-radius: 12px; margin-top: 1rem;
                     box-shadow: 0 1px 3px rgba(107, 70, 193, 0.08); border-left: 4px solid #805AD5;
                     transition: all 0.3s ease-out; animation: fadeInUp 0.9s ease-out;'
              onmouseover='this.style.transform="translateY(-4px)"; this.style.boxShadow="0 8px 24px rgba(128, 90, 213, 0.15)";'
              onmouseout='this.style.transform="translateY(0)"; this.style.boxShadow="0 1px 3px rgba(107, 70, 193, 0.08)";'>
-            <h4 style='color: #805AD5; margin-top: 0;'>📊 Dashboard Visuel</h4>
+            <h4 style='color: #805AD5; margin-top: 0;'>{dashboard_emoji} Dashboard Visuel</h4>
             <p style='color: #4A5568; line-height: 1.7;'>
                 Visualisez vos tendances de bien-être avec des graphiques élégants inspirés d'Apple Santé.
                 Comprenez vos patterns émotionnels en un coup d'œil.
@@ -85,13 +94,13 @@ def show_home():
         """, unsafe_allow_html=True)
 
     with col2:
-        st.markdown("""
+        st.markdown(f"""
         <div style='background-color: #F7FAFC; padding: 2rem; border-radius: 12px; height: 100%;
                     box-shadow: 0 1px 3px rgba(107, 70, 193, 0.08); border-left: 4px solid #9F7AEA;
                     transition: all 0.3s ease-out; animation: fadeInUp 0.8s ease-out;'
              onmouseover='this.style.transform="translateY(-4px)"; this.style.boxShadow="0 8px 24px rgba(159, 122, 234, 0.15)";'
              onmouseout='this.style.transform="translateY(0)"; this.style.boxShadow="0 1px 3px rgba(107, 70, 193, 0.08)";'>
-            <h4 style='color: #9F7AEA; margin-top: 0;'>🌸 Quick Check-in</h4>
+            <h4 style='color: #9F7AEA; margin-top: 0;'>{checkin_emoji} Quick Check-in</h4>
             <p style='color: #4A5568; line-height: 1.7;'>
                 Suivez votre humeur au quotidien en quelques secondes. Une pratique simple qui nourrit
                 vos insights personnalisés et vous aide à mieux vous comprendre.
@@ -99,13 +108,13 @@ def show_home():
         </div>
         """, unsafe_allow_html=True)
 
-        st.markdown("""
+        st.markdown(f"""
         <div style='background-color: #F7FAFC; padding: 2rem; border-radius: 12px; margin-top: 1rem;
                     box-shadow: 0 1px 3px rgba(107, 70, 193, 0.08); border-left: 4px solid #B794F4;
                     transition: all 0.3s ease-out; animation: fadeInUp 1s ease-out;'
              onmouseover='this.style.transform="translateY(-4px)"; this.style.boxShadow="0 8px 24px rgba(183, 148, 244, 0.15)";'
              onmouseout='this.style.transform="translateY(0)"; this.style.boxShadow="0 1px 3px rgba(107, 70, 193, 0.08)";'>
-            <h4 style='color: #B794F4; margin-top: 0;'>✨ Insights IA Actionnables</h4>
+            <h4 style='color: #B794F4; margin-top: 0;'>{insights_emoji} Insights IA Actionnables</h4>
             <p style='color: #4A5568; line-height: 1.7;'>
                 Recevez des révélations personnalisées sur vos patterns émotionnels. Des insights qui
                 vous donnent espoir et pouvoir d'agir sur votre bien-être.
@@ -116,14 +125,15 @@ def show_home():
     # Call to action
     st.markdown("<div style='margin: 3rem 0;'></div>", unsafe_allow_html=True)
 
-    st.markdown("""
+    cta_emoji = emoji("✨", "Étoiles brillantes", size="lg")
+    st.markdown(f"""
     <div style='background: linear-gradient(135deg, #EBF4FF 0%, #F7FAFC 100%);
                 padding: 2rem; border-radius: 16px; text-align: center; border-left: 4px solid #6B46C1;
                 animation: scaleIn 0.6s ease-out; box-shadow: 0 4px 12px rgba(107, 70, 193, 0.1);
                 transition: all 0.3s ease-out;'
          onmouseover='this.style.transform="scale(1.02)"; this.style.boxShadow="0 8px 24px rgba(107, 70, 193, 0.15)";'
          onmouseout='this.style.transform="scale(1)"; this.style.boxShadow="0 4px 12px rgba(107, 70, 193, 0.1)";'>
-        <h3 style='color: #6B46C1; margin-top: 0;'>✨ Prêt à commencer ?</h3>
+        <h3 style='color: #6B46C1; margin-top: 0;'>{cta_emoji} Prêt à commencer ?</h3>
         <p style='color: #4A5568; font-size: 1.05rem; margin-bottom: 0;'>
             Utilisez le menu de navigation à gauche pour commencer votre parcours de bien-être mental.
         </p>
@@ -141,24 +151,32 @@ def main():
         # Afficher le menu de navigation dans la sidebar
         with st.sidebar:
             # Logo et titre avec style
-            st.markdown("""
+            sidebar_logo = emoji("🌸", "Logo Serene", size="2xl", animated=True)
+            nav_icon = emoji("📍", "Navigation", size="md")
+            st.markdown(f"""
             <div style='text-align: center; padding: 1.5rem 0; margin-bottom: 1.5rem;
                         border-bottom: 2px solid rgba(107, 70, 193, 0.1);'>
-                <div style='font-size: 2.5rem; margin-bottom: 0.5rem; animation: pulse 3s infinite;'>🌸</div>
+                <div style='margin-bottom: 0.5rem;'>{sidebar_logo}</div>
                 <h1 style='font-size: 1.75rem; color: #6B46C1; margin: 0; font-weight: 700;'>Serene</h1>
                 <p style='font-size: 0.85rem; color: #718096; margin: 0.5rem 0 0 0;'>Votre compagnon bien-être</p>
             </div>
             """, unsafe_allow_html=True)
 
-            st.markdown("### 📍 Navigation")
+            st.markdown(f"### {nav_icon} Navigation", unsafe_allow_html=True)
+
+            # Créer les emojis pour les options de navigation
+            home_icon = emoji("🏠", "Accueil", size="sm")
+            checkin_nav_icon = emoji("🌸", "Check-in quotidien", size="sm")
+            conversation_nav_icon = emoji("💬", "Conversation", size="sm")
+            dashboard_nav_icon = emoji("📊", "Tableau de bord", size="sm")
 
             page = st.radio(
                 "Menu",
                 [
-                    "🏠 Home",
-                    "🌸 Quick Check-in",
-                    "💬 Conversation",
-                    "📊 Dashboard"
+                    f"{home_icon} Home",
+                    f"{checkin_nav_icon} Quick Check-in",
+                    f"{conversation_nav_icon} Conversation",
+                    f"{dashboard_nav_icon} Dashboard"
                 ],
                 index=0,
                 label_visibility="collapsed"

@@ -3,6 +3,7 @@
 import streamlit as st
 from datetime import datetime
 from src.database.db_manager import DatabaseManager
+from src.ui.emoji_utils import emoji, render_mood_emoji, get_mood_emoji
 
 
 @st.cache_resource
@@ -18,10 +19,11 @@ def get_database():
 
 def show_checkin():
     """Afficher la page de check-in avec formulaire et historique."""
-    st.markdown("""
+    title_emoji = emoji("🌸", "Fleur de bien-être", size="xl")
+    st.markdown(f"""
     <div style='animation: fadeInDown 0.5s ease-out;'>
         <h1 style='font-size: 2.5rem; color: #1A202C; font-weight: 600; margin-bottom: 0.5rem;'>
-            🌸 Quick Check-in
+            {title_emoji} Quick Check-in
         </h1>
     </div>
     """, unsafe_allow_html=True)
@@ -37,7 +39,8 @@ def show_checkin():
     )
 
     # Formulaire de check-in dans une card élégante
-    st.markdown("### 📝 Nouveau Check-in")
+    form_emoji = emoji("📝", "Formulaire", size="md")
+    st.markdown(f"### {form_emoji} Nouveau Check-in", unsafe_allow_html=True)
 
     with st.form("checkin_form", clear_on_submit=True):
         # Slider avec label élégant
@@ -57,14 +60,16 @@ def show_checkin():
         )
 
         # Afficher un emoji selon le mood_score avec animation
-        mood_emoji = _get_mood_emoji(mood_score)
-        mood_label = _get_mood_label(mood_score)
-        mood_color = _get_mood_color(mood_score)
+        mood_data = get_mood_emoji(mood_score)
+        mood_emoji_html = render_mood_emoji(mood_score)
+        mood_label = mood_data["label"]
+        mood_color = mood_data["color"]
+
         st.markdown(f"""
         <div style='text-align: center; margin: 1.5rem 0; padding: 2rem;
                     background: linear-gradient(135deg, #F7FAFC 0%, {mood_color}15 100%);
                     border-radius: 16px; animation: scaleIn 0.3s ease-out;'>
-            <div style='font-size: 5rem; margin-bottom: 1rem; animation: bounce 0.6s ease-out;'>{mood_emoji}</div>
+            <div style='margin-bottom: 1rem;'>{mood_emoji_html}</div>
             <div style='font-size: 1.4rem; font-weight: 600; color: {mood_color};'>{mood_label}</div>
             <div style='font-size: 0.9rem; color: #718096; margin-top: 0.5rem;'>Score: {mood_score}/10</div>
         </div>
@@ -85,42 +90,49 @@ def show_checkin():
             label_visibility="collapsed"
         )
 
-        submitted = st.form_submit_button("💾 Enregistrer Check-in", type="primary", use_container_width=True)
+        save_emoji = emoji("💾", "Enregistrer", size="sm")
+        submitted = st.form_submit_button(f"{save_emoji} Enregistrer Check-in", type="primary", use_container_width=True)
 
         if submitted:
             db = get_database()
             try:
                 checkin_id = db.save_checkin(mood_score, notes)
-                st.success(f"✅ Check-in enregistré avec succès!")
+                success_emoji = emoji("✅", "Succès", size="sm")
+                st.success(f"{success_emoji} Check-in enregistré avec succès!")
                 # Plus de balloons (trop flashy pour sobriété luxueuse)
             except ValueError as e:
-                st.error(f"❌ Erreur de validation: {e}")
+                error_emoji = emoji("❌", "Erreur", size="sm")
+                st.error(f"{error_emoji} Erreur de validation: {e}")
             except Exception as e:
-                st.error(f"❌ Erreur lors de l'enregistrement: {e}")
+                error_emoji = emoji("❌", "Erreur", size="sm")
+                st.error(f"{error_emoji} Erreur lors de l'enregistrement: {e}")
 
     # Historique avec design amélioré
     st.divider()
-    st.markdown("### 📊 Historique")
+    history_emoji = emoji("📊", "Historique des check-ins", size="md")
+    st.markdown(f"### {history_emoji} Historique", unsafe_allow_html=True)
 
     db = get_database()
     history = db.get_mood_history(days=30)
 
     if history:
+        chart_emoji = emoji("📊", "Statistiques", size="sm")
         st.markdown(f"""
         <div style='background: linear-gradient(135deg, #6B46C1 0%, #805AD5 100%);
                     padding: 1rem 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;
                     animation: fadeInUp 0.5s ease-out;'>
             <p style='color: white; margin: 0; font-size: 1.05rem; font-weight: 500;'>
-                📊 <strong>{len(history)} check-in(s)</strong> enregistré(s) ce mois-ci
+                {chart_emoji} <strong>{len(history)} check-in(s)</strong> enregistré(s) ce mois-ci
             </p>
         </div>
         """, unsafe_allow_html=True)
 
         for i, checkin in enumerate(history):
             # Card pour chaque check-in
-            mood_emoji = _get_mood_emoji(checkin["mood_score"])
-            mood_label = _get_mood_label(checkin["mood_score"])
-            mood_color = _get_mood_color(checkin["mood_score"])
+            mood_data = get_mood_emoji(checkin["mood_score"])
+            mood_emoji_html = render_mood_emoji(checkin["mood_score"])
+            mood_label = mood_data["label"]
+            mood_color = mood_data["color"]
 
             # Formater le timestamp
             timestamp_str = checkin["timestamp"]
@@ -137,6 +149,8 @@ def show_checkin():
 
             notes_html = f"<p style='color: #4A5568; margin-top: 0.5rem; line-height: 1.6; font-size: 0.95rem;'>{checkin['notes']}</p>" if checkin["notes"] else ""
 
+            calendar_emoji = emoji("📅", "Date", size="xs")
+
             st.markdown(f"""
             <div style='background-color: #F7FAFC; padding: 1.25rem; border-radius: 12px; margin-bottom: 0.75rem;
                         border-left: 4px solid {mood_color}; box-shadow: 0 2px 8px rgba(107, 70, 193, 0.08);
@@ -145,11 +159,11 @@ def show_checkin():
                  onmouseover='this.style.transform="translateX(4px)"; this.style.boxShadow="0 4px 12px rgba(107, 70, 193, 0.12)";'
                  onmouseout='this.style.transform="translateX(0)"; this.style.boxShadow="0 2px 8px rgba(107, 70, 193, 0.08)";'>
                 <div style='display: flex; align-items: center; margin-bottom: 0.5rem;'>
-                    <div style='font-size: 2.5rem; margin-right: 1rem;'>{mood_emoji}</div>
+                    <div style='margin-right: 1rem;'>{mood_emoji_html}</div>
                     <div style='flex: 1;'>
                         <div style='font-weight: 600; font-size: 1.1rem; color: {mood_color};'>{mood_label}</div>
                         <div style='font-size: 0.85rem; color: #718096;'>
-                            📅 {formatted_date} à {formatted_time} · <span style='color: {mood_color}; font-weight: 500;'>Score: {checkin["mood_score"]}/10</span>
+                            {calendar_emoji} {formatted_date} à {formatted_time} · <span style='color: {mood_color}; font-weight: 500;'>Score: {checkin["mood_score"]}/10</span>
                         </div>
                     </div>
                 </div>
@@ -158,12 +172,15 @@ def show_checkin():
             """, unsafe_allow_html=True)
     else:
         # État vide engageant avec animation
-        st.markdown("""
+        empty_emoji = emoji("📝", "Carnet vide", size="2xl", animated=True)
+        tip_emoji = emoji("💡", "Conseil", size="sm")
+
+        st.markdown(f"""
         <div style='background: linear-gradient(135deg, #F7FAFC 0%, #EBF4FF 100%);
                     padding: 3rem 2rem; border-radius: 16px;
                     text-align: center; border: 2px dashed #CBD5E0;
                     animation: fadeInUp 0.5s ease-out;'>
-            <div style='font-size: 4rem; margin-bottom: 1.5rem; animation: pulse 2s infinite;'>📝</div>
+            <div style='margin-bottom: 1.5rem;'>{empty_emoji}</div>
             <div style='font-size: 1.2rem; font-weight: 600; color: #6B46C1; margin-bottom: 0.75rem;'>
                 Votre journal de bien-être vous attend
             </div>
@@ -174,7 +191,7 @@ def show_checkin():
             <div style='background-color: white; padding: 1.5rem; border-radius: 12px;
                         box-shadow: 0 2px 8px rgba(107, 70, 193, 0.1); margin-top: 1.5rem;
                         display: inline-block;'>
-                <div style='color: #6B46C1; font-weight: 500; font-size: 0.9rem; margin-bottom: 0.5rem;'>💡 Le saviez-vous ?</div>
+                <div style='color: #6B46C1; font-weight: 500; font-size: 0.9rem; margin-bottom: 0.5rem;'>{tip_emoji} Le saviez-vous ?</div>
                 <div style='color: #4A5568; font-size: 0.85rem;'>
                     Suivre son humeur quotidiennement aide à identifier<br/>
                     les patterns et améliorer son bien-être mental
