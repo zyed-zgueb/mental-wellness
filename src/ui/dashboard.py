@@ -147,24 +147,21 @@ def show_dashboard():
 
         st.markdown("<div style='margin: 2rem 0;'></div>", unsafe_allow_html=True)
 
-        # Graphique avec style Apple Santé - courbes organiques
+        # Graphique avec style Apple Santé - points individuels
         st.markdown("### 📈 Tendance (30 jours)")
 
-        fig_mood = px.line(
+        fig_mood = px.scatter(
             df_mood,
             x='timestamp',
-            y='mood_score',
-            markers=True
+            y='mood_score'
         )
 
-        # Style Apple Santé - courbes organiques avec fill
+        # Style Apple Santé - points individuels sans ligne continue
         fig_mood.update_traces(
-            mode='lines+markers',
-            marker=dict(size=10, color='var(--color-primary)', line=dict(color='white', width=2)),
-            line=dict(color='var(--color-primary)', width=3, shape='spline'),
-            fill='tozeroy',
-            fillcolor='rgba(107, 70, 193, 0.1)',
-            hovertemplate='<b>%{x|%d/%m/%Y}</b><br>Score: %{y}/10<extra></extra>'
+            mode='markers',
+            marker=dict(size=14, color='var(--color-primary)', line=dict(color='white', width=2),
+                       opacity=0.85),
+            hovertemplate='<b>%{x|%d/%m/%Y à %H:%M}</b><br>Score: %{y}/10<extra></extra>'
         )
 
         fig_mood.update_layout(
