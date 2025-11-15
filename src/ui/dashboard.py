@@ -45,7 +45,28 @@ def show_dashboard():
     # Section 1: Grande métrique centrale - Style Apple Santé
     st.markdown("### 💜 Votre Bien-être")
 
-    mood_data = db.get_mood_history(days=30)
+    # Sélecteur de période avec style élégant
+    col_title, col_period = st.columns([2, 1])
+
+    with col_period:
+        period_options = {
+            "Aujourd'hui": 1,
+            "7 jours": 7,
+            "30 jours": 30,
+            "90 jours": 90
+        }
+
+        selected_period_label = st.selectbox(
+            "Période",
+            options=list(period_options.keys()),
+            index=2,  # 30 jours par défaut
+            key="mood_period_selector",
+            label_visibility="collapsed"
+        )
+
+        selected_days = period_options[selected_period_label]
+
+    mood_data = db.get_mood_history(days=selected_days)
 
     if mood_data and len(mood_data) > 0:
         # Convertir en DataFrame pour Plotly
@@ -94,7 +115,7 @@ def show_dashboard():
                  onmouseover='this.style.transform="translateY(-4px)"; this.style.boxShadow="0 8px 24px rgba(107, 70, 193, 0.12)";'
                  onmouseout='this.style.transform="translateY(0)"; this.style.boxShadow="0 1px 3px var(--color-primary-dark)";'>
                 <div style='color: #718096; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;'>
-                    Moyenne
+                    Moyenne ({selected_period_label})
                 </div>
                 <div style='color: var(--color-primary); font-size: 2.5rem; font-weight: 600;'>
                     {avg_mood:.1f}
@@ -114,7 +135,7 @@ def show_dashboard():
                  onmouseover='this.style.transform="translateY(-4px)"; this.style.boxShadow="0 8px 24px rgba(245, 101, 101, 0.12)";'
                  onmouseout='this.style.transform="translateY(0)"; this.style.boxShadow="0 1px 3px var(--color-primary-dark)";'>
                 <div style='color: #718096; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;'>
-                    Minimum
+                    Minimum ({selected_period_label})
                 </div>
                 <div style='color: #F56565; font-size: 2.5rem; font-weight: 600;'>
                     {min_mood}
@@ -134,7 +155,7 @@ def show_dashboard():
                  onmouseover='this.style.transform="translateY(-4px)"; this.style.boxShadow="0 8px 24px rgba(72, 187, 120, 0.12)";'
                  onmouseout='this.style.transform="translateY(0)"; this.style.boxShadow="0 1px 3px var(--color-primary-dark)";'>
                 <div style='color: #718096; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;'>
-                    Maximum
+                    Maximum ({selected_period_label})
                 </div>
                 <div style='color: #48BB78; font-size: 2.5rem; font-weight: 600;'>
                     {max_mood}
@@ -148,7 +169,7 @@ def show_dashboard():
         st.markdown("<div style='margin: 2rem 0;'></div>", unsafe_allow_html=True)
 
         # Graphique avec style Apple Santé - points individuels avec gradient de couleur
-        st.markdown("### 📈 Tendance (30 jours)")
+        st.markdown(f"### 📈 Tendance ({selected_period_label})")
 
         fig_mood = px.scatter(
             df_mood,
