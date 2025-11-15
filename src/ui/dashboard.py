@@ -46,25 +46,23 @@ def show_dashboard():
     st.markdown("### 💜 Votre Bien-être")
 
     # Sélecteur de période avec style élégant
-    col_title, col_period = st.columns([2, 1])
+    period_options = {
+        "Aujourd'hui": 1,
+        "7 jours": 7,
+        "30 jours": 30,
+        "90 jours": 90
+    }
 
-    with col_period:
-        period_options = {
-            "Aujourd'hui": 1,
-            "7 jours": 7,
-            "30 jours": 30,
-            "90 jours": 90
-        }
+    selected_period_label = st.radio(
+        "Période de référence",
+        options=list(period_options.keys()),
+        index=2,  # 30 jours par défaut
+        key="mood_period_selector",
+        horizontal=True,
+        label_visibility="collapsed"
+    )
 
-        selected_period_label = st.selectbox(
-            "Période",
-            options=list(period_options.keys()),
-            index=2,  # 30 jours par défaut
-            key="mood_period_selector",
-            label_visibility="collapsed"
-        )
-
-        selected_days = period_options[selected_period_label]
+    selected_days = period_options[selected_period_label]
 
     mood_data = db.get_mood_history(days=selected_days)
 
