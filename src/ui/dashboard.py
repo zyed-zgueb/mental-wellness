@@ -147,24 +147,29 @@ def show_dashboard():
 
         st.markdown("<div style='margin: 2rem 0;'></div>", unsafe_allow_html=True)
 
-        # Graphique avec style Apple Santé - courbes organiques
+        # Graphique avec style Apple Santé - points individuels avec gradient de couleur
         st.markdown("### 📈 Tendance (30 jours)")
 
-        fig_mood = px.line(
+        fig_mood = px.scatter(
             df_mood,
             x='timestamp',
             y='mood_score',
-            markers=True
+            color='mood_score',
+            color_continuous_scale=[
+                (0.0, '#F56565'),   # Rouge pour valeurs basses (1)
+                (0.3, '#ED8936'),   # Orange
+                (0.5, '#ECC94B'),   # Jaune
+                (0.7, '#9AE6B4'),   # Vert clair
+                (1.0, '#48BB78')    # Vert pour valeurs hautes (10)
+            ],
+            range_color=[1, 10]
         )
 
-        # Style Apple Santé - courbes organiques avec fill
+        # Style Apple Santé - points individuels sans ligne continue
         fig_mood.update_traces(
-            mode='lines+markers',
-            marker=dict(size=10, color='var(--color-primary)', line=dict(color='white', width=2)),
-            line=dict(color='var(--color-primary)', width=3, shape='spline'),
-            fill='tozeroy',
-            fillcolor='rgba(107, 70, 193, 0.1)',
-            hovertemplate='<b>%{x|%d/%m/%Y}</b><br>Score: %{y}/10<extra></extra>'
+            mode='markers',
+            marker=dict(size=14, line=dict(color='white', width=2), opacity=0.9),
+            hovertemplate='<b>%{x|%d/%m/%Y à %H:%M}</b><br>Score: %{y}/10<extra></extra>'
         )
 
         fig_mood.update_layout(
@@ -177,7 +182,8 @@ def show_dashboard():
             plot_bgcolor='white',
             paper_bgcolor='white',
             font=dict(family="system-ui", color='#2D3748'),
-            margin=dict(l=20, r=20, t=20, b=20)
+            margin=dict(l=20, r=20, t=20, b=20),
+            coloraxis_showscale=False  # Masquer la barre de couleur
         )
 
         st.plotly_chart(fig_mood, use_container_width=True)
