@@ -346,6 +346,226 @@ def get_main_css():
     ::-webkit-scrollbar-thumb:hover {{
         background: var(--color-primary);
     }}
+
+    /* ==================== CHAT MESSAGES ==================== */
+    .stChatMessage {{
+        border-radius: var(--radius-md);
+        padding: 1rem;
+        margin-bottom: 0.75rem;
+        box-shadow: var(--shadow-sm);
+        animation: fadeInUp 0.3s ease-out;
+    }}
+
+    .stChatMessage[data-testid="chat-message-user"] {{
+        background-color: var(--color-primary) !important;
+        color: white !important;
+        margin-left: 2rem;
+    }}
+
+    .stChatMessage[data-testid="chat-message-assistant"] {{
+        background-color: var(--color-white) !important;
+        color: var(--color-text-dark) !important;
+        margin-right: 2rem;
+        border: 1px solid var(--color-neutral-light);
+    }}
+
+    /* ==================== EXPANDER ==================== */
+    .streamlit-expanderHeader {{
+        background-color: var(--color-white);
+        border-radius: var(--radius-md);
+        padding: 0.875rem 1rem;
+        font-weight: 500;
+        transition: var(--transition-smooth);
+        border: 1px solid var(--color-neutral-light);
+    }}
+
+    .streamlit-expanderHeader:hover {{
+        background-color: var(--color-primary-lighter);
+        border-color: var(--color-primary-light);
+    }}
+
+    /* ==================== METRICS ==================== */
+    div[data-testid="stMetric"] {{
+        background-color: var(--color-white);
+        padding: 1.5rem;
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-sm);
+        transition: var(--transition-smooth);
+        border: 1px solid var(--color-neutral-light);
+    }}
+
+    div[data-testid="stMetric"]:hover {{
+        box-shadow: var(--shadow-md);
+        transform: translateY(-2px);
+    }}
+
+    div[data-testid="stMetric"] [data-testid="stMetricValue"] {{
+        font-size: 2.25rem !important;
+        font-weight: 600 !important;
+        color: var(--color-primary);
+    }}
+
+    /* ==================== PLOTS & CHARTS ==================== */
+    div[data-testid="stPlotlyChart"] {{
+        background-color: var(--color-white);
+        border-radius: var(--radius-md);
+        padding: 1.5rem;
+        box-shadow: var(--shadow-sm);
+        border: 1px solid var(--color-neutral-light);
+    }}
+
+    /* ==================== ANIMATIONS SUPPLÉMENTAIRES ==================== */
+    @keyframes shimmer {{
+        0% {{ background-position: -1000px 0; }}
+        100% {{ background-position: 1000px 0; }}
+    }}
+
+    @keyframes pulse {{
+        0%, 100% {{ opacity: 1; }}
+        50% {{ opacity: 0.7; }}
+    }}
+
+    @keyframes bounce {{
+        0%, 100% {{ transform: translateY(0); }}
+        50% {{ transform: translateY(-5px); }}
+    }}
+
+    /* ==================== ACCESSIBILITY ==================== */
+    button:focus-visible,
+    input:focus-visible,
+    textarea:focus-visible,
+    a:focus-visible {{
+        outline: 3px solid var(--color-primary) !important;
+        outline-offset: 2px;
+    }}
+
+    /* Reduce motion for users who prefer it */
+    @media (prefers-reduced-motion: reduce) {{
+        *,
+        *::before,
+        *::after {{
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+        }}
+    }}
+
+    /* High contrast mode support */
+    @media (prefers-contrast: high) {{
+        :root {{
+            --color-primary: {COLORS['primary_dark']};
+            --color-text-medium: #2D3748;
+        }}
+
+        button,
+        input,
+        textarea {{
+            border-width: 2px !important;
+        }}
+    }}
+
+    /* ==================== UTILITY CLASSES ==================== */
+
+    /* Glassmorphism effect */
+    .glass {{
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }}
+
+    /* Gradient text */
+    .gradient-text {{
+        background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }}
+
+    /* Interactive card hover effect */
+    .interactive-card {{
+        transition: var(--transition-smooth);
+        cursor: pointer;
+    }}
+
+    .interactive-card:hover {{
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-lg);
+    }}
+
+    .interactive-card:active {{
+        transform: translateY(-2px);
+    }}
+
+    /* Status indicators */
+    .status-dot {{
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 0.25rem;
+    }}
+
+    .status-dot.success {{
+        background-color: var(--color-success);
+        animation: pulse 2s infinite;
+    }}
+
+    .status-dot.warning {{
+        background-color: {COLORS['warning']};
+    }}
+
+    .status-dot.error {{
+        background-color: var(--color-error);
+        animation: pulse 2s infinite;
+    }}
+
+    /* Loading skeleton */
+    .skeleton {{
+        background: linear-gradient(
+            90deg,
+            var(--color-neutral-light) 0%,
+            var(--color-neutral-bg) 50%,
+            var(--color-neutral-light) 100%
+        );
+        background-size: 1000px 100%;
+        animation: shimmer 2s infinite linear;
+        border-radius: var(--radius-md);
+    }}
+
+    /* ==================== RESPONSIVE MOBILE ==================== */
+    @media (max-width: 768px) {{
+        /* Stack columns on mobile */
+        div[data-testid="column"] {{
+            width: 100% !important;
+            margin-bottom: 1rem;
+        }}
+
+        /* Reduce padding on cards */
+        div[data-testid="stMetric"] {{
+            padding: 1rem;
+        }}
+
+        .stForm {{
+            padding: 1.5rem;
+        }}
+
+        /* Chat messages - reduce margins */
+        .stChatMessage[data-testid="chat-message-user"] {{
+            margin-left: 0.5rem;
+        }}
+
+        .stChatMessage[data-testid="chat-message-assistant"] {{
+            margin-right: 0.5rem;
+        }}
+    }}
+
+    /* Tablet adjustments */
+    @media (min-width: 769px) and (max-width: 1024px) {{
+        .main .block-container {{
+            max-width: 900px;
+        }}
+    }}
     </style>
     """
 

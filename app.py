@@ -3,11 +3,11 @@ Serene - Mental Wellness AI Companion
 Main Streamlit application entry point
 """
 import streamlit as st
-from pathlib import Path
 from src.ui.disclaimer import show_disclaimer
 from src.ui.checkin import show_checkin
 from src.ui.conversation import show_conversation
 from src.ui.dashboard import show_dashboard
+from src.ui.styles.serene_styles import get_main_css
 
 # Configuration de la page
 st.set_page_config(
@@ -16,15 +16,8 @@ st.set_page_config(
     page_icon="🌸"
 )
 
-# Charger le CSS custom pour le style "sobriété luxueuse"
-def load_custom_css():
-    """Charge le CSS custom pour appliquer le design system."""
-    css_file = Path(__file__).parent / "src" / "ui" / "styles.css"
-    if css_file.exists():
-        with open(css_file) as f:
-            st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
-
-load_custom_css()
+# Charger le CSS unifié
+st.markdown(get_main_css(), unsafe_allow_html=True)
 
 
 def show_home():

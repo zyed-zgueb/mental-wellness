@@ -6,7 +6,7 @@ Design cohérent, maintenable et optimisé pour la santé mentale
 import streamlit as st
 from datetime import datetime
 from src.database.db_manager import DatabaseManager
-from src.ui.styles.serene_styles import get_main_css, COLORS
+from src.ui.styles.serene_styles import COLORS
 from src.ui.ui_components.mood_components import (
     mood_display_card,
     stats_banner,
@@ -68,10 +68,7 @@ def format_datetime(timestamp_str: str) -> tuple[str, str]:
 
 def show_checkin():
     """Afficher la page de check-in avec formulaire et historique."""
-    
-    # Charger les styles CSS
-    st.markdown(get_main_css(), unsafe_allow_html=True)
-    
+
     # Header de la page
     st.markdown(
         page_header(
