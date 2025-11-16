@@ -54,11 +54,12 @@ def show_dashboard():
     }
 
     selected_period_label = st.radio(
-        "",  # Label vide pour éviter l'erreur d'accessibilité Chrome
+        "Sélectionner la période de référence",
         options=list(period_options.keys()),
         index=2,  # 30 jours par défaut
         key="mood_period_selector",
-        horizontal=True
+        horizontal=True,
+        label_visibility="hidden"
     )
 
     selected_days = period_options[selected_period_label]

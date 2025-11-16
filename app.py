@@ -146,14 +146,15 @@ def main():
             st.markdown("### 📍 Navigation")
 
             page = st.radio(
-                "",  # Label vide pour éviter l'erreur d'accessibilité Chrome
+                "Sélectionner une page",
                 [
                     "🏠 Home",
                     "🌸 Quick Check-in",
                     "💬 Conversation",
                     "📊 Dashboard"
                 ],
-                index=0
+                index=0,
+                label_visibility="hidden"
             )
 
         # Afficher la page appropriée
