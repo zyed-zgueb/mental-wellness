@@ -23,36 +23,6 @@ st.markdown(get_main_css(), unsafe_allow_html=True)
 def show_home():
     """Afficher la page d'accueil avec design accueillant."""
 
-    # Styles CSS pour les cartes interactives
-    st.markdown("""
-    <style>
-    .feature-card {
-        background-color: #F7FAFC;
-        padding: 2rem;
-        border-radius: 12px;
-        box-shadow: 0 1px 3px rgba(107, 70, 193, 0.1);
-        transition: all 0.3s ease-out;
-    }
-    .feature-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 8px 24px rgba(107, 70, 193, 0.15);
-    }
-    .cta-card {
-        background: linear-gradient(135deg, #EBF4FF 0%, #F7FAFC 100%);
-        padding: 2rem;
-        border-radius: 16px;
-        text-align: center;
-        border-left: 4px solid var(--color-primary);
-        box-shadow: 0 4px 12px rgba(107, 70, 193, 0.1);
-        transition: all 0.3s ease-out;
-    }
-    .cta-card:hover {
-        transform: scale(1.02);
-        box-shadow: 0 8px 24px rgba(107, 70, 193, 0.15);
-    }
-    </style>
-    """, unsafe_allow_html=True)
-
     # Hero section avec gradient et animation
     st.markdown("""
     <div style='text-align: center; padding: 3rem 1rem; background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);

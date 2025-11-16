@@ -35,20 +35,6 @@ def show_dashboard():
     """Afficher le dashboard avec charts et insights IA - Style Apple Santé."""
     st.title("📊 Dashboard")
     st.markdown("""
-    <style>
-    .stat-card {
-        background-color: #F7FAFC;
-        padding: 1.5rem;
-        border-radius: 12px;
-        text-align: center;
-        box-shadow: 0 1px 3px rgba(107, 70, 193, 0.1);
-        transition: all 0.3s ease-out;
-    }
-    .stat-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 8px 24px rgba(107, 70, 193, 0.12);
-    }
-    </style>
     <p style='font-size: 1.1rem; color: #4A5568; margin-bottom: 2rem;'>
     Visualisez vos tendances de bien-être et recevez des insights personnalisés.
     </p>

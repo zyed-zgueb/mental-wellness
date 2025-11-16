@@ -474,6 +474,53 @@ def get_main_css():
         border: 1px solid rgba(255, 255, 255, 0.3);
     }}
 
+    /* ==================== CARD COMPONENTS ==================== */
+
+    /* Statistical cards for dashboard metrics */
+    .stat-card {{
+        background-color: #F7FAFC;
+        padding: 1.5rem;
+        border-radius: var(--radius-md);
+        text-align: center;
+        box-shadow: 0 1px 3px rgba(107, 70, 193, 0.1);
+        transition: var(--transition-smooth);
+    }}
+
+    .stat-card:hover {{
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(107, 70, 193, 0.12);
+    }}
+
+    /* Feature cards for home page */
+    .feature-card {{
+        background-color: #F7FAFC;
+        padding: 2rem;
+        border-radius: var(--radius-md);
+        box-shadow: 0 1px 3px rgba(107, 70, 193, 0.1);
+        transition: var(--transition-smooth);
+    }}
+
+    .feature-card:hover {{
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(107, 70, 193, 0.15);
+    }}
+
+    /* Call-to-action cards */
+    .cta-card {{
+        background: linear-gradient(135deg, #EBF4FF 0%, #F7FAFC 100%);
+        padding: 2rem;
+        border-radius: var(--radius-lg);
+        text-align: center;
+        border-left: 4px solid var(--color-primary);
+        box-shadow: 0 4px 12px rgba(107, 70, 193, 0.1);
+        transition: var(--transition-smooth);
+    }}
+
+    .cta-card:hover {{
+        transform: scale(1.02);
+        box-shadow: 0 8px 24px rgba(107, 70, 193, 0.15);
+    }}
+
     /* Gradient text */
     .gradient-text {{
         background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
