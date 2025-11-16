@@ -54,12 +54,12 @@ def show_dashboard():
     }
 
     selected_period_label = st.radio(
-        "Période de référence",
+        "Sélectionner la période de référence",
         options=list(period_options.keys()),
         index=2,  # 30 jours par défaut
         key="mood_period_selector",
         horizontal=True,
-        label_visibility="collapsed"
+        label_visibility="hidden"
     )
 
     selected_days = period_options[selected_period_label]
@@ -106,12 +106,7 @@ def show_dashboard():
 
         with col1:
             st.markdown(f"""
-            <div style='background-color: #F7FAFC; padding: 1.5rem; border-radius: 12px; text-align: center;
-                        box-shadow: 0 1px 3px var(--color-primary-dark);
-                        animation: fadeInUp 0.5s ease-out;
-                        transition: all 0.3s ease-out;'
-                 onmouseover='this.style.transform="translateY(-4px)"; this.style.boxShadow="0 8px 24px rgba(107, 70, 193, 0.12)";'
-                 onmouseout='this.style.transform="translateY(0)"; this.style.boxShadow="0 1px 3px var(--color-primary-dark)";'>
+            <div class='stat-card' style='animation: fadeInUp 0.5s ease-out;'>
                 <div style='color: #718096; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;'>
                     Moyenne ({selected_period_label})
                 </div>
@@ -126,12 +121,7 @@ def show_dashboard():
 
         with col2:
             st.markdown(f"""
-            <div style='background-color: #F7FAFC; padding: 1.5rem; border-radius: 12px; text-align: center;
-                        box-shadow: 0 1px 3px var(--color-primary-dark);
-                        animation: fadeInUp 0.6s ease-out;
-                        transition: all 0.3s ease-out;'
-                 onmouseover='this.style.transform="translateY(-4px)"; this.style.boxShadow="0 8px 24px rgba(245, 101, 101, 0.12)";'
-                 onmouseout='this.style.transform="translateY(0)"; this.style.boxShadow="0 1px 3px var(--color-primary-dark)";'>
+            <div class='stat-card' style='animation: fadeInUp 0.6s ease-out;'>
                 <div style='color: #718096; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;'>
                     Minimum ({selected_period_label})
                 </div>
@@ -146,12 +136,7 @@ def show_dashboard():
 
         with col3:
             st.markdown(f"""
-            <div style='background-color: #F7FAFC; padding: 1.5rem; border-radius: 12px; text-align: center;
-                        box-shadow: 0 1px 3px var(--color-primary-dark);
-                        animation: fadeInUp 0.7s ease-out;
-                        transition: all 0.3s ease-out;'
-                 onmouseover='this.style.transform="translateY(-4px)"; this.style.boxShadow="0 8px 24px rgba(72, 187, 120, 0.12)";'
-                 onmouseout='this.style.transform="translateY(0)"; this.style.boxShadow="0 1px 3px var(--color-primary-dark)";'>
+            <div class='stat-card' style='animation: fadeInUp 0.7s ease-out;'>
                 <div style='color: #718096; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;'>
                     Maximum ({selected_period_label})
                 </div>

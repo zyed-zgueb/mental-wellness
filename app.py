@@ -50,11 +50,7 @@ def show_home():
 
     with col1:
         st.markdown("""
-        <div style='background-color: #F7FAFC; padding: 2rem; border-radius: 12px; height: 100%;
-                    box-shadow: 0 1px 3px var(--color-primary-dark); border-left: 4px solid var(--color-primary);
-                    transition: all 0.3s ease-out; animation: fadeInUp 0.7s ease-out;'
-             onmouseover='this.style.transform="translateY(-4px)"; this.style.boxShadow="0 8px 24px rgba(107, 70, 193, 0.15)";'
-             onmouseout='this.style.transform="translateY(0)"; this.style.boxShadow="0 1px 3px var(--color-primary-dark)";'>
+        <div class='feature-card' style='height: 100%; border-left: 4px solid var(--color-primary); animation: fadeInUp 0.7s ease-out;'>
             <h4 style='color: var(--color-primary); margin-top: 0;'>💬 Conversation Empathique</h4>
             <p style='color: #4A5568; line-height: 1.7;'>
                 Un espace d'écoute bienveillant et sans jugement. Parlez librement de ce que vous ressentez
@@ -64,11 +60,7 @@ def show_home():
         """, unsafe_allow_html=True)
 
         st.markdown("""
-        <div style='background-color: #F7FAFC; padding: 2rem; border-radius: 12px; margin-top: 1rem;
-                    box-shadow: 0 1px 3px var(--color-primary-dark); border-left: 4px solid #805AD5;
-                    transition: all 0.3s ease-out; animation: fadeInUp 0.9s ease-out;'
-             onmouseover='this.style.transform="translateY(-4px)"; this.style.boxShadow="0 8px 24px rgba(128, 90, 213, 0.15)";'
-             onmouseout='this.style.transform="translateY(0)"; this.style.boxShadow="0 1px 3px var(--color-primary-dark)";'>
+        <div class='feature-card' style='margin-top: 1rem; border-left: 4px solid #805AD5; animation: fadeInUp 0.9s ease-out;'>
             <h4 style='color: #805AD5; margin-top: 0;'>📊 Dashboard Visuel</h4>
             <p style='color: #4A5568; line-height: 1.7;'>
                 Visualisez vos tendances de bien-être avec des graphiques élégants inspirés d'Apple Santé.
@@ -79,11 +71,7 @@ def show_home():
 
     with col2:
         st.markdown("""
-        <div style='background-color: #F7FAFC; padding: 2rem; border-radius: 12px; height: 100%;
-                    box-shadow: 0 1px 3px var(--color-primary-dark); border-left: 4px solid #9F7AEA;
-                    transition: all 0.3s ease-out; animation: fadeInUp 0.8s ease-out;'
-             onmouseover='this.style.transform="translateY(-4px)"; this.style.boxShadow="0 8px 24px rgba(159, 122, 234, 0.15)";'
-             onmouseout='this.style.transform="translateY(0)"; this.style.boxShadow="0 1px 3px var(--color-primary-dark)";'>
+        <div class='feature-card' style='height: 100%; border-left: 4px solid #9F7AEA; animation: fadeInUp 0.8s ease-out;'>
             <h4 style='color: #9F7AEA; margin-top: 0;'>🌸 Quick Check-in</h4>
             <p style='color: #4A5568; line-height: 1.7;'>
                 Suivez votre humeur au quotidien en quelques secondes. Une pratique simple qui nourrit
@@ -93,11 +81,7 @@ def show_home():
         """, unsafe_allow_html=True)
 
         st.markdown("""
-        <div style='background-color: #F7FAFC; padding: 2rem; border-radius: 12px; margin-top: 1rem;
-                    box-shadow: 0 1px 3px var(--color-primary-dark); border-left: 4px solid #B794F4;
-                    transition: all 0.3s ease-out; animation: fadeInUp 1s ease-out;'
-             onmouseover='this.style.transform="translateY(-4px)"; this.style.boxShadow="0 8px 24px rgba(183, 148, 244, 0.15)";'
-             onmouseout='this.style.transform="translateY(0)"; this.style.boxShadow="0 1px 3px var(--color-primary-dark)";'>
+        <div class='feature-card' style='margin-top: 1rem; border-left: 4px solid #B794F4; animation: fadeInUp 1s ease-out;'>
             <h4 style='color: #B794F4; margin-top: 0;'>✨ Insights IA Actionnables</h4>
             <p style='color: #4A5568; line-height: 1.7;'>
                 Recevez des révélations personnalisées sur vos patterns émotionnels. Des insights qui
@@ -110,12 +94,7 @@ def show_home():
     st.markdown("<div style='margin: 3rem 0;'></div>", unsafe_allow_html=True)
 
     st.markdown("""
-    <div style='background: linear-gradient(135deg, #EBF4FF 0%, #F7FAFC 100%);
-                padding: 2rem; border-radius: 16px; text-align: center; border-left: 4px solid var(--color-primary);
-                animation: scaleIn 0.6s ease-out; box-shadow: 0 4px 12px rgba(107, 70, 193, 0.1);
-                transition: all 0.3s ease-out;'
-         onmouseover='this.style.transform="scale(1.02)"; this.style.boxShadow="0 8px 24px rgba(107, 70, 193, 0.15)";'
-         onmouseout='this.style.transform="scale(1)"; this.style.boxShadow="0 4px 12px rgba(107, 70, 193, 0.1)";'>
+    <div class='cta-card' style='animation: scaleIn 0.6s ease-out;'>
         <h3 style='color: var(--color-primary); margin-top: 0;'>✨ Prêt à commencer ?</h3>
         <p style='color: #4A5568; font-size: 1.05rem; margin-bottom: 0;'>
             Utilisez le menu de navigation à gauche pour commencer votre parcours de bien-être mental.
@@ -146,7 +125,7 @@ def main():
             st.markdown("### 📍 Navigation")
 
             page = st.radio(
-                "Menu",
+                "Sélectionner une page",
                 [
                     "🏠 Home",
                     "🌸 Quick Check-in",
@@ -154,7 +133,7 @@ def main():
                     "📊 Dashboard"
                 ],
                 index=0,
-                label_visibility="collapsed"
+                label_visibility="hidden"
             )
 
         # Afficher la page appropriée
