@@ -94,10 +94,10 @@ def show_checkin():
         
         mood_score = st.slider(
             "Score d'humeur",
-            min_value=1,
+            min_value=0,
             max_value=10,
             value=5,
-            help="1 = Très mal | 5 = Neutre | 10 = Excellent",
+            help="0 = Très mal | 5 = Neutre | 10 = Excellent",
             label_visibility="hidden"
         )
         

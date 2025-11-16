@@ -30,7 +30,7 @@ class DatabaseManager:
             CREATE TABLE IF NOT EXISTS check_ins (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-                mood_score INTEGER NOT NULL CHECK(mood_score BETWEEN 1 AND 10),
+                mood_score INTEGER NOT NULL CHECK(mood_score BETWEEN 0 AND 10),
                 notes TEXT,
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP
             );
@@ -72,18 +72,18 @@ class DatabaseManager:
         Enregistrer un check-in.
 
         Args:
-            mood_score: Score d'humeur (1-10).
+            mood_score: Score d'humeur (0-10).
             notes: Notes optionnelles de l'utilisateur.
 
         Returns:
             ID du check-in créé.
 
         Raises:
-            ValueError: Si mood_score est hors limites (1-10).
+            ValueError: Si mood_score est hors limites (0-10).
         """
-        if not isinstance(mood_score, int) or not 1 <= mood_score <= 10:
+        if not isinstance(mood_score, int) or not 0 <= mood_score <= 10:
             raise ValueError(
-                f"mood_score doit être un entier entre 1 et 10, reçu: {mood_score}"
+                f"mood_score doit être un entier entre 0 et 10, reçu: {mood_score}"
             )
 
         try:

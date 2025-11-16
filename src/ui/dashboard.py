@@ -160,13 +160,13 @@ def show_dashboard():
             y='mood_score',
             color='mood_score',
             color_continuous_scale=[
-                (0.0, '#F56565'),   # Rouge pour valeurs basses (1)
+                (0.0, '#F56565'),   # Rouge pour valeurs basses (0)
                 (0.3, '#ED8936'),   # Orange
                 (0.5, '#ECC94B'),   # Jaune
                 (0.7, '#9AE6B4'),   # Vert clair
                 (1.0, '#48BB78')    # Vert pour valeurs hautes (10)
             ],
-            range_color=[1, 10]
+            range_color=[0, 10]
         )
 
         # Style Apple Santé - points individuels sans ligne continue
