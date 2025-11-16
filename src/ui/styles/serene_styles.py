@@ -205,17 +205,17 @@ def get_main_css():
     .stSlider {{
         padding: 1rem 0 0.5rem 0;
     }}
-    
+
     .stSlider > label {{
         font-weight: 500 !important;
         color: var(--color-text-dark) !important;
         font-size: 1rem !important;
     }}
-    
+
     .stSlider [data-baseweb="slider"] {{
         margin-top: 0.5rem;
     }}
-    
+
     .stSlider [role="slider"] {{
         background-color: var(--color-primary) !important;
         width: 22px !important;
@@ -223,14 +223,23 @@ def get_main_css():
         box-shadow: var(--shadow-sm);
         border: 2px solid var(--color-white);
     }}
-    
+
     .stSlider [role="slider"]:hover {{
         box-shadow: 0 0 0 4px rgba(107, 144, 128, 0.15);
     }}
-    
+
     /* Barre du slider */
     .stSlider [data-baseweb="slider"] > div:first-child {{
         background-color: var(--color-primary-light) !important;
+    }}
+
+    /* Labels du slider (min, max, valeur sélectionnée) - Augmentés de 50% */
+    .stSlider [data-baseweb="slider"] [data-testid="stTickBar"] div,
+    .stSlider [data-baseweb="slider"] [data-testid="stThumbValue"],
+    .stSlider [data-baseweb="slider"] > div > div > div {{
+        font-size: 1.05rem !important;  /* Taille de base augmentée de 50% */
+        font-weight: 500 !important;
+        color: var(--color-text-dark) !important;
     }}
     
     /* Text Area */
