@@ -59,11 +59,6 @@ class TestSaveCheckin:
         assert len(history) == 1
         assert history[0]["notes"] == ""
 
-    def test_save_checkin_invalid_mood_score_zero(self, mock_db):
-        """Tester validation: mood_score = 0 (invalide)."""
-        with pytest.raises(ValueError, match="mood_score doit être"):
-            mock_db.save_checkin(mood_score=0)
-
     def test_save_checkin_invalid_mood_score_eleven(self, mock_db):
         """Tester validation: mood_score = 11 (invalide)."""
         with pytest.raises(ValueError, match="mood_score doit être"):
@@ -75,12 +70,12 @@ class TestSaveCheckin:
             mock_db.save_checkin(mood_score=-5)
 
     def test_save_checkin_valid_boundaries(self, mock_db):
-        """Tester les valeurs limites valides (1 et 10)."""
-        id1 = mock_db.save_checkin(mood_score=1)
-        id2 = mock_db.save_checkin(mood_score=10)
+        """Tester les valeurs limites valides (0 et 10)."""
+        id0 = mock_db.save_checkin(mood_score=0)
+        id10 = mock_db.save_checkin(mood_score=10)
 
-        assert id1 > 0
-        assert id2 > 0
+        assert id0 > 0
+        assert id10 > 0
 
         history = mock_db.get_mood_history()
         assert len(history) == 2

@@ -72,18 +72,18 @@ class DatabaseManager:
         Enregistrer un check-in.
 
         Args:
-            mood_score: Score d'humeur (1-10).
+            mood_score: Score d'humeur (0-10).
             notes: Notes optionnelles de l'utilisateur.
 
         Returns:
             ID du check-in créé.
 
         Raises:
-            ValueError: Si mood_score est hors limites (1-10).
+            ValueError: Si mood_score est hors limites (0-10).
         """
-        if not isinstance(mood_score, int) or not 1 <= mood_score <= 10:
+        if not isinstance(mood_score, int) or not 0 <= mood_score <= 10:
             raise ValueError(
-                f"mood_score doit être un entier entre 1 et 10, reçu: {mood_score}"
+                f"mood_score doit être un entier entre 0 et 10, reçu: {mood_score}"
             )
 
         try:
