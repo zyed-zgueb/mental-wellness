@@ -30,7 +30,7 @@ class DatabaseManager:
             CREATE TABLE IF NOT EXISTS check_ins (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-                mood_score INTEGER NOT NULL CHECK(mood_score BETWEEN 1 AND 10),
+                mood_score INTEGER NOT NULL CHECK(mood_score BETWEEN 0 AND 10),
                 notes TEXT,
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP
             );
