@@ -8,9 +8,17 @@ from anthropic import Anthropic
 from src.database.db_manager import DatabaseManager
 from src.utils.prompts import INSIGHTS_SYSTEM_PROMPT
 
+# =========================
+# Global constants
+# =========================
+
+REGENERATE_INSIGHTS_AFTER_HOURS = 24  # heures
 
 class InsightsGenerator:
-    """Générateur d'insights IA avec logique adaptative et cache 24h."""
+    """
+    Générateur d'insights IA avec logique adaptative et cache.
+    La durée du cache en heures est dans REGENERATE_INSIGHTS_AFTER_HOURS
+    """
 
     def __init__(self, db_manager: DatabaseManager):
         """
@@ -33,7 +41,7 @@ class InsightsGenerator:
         """
         Récupérer un insight adaptatif (cached ou nouveau).
 
-        Cette méthode vérifie d'abord si un insight récent (<24h) existe.
+        Cette méthode vérifie d'abord si un insight récent existe (voir REGENERATE_INSIGHTS_AFTER_HOURS).
         Si oui, elle le retourne. Sinon, elle génère un nouvel insight adaptatif.
 
         Returns:
@@ -125,8 +133,8 @@ class InsightsGenerator:
 
     def _should_regenerate_insights(self) -> bool:
         """
-        Vérifier si un nouvel insight doit être généré (>24h depuis le dernier).
-
+        Vérifier si un nouvel insight doit être généré (>n heures  depuis le dernier).
+        voir REGENERATE_INSIGHTS_AFTER_HOURS
         Returns:
             True si régénération nécessaire, False si insight cached valide.
         """
@@ -140,9 +148,9 @@ class InsightsGenerator:
         created_at = datetime.fromisoformat(latest["created_at"])
         now = datetime.now()
 
-        # Vérifier si >24h
+        # Vérifier si >REGENERATE_INSIGHTS_AFTER_HOURS heures
         time_diff = now - created_at
-        return time_diff > timedelta(hours=24)
+        return time_diff > timedelta(hours=REGENERATE_INSIGHTS_AFTER_HOURS)
 
     def _get_data_maturity_level(self, days_count: int) -> str:
         """
