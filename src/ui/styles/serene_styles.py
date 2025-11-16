@@ -233,15 +233,15 @@ def get_main_css():
         background-color: var(--color-primary-light) !important;
     }}
 
-    /* Labels du slider (min, max, valeur sélectionnée) - Augmentés de 50% */
-    .stSlider [data-baseweb="slider"] [data-testid="stTickBar"] div,
-    .stSlider [data-baseweb="slider"] [data-testid="stThumbValue"],
-    .stSlider [data-baseweb="slider"] > div > div > div {{
-        font-size: 1.05rem !important;  /* Taille de base augmentée de 50% */
+
+    [data-testid="stSliderThumbValue"], [data-testid="stSliderTickBar"] {{
+        font-size: 2.00rem !important;  /* Taille de base augmentée de 50% */
         font-weight: 500 !important;
         color: var(--color-text-dark) !important;
     }}
+
     
+
     /* Text Area */
     .stTextArea > label {{
         font-weight: 500 !important;
