@@ -93,12 +93,11 @@ def show_checkin():
         )
         
         mood_score = st.slider(
-            "Mood Score",
+            "",  # Label vide pour éviter l'erreur d'accessibilité Chrome
             min_value=1,
             max_value=10,
             value=5,
-            help="1 = Très mal | 5 = Neutre | 10 = Excellent",
-            label_visibility="collapsed"
+            help="1 = Très mal | 5 = Neutre | 10 = Excellent"
         )
         
         # Affichage du mood actuel
@@ -116,12 +115,11 @@ def show_checkin():
         )
         
         notes = st.text_area(
-            "Notes",
+            "",  # Label vide pour éviter l'erreur d'accessibilité Chrome
             placeholder="Décrivez ce qui influence votre humeur... "
                        "(ex: 'Journée stressante au travail' ou 'Belle promenade ce matin')",
             max_chars=500,
             help="Partagez ce qui vous vient à l'esprit",
-            label_visibility="collapsed",
             height=100
         )
         
