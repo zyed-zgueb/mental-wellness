@@ -103,4 +103,4 @@ def show_conversation():
                     'ai_response': full_response
                 })
             except Exception as e:
-                st.error(f"❌ Erreur: {e}")
+                st.error(f"Erreur: {e}")

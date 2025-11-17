@@ -3,9 +3,36 @@
 import streamlit as st
 import plotly.express as px
 import pandas as pd
+import re
 from datetime import datetime, timedelta
 from src.database.db_manager import DatabaseManager
 from src.llm.insights_generator import InsightsGenerator
+
+
+def remove_emojis(text: str) -> str:
+    """
+    Supprime tous les emojis d'un texte pour un style épuré.
+
+    Args:
+        text: Le texte à nettoyer
+
+    Returns:
+        Le texte sans emojis
+    """
+    # Pattern pour détecter les emojis
+    emoji_pattern = re.compile(
+        "["
+        u"\U0001F600-\U0001F64F"  # emoticons
+        u"\U0001F300-\U0001F5FF"  # symbols & pictographs
+        u"\U0001F680-\U0001F6FF"  # transport & map symbols
+        u"\U0001F1E0-\U0001F1FF"  # flags (iOS)
+        u"\U00002702-\U000027B0"
+        u"\U000024C2-\U0001F251"
+        u"\U0001F900-\U0001F9FF"  # supplemental symbols
+        u"\U00002600-\U000026FF"  # misc symbols
+        "]+", flags=re.UNICODE
+    )
+    return emoji_pattern.sub('', text).strip()
 
 
 @st.cache_resource
@@ -404,12 +431,15 @@ def show_dashboard():
             # Effacer le skeleton et afficher le contenu
             loading_placeholder.empty()
 
+            # Nettoyer le texte des emojis pour un style épuré
+            clean_content = remove_emojis(insight_content)
+
             # Afficher l'insight avec style minimaliste
             st.markdown(f"""
             <div style='font-family: "Inter", sans-serif; color: var(--charcoal);
                        line-height: 1.8; font-size: 0.9375rem; font-weight: 300;
                        animation: fadeIn 0.5s ease-out;'>
-                {insight_content}
+                {clean_content}
             </div>
             """, unsafe_allow_html=True)
 
@@ -422,13 +452,13 @@ def show_dashboard():
         except Exception as e:
             loading_placeholder.empty()
             st.markdown("</div>", unsafe_allow_html=True)
-            st.error(f"❌ Erreur lors de la génération des insights: {e}")
+            st.error(f"Erreur lors de la génération des insights: {e}")
             return
 
         st.markdown("</div>", unsafe_allow_html=True)
 
         # Metadata insight dans un expander subtil
-        with st.expander("ℹ️ Détails de l'analyse", expanded=False):
+        with st.expander("Détails de l'analyse", expanded=False):
             db = get_database()
             latest_insight = db.get_latest_insight("weekly")
 

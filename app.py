@@ -188,29 +188,30 @@ def main():
             if 'current_page' not in st.session_state:
                 st.session_state.current_page = "Home"
 
-            # Style CSS pour les boutons de navigation - Minimalist
+            # Style CSS pour les boutons de navigation - Textes simples avec barre
             st.markdown("""
             <style>
-            /* Navigation buttons - Gallery style */
+            /* Navigation - Textes simples avec barre fine, pas de flèches */
             section[data-testid="stSidebar"] button[kind="secondary"] {
                 background-color: transparent !important;
                 border: none !important;
-                border-left: 2px solid transparent !important;
+                border-left: 1px solid transparent !important;
                 border-radius: 0 !important;
                 color: var(--gray-medium) !important;
                 font-family: 'Inter', sans-serif !important;
                 font-size: 0.875rem !important;
-                font-weight: 400 !important;
+                font-weight: 300 !important;
                 letter-spacing: 0.03em !important;
                 text-transform: uppercase !important;
                 padding: 0.75rem 0 0.75rem 1rem !important;
                 text-align: left !important;
+                box-shadow: none !important;
             }
 
             section[data-testid="stSidebar"] button[kind="secondary"]:hover {
                 background-color: transparent !important;
                 border-left-color: var(--gray-lighter) !important;
-                color: var(--black) !important;
+                color: var(--charcoal) !important;
             }
 
             section[data-testid="stSidebar"] button[kind="primary"],
@@ -223,15 +224,23 @@ def main():
                 color: var(--black) !important;
                 font-family: 'Inter', sans-serif !important;
                 font-size: 0.875rem !important;
-                font-weight: 500 !important;
+                font-weight: 400 !important;
                 letter-spacing: 0.03em !important;
                 text-transform: uppercase !important;
                 padding: 0.75rem 0 0.75rem 1rem !important;
                 text-align: left !important;
+                box-shadow: none !important;
             }
 
             section[data-testid="stSidebar"] button[kind="primary"]:hover {
                 background-color: transparent !important;
+            }
+
+            /* Pas de flèches pour la navigation */
+            section[data-testid="stSidebar"] button::after,
+            section[data-testid="stSidebar"] button::before {
+                content: none !important;
+                display: none !important;
             }
             </style>
             """, unsafe_allow_html=True)

@@ -415,8 +415,9 @@ def get_main_css():
         transform: scale(0.98);
     }}
 
-    /* Boutons primaires généraux (hors formulaire) avec icônes */
-    button[kind="primary"]:not(.stForm button) {{
+    /* Boutons primaires généraux (disclaimer, etc.) - Contraste élevé */
+    button[kind="primary"],
+    .stButton > button[kind="primary"] {{
         background-color: var(--black) !important;
         color: var(--white) !important;
         border: none !important;
@@ -429,9 +430,11 @@ def get_main_css():
         border-radius: var(--radius-none) !important;
         transition: var(--transition-elegant) !important;
         position: relative;
+        box-shadow: none !important;
     }}
 
-    button[kind="primary"]:not(.stForm button)::after {{
+    button[kind="primary"]::after,
+    .stButton > button[kind="primary"]::after {{
         font-family: 'Font Awesome 6 Free' !important;
         font-weight: 900 !important;
         content: '\\f061' !important; /* fa-arrow-right - flèche droite */
@@ -441,14 +444,24 @@ def get_main_css():
         transition: var(--transition-elegant) !important;
     }}
 
-    button[kind="primary"]:not(.stForm button):hover {{
+    button[kind="primary"]:hover,
+    .stButton > button[kind="primary"]:hover {{
         background-color: var(--charcoal) !important;
         box-shadow: var(--shadow-soft) !important;
     }}
 
-    button[kind="primary"]:not(.stForm button):hover::after {{
+    button[kind="primary"]:hover::after,
+    .stButton > button[kind="primary"]:hover::after {{
         opacity: 1 !important;
         transform: translateX(2px);
+    }}
+
+    /* Texte des boutons - Forcer blanc sur fond noir */
+    button[kind="primary"] p,
+    .stButton > button[kind="primary"] p,
+    button[kind="primary"] div,
+    .stButton > button[kind="primary"] div {{
+        color: var(--white) !important;
     }}
 
     /* ==================== DIVIDER - THIN GEOMETRIC LINE ==================== */
@@ -523,6 +536,53 @@ def get_main_css():
         color: var(--charcoal) !important;
         margin-right: var(--space-lg);
         border: var(--border-thin) solid var(--line-light);
+    }}
+
+    /* Texte dans les messages */
+    .stChatMessage p {{
+        font-family: 'Inter', sans-serif !important;
+        font-size: 0.9375rem !important;
+        line-height: 1.8 !important;
+        font-weight: 300 !important;
+        margin: 0 !important;
+    }}
+
+    .stChatMessage[data-testid="chat-message-user"] p {{
+        color: var(--white) !important;
+    }}
+
+    .stChatMessage[data-testid="chat-message-assistant"] p {{
+        color: var(--charcoal) !important;
+    }}
+
+    /* Avatars minimalistes - Remplacer emojis par des initiales */
+    .stChatMessage .stAvatar {{
+        width: 32px !important;
+        height: 32px !important;
+        border-radius: 0 !important;
+        background-color: transparent !important;
+        border: var(--border-thin) solid var(--line-light) !important;
+        font-family: 'Inter', sans-serif !important;
+        font-size: 0.75rem !important;
+        font-weight: 400 !important;
+        color: var(--gray-dark) !important;
+    }}
+
+    .stChatMessage[data-testid="chat-message-user"] .stAvatar {{
+        background-color: var(--charcoal) !important;
+        border-color: var(--charcoal) !important;
+        color: var(--white) !important;
+    }}
+
+    .stChatMessage[data-testid="chat-message-assistant"] .stAvatar {{
+        background-color: var(--white) !important;
+        border-color: var(--line-dark) !important;
+        color: var(--black) !important;
+    }}
+
+    /* Masquer les emojis par défaut dans les avatars */
+    .stChatMessage .stAvatar img {{
+        display: none !important;
     }}
 
     /* ==================== EXPANDER - MINIMAL ==================== */
