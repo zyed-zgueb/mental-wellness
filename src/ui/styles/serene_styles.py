@@ -426,6 +426,51 @@ def get_main_css():
         color: #FFFFFF !important;
     }}
 
+    /* ==================== BOUTON DISCLAIMER - STYLE NOIR ==================== */
+    /* Cibler le bouton de disclaimer spécifiquement via sa clé */
+    .st-key-disclaimer_accept_button button,
+    [class*="st-key-disclaimer_accept_button"] button {{
+        background-color: #000000 !important;
+        background: #000000 !important;
+        background-image: none !important;
+        color: #FFFFFF !important;
+        border: none !important;
+        border-color: #000000 !important;
+        padding: var(--space-sm) var(--space-lg) !important;
+        font-family: 'Inter', sans-serif !important;
+        font-size: 0.875rem !important;
+        font-weight: 400 !important;
+        letter-spacing: 0.05em !important;
+        text-transform: uppercase !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        transition: all 0.3s ease !important;
+        cursor: pointer !important;
+    }}
+
+    .st-key-disclaimer_accept_button button:hover,
+    [class*="st-key-disclaimer_accept_button"] button:hover {{
+        background-color: #1A1A1A !important;
+        background: #1A1A1A !important;
+        background-image: none !important;
+    }}
+
+    .st-key-disclaimer_accept_button button:active,
+    .st-key-disclaimer_accept_button button:focus,
+    [class*="st-key-disclaimer_accept_button"] button:active,
+    [class*="st-key-disclaimer_accept_button"] button:focus {{
+        background-color: #000000 !important;
+        background: #000000 !important;
+        background-image: none !important;
+        transform: scale(0.98) !important;
+    }}
+
+    /* Texte blanc dans le bouton disclaimer */
+    .st-key-disclaimer_accept_button button *,
+    [class*="st-key-disclaimer_accept_button"] button * {{
+        color: #FFFFFF !important;
+    }}
+
     /* ==================== BOUTONS PRIMAIRES (NON-FORMULAIRE) ==================== */
     button[kind="primary"],
     button[data-testid="stBaseButton-primary"],
