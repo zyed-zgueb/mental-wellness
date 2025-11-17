@@ -230,7 +230,7 @@ def get_main_css():
 
     /* Barre du slider */
     .stSlider [data-baseweb="slider"] > div:first-child {{
-        background-color: var(--color-primary-light) !important;
+        background-color: var(--white) !important;
     }}
 
 
