@@ -374,8 +374,13 @@ def get_main_css():
     }}
 
     /* ==================== SUBMIT BUTTON - MINIMALIST WITH FONTAWESOME ==================== */
-    .stForm button[kind="primary"] {{
+    /* Sélecteurs multiples pour forcer le style sur les boutons de formulaire */
+    .stForm button[kind="primary"],
+    .stForm button[type="submit"],
+    form button[kind="primary"],
+    form button[type="submit"] {{
         background-color: var(--black) !important;
+        background: var(--black) !important;
         color: var(--white) !important;
         border: none !important;
         padding: var(--space-sm) var(--space-lg) !important;
@@ -387,13 +392,14 @@ def get_main_css():
         border-radius: var(--radius-none) !important;
         transition: var(--transition-elegant) !important;
         box-shadow: none !important;
-        width: 100%;
-        cursor: pointer;
-        position: relative;
+        width: 100% !important;
+        cursor: pointer !important;
+        position: relative !important;
     }}
 
     /* Icône FontAwesome subtile sur les boutons de formulaire */
-    .stForm button[kind="primary"] p::before {{
+    .stForm button[kind="primary"] p::before,
+    form button[kind="primary"] p::before {{
         font-family: 'Font Awesome 6 Free' !important;
         font-weight: 900 !important;
         content: '\\f058  ' !important; /* fa-check-circle - validation */
@@ -402,21 +408,30 @@ def get_main_css():
         font-size: 0.875rem !important;
     }}
 
-    .stForm button[kind="primary"]:hover {{
+    .stForm button[kind="primary"]:hover,
+    form button[kind="primary"]:hover {{
         background-color: var(--charcoal) !important;
+        background: var(--charcoal) !important;
         box-shadow: var(--shadow-soft) !important;
     }}
 
-    .stForm button[kind="primary"]:hover p::before {{
+    .stForm button[kind="primary"]:hover p::before,
+    form button[kind="primary"]:hover p::before {{
         opacity: 1 !important;
     }}
 
-    .stForm button[kind="primary"]:active {{
-        transform: scale(0.98);
+    .stForm button[kind="primary"]:active,
+    form button[kind="primary"]:active {{
+        transform: scale(0.98) !important;
     }}
 
     /* Forcer texte blanc dans boutons de formulaire */
-    .stForm button[kind="primary"] p {{
+    .stForm button[kind="primary"] p,
+    .stForm button[kind="primary"] div,
+    .stForm button[kind="primary"] span,
+    form button[kind="primary"] p,
+    form button[kind="primary"] div,
+    form button[kind="primary"] span {{
         color: var(--white) !important;
         margin: 0 !important;
     }}
