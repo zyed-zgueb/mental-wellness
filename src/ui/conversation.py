@@ -70,25 +70,25 @@ def show_conversation():
         # Inverser pour afficher du plus ancien au plus récent
         st.session_state.conversation_history = list(reversed(history))
 
-    # Afficher l'historique
+    # Afficher l'historique avec avatars personnalisés
     for conv in st.session_state.conversation_history:
-        with st.chat_message("user"):
+        with st.chat_message("user", avatar="👤"):
             st.write(conv['user_message'])
-        with st.chat_message("assistant"):
+        with st.chat_message("assistant", avatar="◆"):
             st.write(conv['ai_response'])
 
     # Input utilisateur
     if user_input := st.chat_input("Votre message..."):
-        # Afficher message utilisateur
-        with st.chat_message("user"):
+        # Afficher message utilisateur avec avatar personnalisé
+        with st.chat_message("user", avatar="👤"):
             st.write(user_input)
 
         # Détection crise
         if manager.detect_crisis(user_input):
             st.warning(EMERGENCY_RESOURCES)
 
-        # Streaming réponse IA
-        with st.chat_message("assistant"):
+        # Streaming réponse IA avec avatar personnalisé
+        with st.chat_message("assistant", avatar="◆"):
             placeholder = st.empty()
             full_response = ""
             try:

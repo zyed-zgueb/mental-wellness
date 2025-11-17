@@ -75,6 +75,7 @@ def show_home():
             <h4 style='font-family: "Inter", sans-serif; color: var(--black); margin-top: 0;
                        font-size: 0.75rem; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase;
                        margin-bottom: 1rem;'>
+                <i class="fa-regular fa-comments" style='margin-right: 0.5rem; opacity: 0.7;'></i>
                 Conversation Empathique
             </h4>
             <p style='font-family: "Inter", sans-serif; color: var(--gray-dark); line-height: 1.8;
@@ -94,6 +95,7 @@ def show_home():
             <h4 style='font-family: "Inter", sans-serif; color: var(--black); margin-top: 0;
                        font-size: 0.75rem; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase;
                        margin-bottom: 1rem;'>
+                <i class="fa-solid fa-chart-line" style='margin-right: 0.5rem; opacity: 0.7;'></i>
                 Tableau de Bord
             </h4>
             <p style='font-family: "Inter", sans-serif; color: var(--gray-dark); line-height: 1.8;
@@ -114,6 +116,7 @@ def show_home():
             <h4 style='font-family: "Inter", sans-serif; color: var(--black); margin-top: 0;
                        font-size: 0.75rem; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase;
                        margin-bottom: 1rem;'>
+                <i class="fa-regular fa-circle-check" style='margin-right: 0.5rem; opacity: 0.7;'></i>
                 Quick Check-in
             </h4>
             <p style='font-family: "Inter", sans-serif; color: var(--gray-dark); line-height: 1.8;
@@ -133,6 +136,7 @@ def show_home():
             <h4 style='font-family: "Inter", sans-serif; color: var(--black); margin-top: 0;
                        font-size: 0.75rem; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase;
                        margin-bottom: 1rem;'>
+                <i class="fa-solid fa-lightbulb" style='margin-right: 0.5rem; opacity: 0.7;'></i>
                 Insights IA Actionnables
             </h4>
             <p style='font-family: "Inter", sans-serif; color: var(--gray-dark); line-height: 1.8;
@@ -214,6 +218,7 @@ def main():
                 color: var(--charcoal) !important;
             }
 
+            /* État sélectionné - Texte noir, pas blanc */
             section[data-testid="stSidebar"] button[kind="primary"],
             section[data-testid="stSidebar"] button[kind="primary"]:active,
             section[data-testid="stSidebar"] button[kind="primary"]:focus {
@@ -230,6 +235,13 @@ def main():
                 padding: 0.75rem 0 0.75rem 1rem !important;
                 text-align: left !important;
                 box-shadow: none !important;
+            }
+
+            /* Forcer la couleur du texte intérieur à noir pour l'état sélectionné */
+            section[data-testid="stSidebar"] button[kind="primary"] p,
+            section[data-testid="stSidebar"] button[kind="primary"] div,
+            section[data-testid="stSidebar"] button[kind="primary"] span {
+                color: var(--black) !important;
             }
 
             section[data-testid="stSidebar"] button[kind="primary"]:hover {

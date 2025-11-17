@@ -393,13 +393,13 @@ def get_main_css():
     }}
 
     /* Icône FontAwesome subtile sur les boutons de formulaire */
-    .stForm button[kind="primary"]::before {{
+    .stForm button[kind="primary"] p::before {{
         font-family: 'Font Awesome 6 Free' !important;
         font-weight: 900 !important;
-        content: '\\f00c' !important; /* fa-check - icône de validation */
-        margin-right: 0.5rem !important;
-        opacity: 0.7 !important;
-        font-size: 0.75rem !important;
+        content: '\\f058  ' !important; /* fa-check-circle - validation */
+        margin-right: 0.25rem !important;
+        opacity: 0.85 !important;
+        font-size: 0.875rem !important;
     }}
 
     .stForm button[kind="primary"]:hover {{
@@ -407,12 +407,18 @@ def get_main_css():
         box-shadow: var(--shadow-soft) !important;
     }}
 
-    .stForm button[kind="primary"]:hover::before {{
+    .stForm button[kind="primary"]:hover p::before {{
         opacity: 1 !important;
     }}
 
     .stForm button[kind="primary"]:active {{
         transform: scale(0.98);
+    }}
+
+    /* Forcer texte blanc dans boutons de formulaire */
+    .stForm button[kind="primary"] p {{
+        color: var(--white) !important;
+        margin: 0 !important;
     }}
 
     /* Boutons primaires généraux (disclaimer, etc.) - Contraste élevé */
@@ -555,34 +561,64 @@ def get_main_css():
         color: var(--charcoal) !important;
     }}
 
-    /* Avatars minimalistes - Remplacer emojis par des initiales */
+    /* Avatars minimalistes - Style carré avec initiales */
     .stChatMessage .stAvatar {{
-        width: 32px !important;
-        height: 32px !important;
+        width: 36px !important;
+        height: 36px !important;
         border-radius: 0 !important;
         background-color: transparent !important;
         border: var(--border-thin) solid var(--line-light) !important;
         font-family: 'Inter', sans-serif !important;
-        font-size: 0.75rem !important;
-        font-weight: 400 !important;
+        font-size: 1rem !important;
+        font-weight: 500 !important;
         color: var(--gray-dark) !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        position: relative !important;
     }}
 
+    /* Avatar utilisateur - Carré charcoal avec "M" (Moi) */
     .stChatMessage[data-testid="chat-message-user"] .stAvatar {{
         background-color: var(--charcoal) !important;
         border-color: var(--charcoal) !important;
         color: var(--white) !important;
     }}
 
+    /* Avatar assistant - Carré blanc avec bordure noire et "S" (Serene) */
     .stChatMessage[data-testid="chat-message-assistant"] .stAvatar {{
         background-color: var(--white) !important;
         border-color: var(--line-dark) !important;
         color: var(--black) !important;
     }}
 
-    /* Masquer les emojis par défaut dans les avatars */
+    /* Masquer les emojis/symboles et les remplacer par du texte via CSS */
     .stChatMessage .stAvatar img {{
         display: none !important;
+    }}
+
+    .stChatMessage[data-testid="chat-message-user"] .stAvatar::after {{
+        content: 'M' !important;
+        font-family: 'Inter', sans-serif !important;
+        font-weight: 500 !important;
+        font-size: 0.875rem !important;
+        color: var(--white) !important;
+        position: absolute !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+    }}
+
+    .stChatMessage[data-testid="chat-message-assistant"] .stAvatar::after {{
+        content: 'S' !important;
+        font-family: 'Inter', sans-serif !important;
+        font-weight: 500 !important;
+        font-size: 0.875rem !important;
+        color: var(--black) !important;
+        position: absolute !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
     }}
 
     /* ==================== EXPANDER - MINIMAL ==================== */

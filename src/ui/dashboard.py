@@ -85,6 +85,7 @@ def show_dashboard():
     <h2 style='font-family: "Cormorant Garamond", serif; font-size: 2rem;
                font-weight: 300; color: var(--black); margin-bottom: 2rem;
                letter-spacing: 0.02em;'>
+        <i class="fa-regular fa-heart" style='margin-right: 0.75rem; opacity: 0.65; font-size: 1.75rem;'></i>
         Votre Bien-être
     </h2>
     """, unsafe_allow_html=True)
@@ -299,6 +300,7 @@ def show_dashboard():
     <h2 style='font-family: "Cormorant Garamond", serif; font-size: 2rem;
                font-weight: 300; color: var(--black); margin-bottom: 2rem;
                letter-spacing: 0.02em;'>
+        <i class="fa-regular fa-message" style='margin-right: 0.75rem; opacity: 0.65; font-size: 1.75rem;'></i>
         Activité Conversations
     </h2>
     """, unsafe_allow_html=True)
@@ -387,6 +389,7 @@ def show_dashboard():
     <h2 style='font-family: "Cormorant Garamond", serif; font-size: 2rem;
                font-weight: 300; color: var(--black); margin-bottom: 1rem;
                letter-spacing: 0.02em;'>
+        <i class="fa-solid fa-sparkles" style='margin-right: 0.75rem; opacity: 0.65; font-size: 1.75rem;'></i>
         Vos Insights Personnalisés
     </h2>
     <p style='font-family: "Inter", sans-serif; color: var(--gray-dark);
