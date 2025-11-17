@@ -168,25 +168,34 @@ def get_main_css():
         font-weight: 600;
         line-height: 1.3;
     }}
-    
+
     h1 {{
         font-size: 2rem;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.75rem;
     }}
-    
+
     h2 {{
         font-size: 1.5rem;
         margin: 2rem 0 1rem 0;
     }}
-    
+
     h3 {{
-        font-size: 1.25rem;
+        font-size: 1.15rem;
         margin: 1.5rem 0 0.75rem 0;
+        font-weight: 600;
     }}
-    
+
+    h4 {{
+        font-size: 1.05rem;
+        margin: 1rem 0 0.5rem 0;
+        font-weight: 600;
+        color: var(--color-text-dark);
+    }}
+
     p {{
         color: var(--color-text-medium);
         line-height: 1.6;
+        font-size: 0.95rem;
     }}
     
     /* ==================== FORMS ==================== */
@@ -487,47 +496,50 @@ def get_main_css():
 
     /* Statistical cards for dashboard metrics */
     .stat-card {{
-        background-color: #F7FAFC;
+        background-color: var(--color-neutral-bg);
         padding: 1.5rem;
         border-radius: var(--radius-md);
         text-align: center;
-        box-shadow: 0 1px 3px rgba(107, 70, 193, 0.1);
+        box-shadow: var(--shadow-sm);
         transition: var(--transition-smooth);
+        border: 1px solid var(--color-neutral-light);
     }}
 
     .stat-card:hover {{
-        transform: translateY(-4px);
-        box-shadow: 0 8px 24px rgba(107, 70, 193, 0.12);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
     }}
 
     /* Feature cards for home page */
     .feature-card {{
-        background-color: #F7FAFC;
+        background-color: var(--color-white);
         padding: 2rem;
         border-radius: var(--radius-md);
-        box-shadow: 0 1px 3px rgba(107, 70, 193, 0.1);
+        box-shadow: var(--shadow-sm);
         transition: var(--transition-smooth);
+        border: 1px solid var(--color-neutral-light);
     }}
 
     .feature-card:hover {{
-        transform: translateY(-4px);
-        box-shadow: 0 8px 24px rgba(107, 70, 193, 0.15);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+        border-color: var(--color-primary-light);
     }}
 
     /* Call-to-action cards */
     .cta-card {{
-        background: linear-gradient(135deg, #EBF4FF 0%, #F7FAFC 100%);
+        background: linear-gradient(135deg, var(--color-primary-lighter) 0%, var(--color-neutral-bg) 100%);
         padding: 2rem;
         border-radius: var(--radius-lg);
         text-align: center;
         border-left: 4px solid var(--color-primary);
-        box-shadow: 0 4px 12px rgba(107, 70, 193, 0.1);
+        box-shadow: var(--shadow-md);
         transition: var(--transition-smooth);
     }}
 
     .cta-card:hover {{
-        transform: scale(1.02);
-        box-shadow: 0 8px 24px rgba(107, 70, 193, 0.15);
+        transform: scale(1.01);
+        box-shadow: var(--shadow-lg);
     }}
 
     /* Gradient text */

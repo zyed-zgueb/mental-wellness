@@ -35,7 +35,7 @@ def show_dashboard():
     """Afficher le dashboard avec charts et insights IA - Style Apple Santé."""
     st.title("📊 Dashboard")
     st.markdown("""
-    <p style='font-size: 1.1rem; color: #4A5568; margin-bottom: 2rem;'>
+    <p style='font-size: 1.05rem; color: var(--color-text-medium); margin-bottom: 2rem; line-height: 1.6;'>
     Visualisez vos tendances de bien-être et recevez des insights personnalisés.
     </p>
     """, unsafe_allow_html=True)
@@ -82,16 +82,16 @@ def show_dashboard():
 
         # Grande métrique centrale - Style Apple Santé
         st.markdown(f"""
-        <div style='background: linear-gradient(135deg, var(--color-primary) 0%, #805AD5 100%);
+        <div style='background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
                     padding: 2.5rem; border-radius: 16px; text-align: center; margin-bottom: 1.5rem;
-                    box-shadow: 0 4px 12px rgba(107, 70, 193, 0.15);'>
+                    box-shadow: 0 4px 12px rgba(107, 144, 128, 0.15);'>
             <div style='color: rgba(255, 255, 255, 0.9); font-size: 0.9rem; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 0.5rem;'>
                 Score Actuel
             </div>
-            <div style='color: white; font-size: 4.5rem; font-weight: 700; line-height: 1; margin-bottom: 0.25rem;'>
+            <div style='color: white; font-size: 3.5rem; font-weight: 700; line-height: 1; margin-bottom: 0.25rem;'>
                 {latest_mood:.1f}
             </div>
-            <div style='color: rgba(255, 255, 255, 0.85); font-size: 1.1rem;'>
+            <div style='color: rgba(255, 255, 255, 0.85); font-size: 1rem;'>
                 sur 10
             </div>
             <div style='color: {"rgba(72, 187, 120, 1)" if delta >= 0 else "rgba(245, 101, 101, 1)"};
@@ -107,13 +107,13 @@ def show_dashboard():
         with col1:
             st.markdown(f"""
             <div class='stat-card' style='animation: fadeInUp 0.5s ease-out;'>
-                <div style='color: #718096; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;'>
+                <div style='color: var(--color-text-light); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;'>
                     Moyenne ({selected_period_label})
                 </div>
-                <div style='color: var(--color-primary); font-size: 2.5rem; font-weight: 600;'>
+                <div style='color: var(--color-primary); font-size: 2rem; font-weight: 600;'>
                     {avg_mood:.1f}
                 </div>
-                <div style='color: #A0AEC0; font-size: 0.85rem;'>
+                <div style='color: var(--color-text-light); font-size: 0.85rem;'>
                     sur 10
                 </div>
             </div>
@@ -122,13 +122,13 @@ def show_dashboard():
         with col2:
             st.markdown(f"""
             <div class='stat-card' style='animation: fadeInUp 0.6s ease-out;'>
-                <div style='color: #718096; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;'>
+                <div style='color: var(--color-text-light); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;'>
                     Minimum ({selected_period_label})
                 </div>
-                <div style='color: #F56565; font-size: 2.5rem; font-weight: 600;'>
+                <div style='color: var(--color-error); font-size: 2rem; font-weight: 600;'>
                     {min_mood}
                 </div>
-                <div style='color: #A0AEC0; font-size: 0.85rem;'>
+                <div style='color: var(--color-text-light); font-size: 0.85rem;'>
                     sur 10
                 </div>
             </div>
@@ -137,13 +137,13 @@ def show_dashboard():
         with col3:
             st.markdown(f"""
             <div class='stat-card' style='animation: fadeInUp 0.7s ease-out;'>
-                <div style='color: #718096; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;'>
+                <div style='color: var(--color-text-light); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;'>
                     Maximum ({selected_period_label})
                 </div>
-                <div style='color: #48BB78; font-size: 2.5rem; font-weight: 600;'>
+                <div style='color: var(--color-success); font-size: 2rem; font-weight: 600;'>
                     {max_mood}
                 </div>
-                <div style='color: #A0AEC0; font-size: 0.85rem;'>
+                <div style='color: var(--color-text-light); font-size: 0.85rem;'>
                     sur 10
                 </div>
             </div>
@@ -235,15 +235,15 @@ def show_dashboard():
 
         with col1:
             st.markdown(f"""
-            <div style='background-color: #F7FAFC; padding: 1.5rem; border-radius: 12px; text-align: center;
-                        box-shadow: 0 1px 3px var(--color-primary-dark);'>
-                <div style='color: #718096; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;'>
+            <div style='background-color: var(--color-neutral-bg); padding: 1.5rem; border-radius: 12px; text-align: center;
+                        box-shadow: var(--shadow-sm);'>
+                <div style='color: var(--color-text-light); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;'>
                     Total
                 </div>
-                <div style='color: var(--color-primary); font-size: 2.5rem; font-weight: 600;'>
+                <div style='color: var(--color-primary); font-size: 2rem; font-weight: 600;'>
                     {total_conv}
                 </div>
-                <div style='color: #A0AEC0; font-size: 0.85rem;'>
+                <div style='color: var(--color-text-light); font-size: 0.85rem;'>
                     conversations
                 </div>
             </div>
@@ -251,15 +251,15 @@ def show_dashboard():
 
         with col2:
             st.markdown(f"""
-            <div style='background-color: #F7FAFC; padding: 1.5rem; border-radius: 12px; text-align: center;
-                        box-shadow: 0 1px 3px var(--color-primary-dark);'>
-                <div style='color: #718096; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;'>
+            <div style='background-color: var(--color-neutral-bg); padding: 1.5rem; border-radius: 12px; text-align: center;
+                        box-shadow: var(--shadow-sm);'>
+                <div style='color: var(--color-text-light); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;'>
                     Moyenne
                 </div>
-                <div style='color: #805AD5; font-size: 2.5rem; font-weight: 600;'>
+                <div style='color: var(--color-primary-dark); font-size: 2rem; font-weight: 600;'>
                     {avg_per_day:.1f}
                 </div>
-                <div style='color: #A0AEC0; font-size: 0.85rem;'>
+                <div style='color: var(--color-text-light); font-size: 0.85rem;'>
                     par jour
                 </div>
             </div>
