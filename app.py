@@ -13,7 +13,7 @@ from src.ui.styles.serene_styles import get_main_css
 st.set_page_config(
     page_title="Serene",
     layout="wide",
-    page_icon="🌸"
+    page_icon="◼"  # Carré noir minimaliste
 )
 
 # Charger FontAwesome pour icônes
@@ -26,15 +26,20 @@ st.markdown(get_main_css(), unsafe_allow_html=True)
 
 
 def show_home():
-    """Afficher la page d'accueil avec design accueillant."""
+    """Afficher la page d'accueil - Gallery minimalist style."""
 
-    # Hero section avec gradient et animation
+    # Hero section minimaliste
     st.markdown("""
-    <div style='text-align: center; padding: 3rem 1rem; background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
-                border-radius: 16px; margin-bottom: 2rem; box-shadow: 0 4px 12px var(--text-primary);
+    <div style='text-align: center; padding: 4rem 2rem; background-color: var(--white);
+                border: 1px solid var(--line-light); margin-bottom: 3rem;
                 animation: fadeInDown 0.6s ease-out;'>
-        <h1 style='color: white; font-size: 3rem; margin-bottom: 0.5rem; animation: fadeIn 0.8s ease-out;'>Serene</h1>
-        <p style='color: var(--text-primary); font-size: 1.3rem; margin-bottom: 0; animation: fadeIn 1s ease-out;'>
+        <h1 style='font-family: "Cormorant Garamond", serif; color: var(--black); font-size: 4rem;
+                   font-weight: 300; margin-bottom: 1rem; letter-spacing: 0.05em; animation: fadeIn 0.8s ease-out;'>
+            SERENE
+        </h1>
+        <div style='width: 80px; height: 1px; background-color: var(--line-dark); margin: 1.5rem auto;'></div>
+        <p style='font-family: "Inter", sans-serif; color: var(--gray-dark); font-size: 0.9375rem;
+                  margin-bottom: 0; animation: fadeIn 1s ease-out; font-weight: 300; letter-spacing: 0.02em;'>
             Votre compagnon de bien-être mental
         </p>
     </div>
@@ -42,28 +47,39 @@ def show_home():
 
     # Introduction
     st.markdown("""
-    <p style='font-size: 1.1rem; color: #4A5568; text-align: center; margin-bottom: 3rem; line-height: 1.7;'>
+    <p style='font-family: "Inter", sans-serif; font-size: 0.9375rem; color: var(--gray-dark);
+              text-align: center; margin-bottom: 4rem; line-height: 1.8; font-weight: 300; max-width: 600px;
+              margin-left: auto; margin-right: auto;'>
     Serene vous accompagne avec empathie dans votre parcours de bien-être mental.<br/>
     Un espace d'écoute, de suivi et de découverte de soi.
     </p>
     """, unsafe_allow_html=True)
 
-    # Fonctionnalités - Cards élégantes
-    st.markdown("### Fonctionnalités")
+    # Fonctionnalités - Cards minimalistes
+    st.markdown("""
+    <h2 style='font-family: "Cormorant Garamond", serif; font-size: 2rem; font-weight: 300;
+               color: var(--black); margin-bottom: 2rem; letter-spacing: 0.02em;'>
+        Fonctionnalités
+    </h2>
+    """, unsafe_allow_html=True)
 
     col1, col2 = st.columns(2)
 
     with col1:
         st.markdown("""
-        <div style='background-color: #F7FAFC; padding: 2rem; border-radius: 12px; height: 100%;
-                    box-shadow: 0 1px 3px var(--color-primary-dark); border-left: 4px solid var(--color-primary);
+        <div style='background-color: var(--white); padding: 2rem; border: 1px solid var(--line-light);
+                    height: 100%; box-shadow: var(--shadow-subtle);
                     transition: all 0.3s ease-out; animation: fadeInUp 0.7s ease-out;'
-             onmouseover='this.style.transform="translateY(-4px)"; this.style.boxShadow="0 8px 24px rgba(107, 70, 193, 0.15)";'
-             onmouseout='this.style.transform="translateY(0)"; this.style.boxShadow="0 1px 3px var(--color-primary-dark)";'>
-            <h4 style='color: var(--color-primary); margin-top: 0;'>
-                <i class="fa-regular fa-comments" style="margin-right: 0.5rem;"></i>Conversation Empathique
+             onmouseover='this.style.boxShadow="var(--shadow-soft)";'
+             onmouseout='this.style.boxShadow="var(--shadow-subtle)";'>
+            <h4 style='font-family: "Inter", sans-serif; color: var(--black); margin-top: 0;
+                       font-size: 0.75rem; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase;
+                       margin-bottom: 1rem;'>
+                <i class="fa-regular fa-comments" style='margin-right: 0.5rem; opacity: 0.7;'></i>
+                Conversation Empathique
             </h4>
-            <p style='color: #4A5568; line-height: 1.7;'>
+            <p style='font-family: "Inter", sans-serif; color: var(--gray-dark); line-height: 1.8;
+                     font-size: 0.875rem; font-weight: 300;'>
                 Un espace d'écoute bienveillant et sans jugement. Parlez librement de ce que vous ressentez
                 avec un compagnon IA qui vous écoute vraiment.
             </p>
@@ -71,16 +87,20 @@ def show_home():
         """, unsafe_allow_html=True)
 
         st.markdown("""
-        <div style='background-color: #F7FAFC; padding: 2rem; border-radius: 12px; margin-top: 1rem;
-                    box-shadow: 0 1px 3px var(--color-primary-dark); border-left: 4px solid #805AD5;
+        <div style='background-color: var(--white); padding: 2rem; border: 1px solid var(--line-light);
+                    margin-top: 1rem; box-shadow: var(--shadow-subtle);
                     transition: all 0.3s ease-out; animation: fadeInUp 0.9s ease-out;'
-             onmouseover='this.style.transform="translateY(-4px)"; this.style.boxShadow="0 8px 24px rgba(128, 90, 213, 0.15)";'
-             onmouseout='this.style.transform="translateY(0)"; this.style.boxShadow="0 1px 3px var(--color-primary-dark)";'>
-            <h4 style='color: #805AD5; margin-top: 0;'>
-                <i class="fa-solid fa-chart-line" style="margin-right: 0.5rem;"></i>Tableau de Bord
+             onmouseover='this.style.boxShadow="var(--shadow-soft)";'
+             onmouseout='this.style.boxShadow="var(--shadow-subtle)";'>
+            <h4 style='font-family: "Inter", sans-serif; color: var(--black); margin-top: 0;
+                       font-size: 0.75rem; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase;
+                       margin-bottom: 1rem;'>
+                <i class="fa-solid fa-chart-line" style='margin-right: 0.5rem; opacity: 0.7;'></i>
+                Tableau de Bord
             </h4>
-            <p style='color: #4A5568; line-height: 1.7;'>
-                Visualisez vos tendances de bien-être avec des graphiques élégants inspirés d'Apple Santé.
+            <p style='font-family: "Inter", sans-serif; color: var(--gray-dark); line-height: 1.8;
+                     font-size: 0.875rem; font-weight: 300;'>
+                Visualisez vos tendances de bien-être avec des graphiques élégants.
                 Comprenez vos patterns émotionnels en un coup d'œil.
             </p>
         </div>
@@ -88,15 +108,19 @@ def show_home():
 
     with col2:
         st.markdown("""
-        <div style='background-color: #F7FAFC; padding: 2rem; border-radius: 12px; height: 100%;
-                    box-shadow: 0 1px 3px var(--color-primary-dark); border-left: 4px solid #9F7AEA;
+        <div style='background-color: var(--white); padding: 2rem; border: 1px solid var(--line-light);
+                    height: 100%; box-shadow: var(--shadow-subtle);
                     transition: all 0.3s ease-out; animation: fadeInUp 0.8s ease-out;'
-             onmouseover='this.style.transform="translateY(-4px)"; this.style.boxShadow="0 8px 24px rgba(159, 122, 234, 0.15)";'
-             onmouseout='this.style.transform="translateY(0)"; this.style.boxShadow="0 1px 3px var(--color-primary-dark)";'>
-            <h4 style='color: #9F7AEA; margin-top: 0;'>
-                <i class="fa-regular fa-heart-pulse" style="margin-right: 0.5rem;"></i>Quick Check-in
+             onmouseover='this.style.boxShadow="var(--shadow-soft)";'
+             onmouseout='this.style.boxShadow="var(--shadow-subtle)";'>
+            <h4 style='font-family: "Inter", sans-serif; color: var(--black); margin-top: 0;
+                       font-size: 0.75rem; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase;
+                       margin-bottom: 1rem;'>
+                <i class="fa-regular fa-circle-check" style='margin-right: 0.5rem; opacity: 0.7;'></i>
+                Quick Check-in
             </h4>
-            <p style='color: #4A5568; line-height: 1.7;'>
+            <p style='font-family: "Inter", sans-serif; color: var(--gray-dark); line-height: 1.8;
+                     font-size: 0.875rem; font-weight: 300;'>
                 Suivez votre humeur au quotidien en quelques secondes. Une pratique simple qui nourrit
                 vos insights personnalisés et vous aide à mieux vous comprendre.
             </p>
@@ -104,33 +128,41 @@ def show_home():
         """, unsafe_allow_html=True)
 
         st.markdown("""
-        <div style='background-color: #F7FAFC; padding: 2rem; border-radius: 12px; margin-top: 1rem;
-                    box-shadow: 0 1px 3px var(--color-primary-dark); border-left: 4px solid #B794F4;
+        <div style='background-color: var(--white); padding: 2rem; border: 1px solid var(--line-light);
+                    margin-top: 1rem; box-shadow: var(--shadow-subtle);
                     transition: all 0.3s ease-out; animation: fadeInUp 1s ease-out;'
-             onmouseover='this.style.transform="translateY(-4px)"; this.style.boxShadow="0 8px 24px rgba(183, 148, 244, 0.15)";'
-             onmouseout='this.style.transform="translateY(0)"; this.style.boxShadow="0 1px 3px var(--color-primary-dark)";'>
-            <h4 style='color: #B794F4; margin-top: 0;'>
-                <i class="fa-solid fa-lightbulb" style="margin-right: 0.5rem;"></i>Insights IA Actionnables
+             onmouseover='this.style.boxShadow="var(--shadow-soft)";'
+             onmouseout='this.style.boxShadow="var(--shadow-subtle)";'>
+            <h4 style='font-family: "Inter", sans-serif; color: var(--black); margin-top: 0;
+                       font-size: 0.75rem; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase;
+                       margin-bottom: 1rem;'>
+                <i class="fa-solid fa-lightbulb" style='margin-right: 0.5rem; opacity: 0.7;'></i>
+                Insights IA Actionnables
             </h4>
-            <p style='color: #4A5568; line-height: 1.7;'>
+            <p style='font-family: "Inter", sans-serif; color: var(--gray-dark); line-height: 1.8;
+                     font-size: 0.875rem; font-weight: 300;'>
                 Recevez des révélations personnalisées sur vos patterns émotionnels. Des insights qui
                 vous donnent espoir et pouvoir d'agir sur votre bien-être.
             </p>
         </div>
         """, unsafe_allow_html=True)
 
-    # Call to action
-    st.markdown("<div style='margin: 3rem 0;'></div>", unsafe_allow_html=True)
+    # Call to action minimaliste
+    st.markdown("<div style='margin: 4rem 0 2rem 0;'></div>", unsafe_allow_html=True)
 
     st.markdown("""
-    <div style='background: linear-gradient(135deg, #EBF4FF 0%, #F7FAFC 100%);
-                padding: 2rem; border-radius: 16px; text-align: center; border-left: 4px solid var(--color-primary);
-                animation: scaleIn 0.6s ease-out; box-shadow: 0 4px 12px rgba(107, 70, 193, 0.1);
+    <div style='background-color: var(--white); padding: 3rem 2rem; border: 1px solid var(--line-light);
+                text-align: center; animation: fadeInUp 0.6s ease-out; box-shadow: var(--shadow-subtle);
                 transition: all 0.3s ease-out;'
-         onmouseover='this.style.transform="scale(1.02)"; this.style.boxShadow="0 8px 24px rgba(107, 70, 193, 0.15)";'
-         onmouseout='this.style.transform="scale(1)"; this.style.boxShadow="0 4px 12px rgba(107, 70, 193, 0.1)";'>
-        <h3 style='color: var(--color-primary); margin-top: 0;'>Prêt à commencer ?</h3>
-        <p style='color: #4A5568; font-size: 1.05rem; margin-bottom: 0;'>
+         onmouseover='this.style.boxShadow="var(--shadow-soft)";'
+         onmouseout='this.style.boxShadow="var(--shadow-subtle)";'>
+        <h3 style='font-family: "Cormorant Garamond", serif; color: var(--black); margin-top: 0;
+                   font-size: 1.5rem; font-weight: 300; letter-spacing: 0.02em; margin-bottom: 1rem;'>
+            Prêt à commencer ?
+        </h3>
+        <div style='width: 60px; height: 1px; background-color: var(--line-dark); margin: 1.5rem auto;'></div>
+        <p style='font-family: "Inter", sans-serif; color: var(--gray-dark); font-size: 0.875rem;
+                  margin-bottom: 0; font-weight: 300; line-height: 1.7;'>
             Utilisez le menu de navigation à gauche pour commencer votre parcours de bien-être mental.
         </p>
     </div>
@@ -144,13 +176,15 @@ def main():
     if not st.session_state.get('disclaimer_acknowledged', False):
         show_disclaimer()
     else:
-        # Afficher le menu de navigation dans la sidebar
+        # Afficher le menu de navigation dans la sidebar - Gallery minimalist
         with st.sidebar:
-            # Logo et titre avec style épuré
+            # Logo et titre minimaliste
             st.markdown("""
-            <div style='text-align: center; padding: 1rem 0 1.5rem 0; margin-bottom: 1.5rem;
-                        border-bottom: 1px solid #E2E8F0;'>
-                <h1 style='font-size: 1.5rem; color: #6B46C1; margin: 0; font-weight: 600;'>Serene</h1>
+            <div style='text-align: left; padding: 0 0 2rem 0; margin-bottom: 2rem;
+                        border-bottom: 1px solid var(--line-light);'>
+                <h1 style='font-family: "Cormorant Garamond", serif; font-size: 1.75rem;
+                          color: var(--black); margin: 0; font-weight: 300; letter-spacing: 0.05em;
+                          text-transform: uppercase;'>Serene</h1>
             </div>
             """, unsafe_allow_html=True)
 
@@ -158,34 +192,70 @@ def main():
             if 'current_page' not in st.session_state:
                 st.session_state.current_page = "Home"
 
-            # Style CSS pour les boutons de navigation
+            # Style CSS pour les boutons de navigation - Textes simples avec barre
             st.markdown("""
             <style>
-            /* Fix états clicked et selected - Approche ciblée */
-            section[data-testid="stSidebar"] button[kind="secondary"]:active,
-            section[data-testid="stSidebar"] button[kind="secondary"]:focus {
-                background-color: rgba(240, 242, 246, 0.5) !important;
-                border-color: rgba(49, 51, 63, 0.1) !important;
-                color: rgb(49, 51, 63) !important;
+            /* Navigation - Textes simples avec barre fine, pas de flèches */
+            section[data-testid="stSidebar"] button[kind="secondary"] {
+                background-color: transparent !important;
+                border: none !important;
+                border-left: 1px solid transparent !important;
+                border-radius: 0 !important;
+                color: var(--gray-medium) !important;
+                font-family: 'Inter', sans-serif !important;
+                font-size: 0.875rem !important;
+                font-weight: 300 !important;
+                letter-spacing: 0.03em !important;
+                text-transform: uppercase !important;
+                padding: 0.75rem 0 0.75rem 1rem !important;
+                text-align: left !important;
+                box-shadow: none !important;
             }
 
+            section[data-testid="stSidebar"] button[kind="secondary"]:hover {
+                background-color: transparent !important;
+                border-left-color: var(--gray-lighter) !important;
+                color: var(--charcoal) !important;
+            }
+
+            /* État sélectionné - Texte noir, pas blanc */
             section[data-testid="stSidebar"] button[kind="primary"],
             section[data-testid="stSidebar"] button[kind="primary"]:active,
             section[data-testid="stSidebar"] button[kind="primary"]:focus {
-                background-color: rgba(240, 242, 246, 0.7) !important;
-                border-color: rgba(107, 70, 193, 0.3) !important;
-                color: rgb(107, 70, 193) !important;
-                font-weight: 500 !important;
+                background-color: transparent !important;
+                border: none !important;
+                border-left: 2px solid var(--black) !important;
+                border-radius: 0 !important;
+                color: var(--black) !important;
+                font-family: 'Inter', sans-serif !important;
+                font-size: 0.875rem !important;
+                font-weight: 400 !important;
+                letter-spacing: 0.03em !important;
+                text-transform: uppercase !important;
+                padding: 0.75rem 0 0.75rem 1rem !important;
+                text-align: left !important;
+                box-shadow: none !important;
+            }
+
+            /* Forcer la couleur du texte intérieur à noir pour l'état sélectionné */
+            section[data-testid="stSidebar"] button[kind="primary"] p,
+            section[data-testid="stSidebar"] button[kind="primary"] div,
+            section[data-testid="stSidebar"] button[kind="primary"] span {
+                color: var(--black) !important;
             }
 
             section[data-testid="stSidebar"] button[kind="primary"]:hover {
-                background-color: rgba(237, 233, 254, 0.8) !important;
-                border-color: rgba(107, 70, 193, 0.5) !important;
+                background-color: transparent !important;
+            }
+
+            /* Pas de flèches pour la navigation */
+            section[data-testid="stSidebar"] button::after,
+            section[data-testid="stSidebar"] button::before {
+                content: none !important;
+                display: none !important;
             }
             </style>
             """, unsafe_allow_html=True)
-
-            st.markdown("<p style='font-size: 0.75rem; color: #A0AEC0; margin-bottom: 0.5rem; padding-left: 1rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;'>Navigation</p>", unsafe_allow_html=True)
 
             # Navigation avec boutons épurés
             pages = {

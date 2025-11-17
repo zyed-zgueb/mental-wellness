@@ -1,4 +1,4 @@
-"""Interface de conversation avec l'IA."""
+"""Interface de conversation avec l'IA - Gallery Minimalist Style"""
 
 import streamlit as st
 from dotenv import load_dotenv
@@ -24,22 +24,41 @@ def get_conversation_manager():
 
 
 def show_conversation():
-    """Afficher la page de conversation avec design empathique."""
-    st.title("Conversation")
+    """Afficher la page de conversation - Gallery minimalist style."""
+
+    # Header minimaliste
     st.markdown("""
-    <p style='font-size: 1.1rem; color: #4A5568; margin-bottom: 2rem;'>
-    Un espace d'écoute bienveillant et sans jugement. Parlez librement de ce que vous ressentez.
-    </p>
+    <div style='animation: fadeInDown 0.4s ease-out; margin-bottom: 3rem;
+                padding-bottom: 2rem; border-bottom: 1px solid var(--line-light);'>
+        <h1 style='font-family: "Cormorant Garamond", serif; font-size: 3rem;
+                   color: var(--black); font-weight: 300; margin-bottom: 1rem;
+                   letter-spacing: 0.02em; line-height: 1.1;'>
+            Conversation
+        </h1>
+        <p style='font-family: "Inter", sans-serif; font-size: 0.9375rem;
+                 color: var(--gray-dark); margin: 0; line-height: 1.8;
+                 font-weight: 300; max-width: 600px;'>
+            Un espace d'écoute bienveillant et sans jugement. Parlez librement de ce que vous ressentez.
+        </p>
+    </div>
     """, unsafe_allow_html=True)
 
     try:
         manager = get_conversation_manager()
     except ValueError as e:
-        # Error state élégant
+        # Error state minimaliste
         st.markdown("""
-        <div style='background-color: #FFF5F5; padding: 2rem; border-radius: 12px; border-left: 4px solid #F56565;'>
-            <h3 style='color: #C53030; margin-top: 0;'>❌ Configuration manquante</h3>
-            <p style='color: #742A2A;'>Veuillez configurer votre ANTHROPIC_API_KEY dans un fichier .env</p>
+        <div style='background-color: var(--white); padding: 2rem; border: 1px solid var(--line-light);
+                    border-left: 2px solid var(--black); box-shadow: var(--shadow-subtle);'>
+            <h3 style='font-family: "Inter", sans-serif; color: var(--black); margin-top: 0;
+                       font-size: 0.75rem; font-weight: 400; letter-spacing: 0.1em;
+                       text-transform: uppercase; margin-bottom: 1rem;'>
+                Configuration manquante
+            </h3>
+            <p style='font-family: "Inter", sans-serif; color: var(--gray-dark);
+                     line-height: 1.8; font-size: 0.875rem; font-weight: 300;'>
+                Veuillez configurer votre ANTHROPIC_API_KEY dans un fichier .env
+            </p>
         </div>
         """, unsafe_allow_html=True)
         st.code("ANTHROPIC_API_KEY=sk-ant-your-key-here", language="bash")
@@ -51,7 +70,7 @@ def show_conversation():
         # Inverser pour afficher du plus ancien au plus récent
         st.session_state.conversation_history = list(reversed(history))
 
-    # Afficher l'historique
+    # Afficher l'historique (avatars stylisés via CSS)
     for conv in st.session_state.conversation_history:
         with st.chat_message("user"):
             st.write(conv['user_message'])
@@ -60,7 +79,7 @@ def show_conversation():
 
     # Input utilisateur
     if user_input := st.chat_input("Votre message..."):
-        # Afficher message utilisateur
+        # Afficher message utilisateur (avatar stylisé via CSS)
         with st.chat_message("user"):
             st.write(user_input)
 
@@ -68,7 +87,7 @@ def show_conversation():
         if manager.detect_crisis(user_input):
             st.warning(EMERGENCY_RESOURCES)
 
-        # Streaming réponse IA
+        # Streaming réponse IA (avatar stylisé via CSS)
         with st.chat_message("assistant"):
             placeholder = st.empty()
             full_response = ""
@@ -84,4 +103,4 @@ def show_conversation():
                     'ai_response': full_response
                 })
             except Exception as e:
-                st.error(f"❌ Erreur: {e}")
+                st.error(f"Erreur: {e}")
