@@ -66,19 +66,41 @@ def get_main_css():
         --line-dark: {COLORS['line_dark']};
         --line-light: {COLORS['line_light']};
 
+        /* Variables de compatibilité (mapping anciennes -> nouvelles) */
+        --color-primary: {COLORS['black']};
+        --color-primary-light: {COLORS['gray_medium']};
+        --color-primary-lighter: {COLORS['gray_lighter']};
+        --color-primary-dark: {COLORS['charcoal']};
+        --color-neutral-bg: {COLORS['ivory']};
+        --color-neutral-light: {COLORS['ivory_dark']};
+        --color-white: {COLORS['white']};
+        --color-text-dark: {COLORS['charcoal']};
+        --color-text-medium: {COLORS['gray_dark']};
+        --color-text-light: {COLORS['gray_light']};
+        --color-success: {COLORS['success']};
+        --color-error: {COLORS['error']};
+        --text-primary: {COLORS['white']};
+
         /* Ombres subtiles */
         --shadow-subtle: {COLORS['shadow_subtle']};
         --shadow-soft: {COLORS['shadow_soft']};
         --shadow-medium: {COLORS['shadow_medium']};
+        --shadow-sm: {COLORS['shadow_subtle']};
+        --shadow-md: {COLORS['shadow_soft']};
+        --shadow-lg: {COLORS['shadow_medium']};
 
         /* Géométrie Bauhaus - lignes fines, pas de border-radius */
         --border-thin: 1px;
         --border-medium: 2px;
         --radius-none: 0px;
         --radius-subtle: 2px;
+        --radius-sm: 2px;
+        --radius-md: 2px;
+        --radius-lg: 2px;
 
         /* Transition élégante */
         --transition-elegant: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
         /* Espacements généreux - Respiration visuelle */
         --space-xs: 0.5rem;
