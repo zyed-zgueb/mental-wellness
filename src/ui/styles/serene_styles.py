@@ -374,15 +374,22 @@ def get_main_css():
     }}
 
     /* ==================== SUBMIT BUTTON - MINIMALIST WITH FONTAWESOME ==================== */
-    /* Sélecteurs multiples pour forcer le style sur les boutons de formulaire */
+    /* Sélecteurs multiples ultra-spécifiques pour forcer le style sur les boutons de formulaire */
+    /* Forcer noir sur tous les états et variantes */
     .stForm button[kind="primary"],
     .stForm button[type="submit"],
+    .stForm button[data-testid="stFormSubmitButton"],
     form button[kind="primary"],
-    form button[type="submit"] {{
+    form button[type="submit"],
+    button[data-testid="stFormSubmitButton"],
+    .stForm .row-widget button,
+    .stForm div[data-testid="column"] button[kind="primary"] {{
         background-color: var(--black) !important;
         background: var(--black) !important;
+        background-image: none !important;
         color: var(--white) !important;
         border: none !important;
+        border-color: var(--black) !important;
         padding: var(--space-sm) var(--space-lg) !important;
         font-family: 'Inter', sans-serif !important;
         font-size: 0.875rem !important;
@@ -399,6 +406,7 @@ def get_main_css():
 
     /* Icône FontAwesome subtile sur les boutons de formulaire */
     .stForm button[kind="primary"] p::before,
+    button[data-testid="stFormSubmitButton"] p::before,
     form button[kind="primary"] p::before {{
         font-family: 'Font Awesome 6 Free' !important;
         font-weight: 900 !important;
@@ -408,27 +416,50 @@ def get_main_css():
         font-size: 0.875rem !important;
     }}
 
+    /* États hover - Forcer charcoal */
     .stForm button[kind="primary"]:hover,
+    .stForm button[data-testid="stFormSubmitButton"]:hover,
+    button[data-testid="stFormSubmitButton"]:hover,
     form button[kind="primary"]:hover {{
         background-color: var(--charcoal) !important;
         background: var(--charcoal) !important;
+        background-image: none !important;
+        border-color: var(--charcoal) !important;
         box-shadow: var(--shadow-soft) !important;
     }}
 
     .stForm button[kind="primary"]:hover p::before,
+    button[data-testid="stFormSubmitButton"]:hover p::before,
     form button[kind="primary"]:hover p::before {{
         opacity: 1 !important;
     }}
 
+    /* États active et focus - Forcer noir */
     .stForm button[kind="primary"]:active,
-    form button[kind="primary"]:active {{
+    .stForm button[kind="primary"]:focus,
+    .stForm button[data-testid="stFormSubmitButton"]:active,
+    .stForm button[data-testid="stFormSubmitButton"]:focus,
+    button[data-testid="stFormSubmitButton"]:active,
+    button[data-testid="stFormSubmitButton"]:focus,
+    form button[kind="primary"]:active,
+    form button[kind="primary"]:focus {{
+        background-color: var(--black) !important;
+        background: var(--black) !important;
+        background-image: none !important;
+        border-color: var(--black) !important;
         transform: scale(0.98) !important;
     }}
 
-    /* Forcer texte blanc dans boutons de formulaire */
+    /* Forcer texte blanc dans boutons de formulaire - Tous sélecteurs */
     .stForm button[kind="primary"] p,
     .stForm button[kind="primary"] div,
     .stForm button[kind="primary"] span,
+    .stForm button[data-testid="stFormSubmitButton"] p,
+    .stForm button[data-testid="stFormSubmitButton"] div,
+    .stForm button[data-testid="stFormSubmitButton"] span,
+    button[data-testid="stFormSubmitButton"] p,
+    button[data-testid="stFormSubmitButton"] div,
+    button[data-testid="stFormSubmitButton"] span,
     form button[kind="primary"] p,
     form button[kind="primary"] div,
     form button[kind="primary"] span {{
