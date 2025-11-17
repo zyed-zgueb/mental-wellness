@@ -374,10 +374,15 @@ def get_main_css():
     }}
 
     /* ==================== BOUTONS PRIMAIRES - STYLE UNIFIÉ NOIR ==================== */
-    /* Cibler les classes Streamlit Emotion CSS générées */
+    /* Cibler tous les boutons primaires y compris les boutons de formulaire */
     button.st-emotion-cache-916x6u,
     button[class*="st-emotion-cache"],
-    button[kind="primary"] {{
+    button[kind="primary"],
+    button[kind="primaryFormSubmit"],
+    button[data-testid="stBaseButton-primary"],
+    button[data-testid="stBaseButton-primaryFormSubmit"],
+    .stFormSubmitButton button,
+    .stButton button[kind="primary"] {{
         background-color: #000000 !important;
         background: #000000 !important;
         background-image: none !important;
@@ -398,7 +403,12 @@ def get_main_css():
 
     button.st-emotion-cache-916x6u:hover,
     button[class*="st-emotion-cache"]:hover,
-    button[kind="primary"]:hover {{
+    button[kind="primary"]:hover,
+    button[kind="primaryFormSubmit"]:hover,
+    button[data-testid="stBaseButton-primary"]:hover,
+    button[data-testid="stBaseButton-primaryFormSubmit"]:hover,
+    .stFormSubmitButton button:hover,
+    .stButton button[kind="primary"]:hover {{
         background-color: #1A1A1A !important;
         background: #1A1A1A !important;
         background-image: none !important;
@@ -409,7 +419,17 @@ def get_main_css():
     button[class*="st-emotion-cache"]:active,
     button[class*="st-emotion-cache"]:focus,
     button[kind="primary"]:active,
-    button[kind="primary"]:focus {{
+    button[kind="primary"]:focus,
+    button[kind="primaryFormSubmit"]:active,
+    button[kind="primaryFormSubmit"]:focus,
+    button[data-testid="stBaseButton-primary"]:active,
+    button[data-testid="stBaseButton-primary"]:focus,
+    button[data-testid="stBaseButton-primaryFormSubmit"]:active,
+    button[data-testid="stBaseButton-primaryFormSubmit"]:focus,
+    .stFormSubmitButton button:active,
+    .stFormSubmitButton button:focus,
+    .stButton button[kind="primary"]:active,
+    .stButton button[kind="primary"]:focus {{
         background-color: #000000 !important;
         background: #000000 !important;
         background-image: none !important;
@@ -422,7 +442,15 @@ def get_main_css():
     button[kind="primary"] *,
     button[kind="primary"] p,
     button[kind="primary"] div,
-    button[kind="primary"] span {{
+    button[kind="primary"] span,
+    button[kind="primaryFormSubmit"] *,
+    button[kind="primaryFormSubmit"] p,
+    button[kind="primaryFormSubmit"] div,
+    button[kind="primaryFormSubmit"] span,
+    button[data-testid="stBaseButton-primary"] *,
+    button[data-testid="stBaseButton-primaryFormSubmit"] *,
+    .stFormSubmitButton button *,
+    .stButton button[kind="primary"] * {{
         color: #FFFFFF !important;
     }}
 
