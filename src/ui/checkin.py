@@ -30,23 +30,24 @@ def get_database():
 def get_mood_data(mood_score: int) -> tuple[str, str, str]:
     """
     Retourne les données de mood (emoji, label, couleur) pour un score donné.
-    
+    Note: Dans le design minimaliste, emojis et couleurs ne sont plus utilisés visuellement.
+
     Args:
-        mood_score: Score d'humeur (1-10)
-        
+        mood_score: Score d'humeur (0-10)
+
     Returns:
-        Tuple (emoji, label, couleur)
+        Tuple (emoji, label, couleur) - emoji et couleur gardés pour compatibilité
     """
     if mood_score <= 2:
-        return "😢", "Très difficile", COLORS['mood_tres_difficile']
+        return "", "Très difficile", COLORS['mood_tres_difficile']
     elif mood_score <= 4:
-        return "😔", "Difficile", COLORS['mood_difficile']
+        return "", "Difficile", COLORS['mood_difficile']
     elif mood_score <= 6:
-        return "😐", "Neutre", COLORS['mood_neutre']
+        return "", "Neutre", COLORS['mood_neutre']
     elif mood_score <= 8:
-        return "🙂", "Bien", COLORS['mood_bien']
+        return "", "Bien", COLORS['mood_bien']
     else:
-        return "😊", "Excellent", COLORS['mood_excellent']
+        return "", "Excellent", COLORS['mood_excellent']
 
 
 def format_datetime(timestamp_str: str) -> tuple[str, str]:
