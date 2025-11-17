@@ -373,11 +373,11 @@ def get_main_css():
         font-weight: 300 !important;
     }}
 
-    /* ==================== BOUTONS PRIMAIRES - STYLE UNIFIÉ NOIR ==================== */
-    /* Cibler les classes Streamlit Emotion CSS générées */
-    button.st-emotion-cache-916x6u,
-    button[class*="st-emotion-cache"],
-    button[kind="primary"] {{
+    /* ==================== BOUTONS DE FORMULAIRE - STYLE NOIR ==================== */
+    /* Cibler uniquement les boutons de submit de formulaire */
+    button[kind="primaryFormSubmit"],
+    button[data-testid="stBaseButton-primaryFormSubmit"],
+    .stFormSubmitButton button {{
         background-color: #000000 !important;
         background: #000000 !important;
         background-image: none !important;
@@ -396,34 +396,94 @@ def get_main_css():
         cursor: pointer !important;
     }}
 
-    button.st-emotion-cache-916x6u:hover,
-    button[class*="st-emotion-cache"]:hover,
-    button[kind="primary"]:hover {{
+    button[kind="primaryFormSubmit"]:hover,
+    button[data-testid="stBaseButton-primaryFormSubmit"]:hover,
+    .stFormSubmitButton button:hover {{
         background-color: #1A1A1A !important;
         background: #1A1A1A !important;
         background-image: none !important;
     }}
 
-    button.st-emotion-cache-916x6u:active,
-    button.st-emotion-cache-916x6u:focus,
-    button[class*="st-emotion-cache"]:active,
-    button[class*="st-emotion-cache"]:focus,
-    button[kind="primary"]:active,
-    button[kind="primary"]:focus {{
+    button[kind="primaryFormSubmit"]:active,
+    button[kind="primaryFormSubmit"]:focus,
+    button[data-testid="stBaseButton-primaryFormSubmit"]:active,
+    button[data-testid="stBaseButton-primaryFormSubmit"]:focus,
+    .stFormSubmitButton button:active,
+    .stFormSubmitButton button:focus {{
         background-color: #000000 !important;
         background: #000000 !important;
         background-image: none !important;
         transform: scale(0.98) !important;
     }}
 
-    /* Texte blanc dans tous les boutons primaires */
-    button.st-emotion-cache-916x6u *,
-    button[class*="st-emotion-cache"] *,
-    button[kind="primary"] *,
-    button[kind="primary"] p,
-    button[kind="primary"] div,
-    button[kind="primary"] span {{
+    /* Texte blanc dans les boutons de formulaire */
+    button[kind="primaryFormSubmit"] *,
+    button[kind="primaryFormSubmit"] p,
+    button[kind="primaryFormSubmit"] div,
+    button[kind="primaryFormSubmit"] span,
+    button[data-testid="stBaseButton-primaryFormSubmit"] *,
+    .stFormSubmitButton button * {{
         color: #FFFFFF !important;
+    }}
+
+    /* ==================== BOUTON DISCLAIMER - STYLE NOIR ==================== */
+    /* Cibler le bouton de disclaimer spécifiquement via sa clé */
+    .st-key-disclaimer_accept_button button,
+    [class*="st-key-disclaimer_accept_button"] button {{
+        background-color: #000000 !important;
+        background: #000000 !important;
+        background-image: none !important;
+        color: #FFFFFF !important;
+        border: none !important;
+        border-color: #000000 !important;
+        padding: var(--space-sm) var(--space-lg) !important;
+        font-family: 'Inter', sans-serif !important;
+        font-size: 0.875rem !important;
+        font-weight: 400 !important;
+        letter-spacing: 0.05em !important;
+        text-transform: uppercase !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        transition: all 0.3s ease !important;
+        cursor: pointer !important;
+    }}
+
+    .st-key-disclaimer_accept_button button:hover,
+    [class*="st-key-disclaimer_accept_button"] button:hover {{
+        background-color: #1A1A1A !important;
+        background: #1A1A1A !important;
+        background-image: none !important;
+    }}
+
+    .st-key-disclaimer_accept_button button:active,
+    .st-key-disclaimer_accept_button button:focus,
+    [class*="st-key-disclaimer_accept_button"] button:active,
+    [class*="st-key-disclaimer_accept_button"] button:focus {{
+        background-color: #000000 !important;
+        background: #000000 !important;
+        background-image: none !important;
+        transform: scale(0.98) !important;
+    }}
+
+    /* Texte blanc dans le bouton disclaimer */
+    .st-key-disclaimer_accept_button button *,
+    [class*="st-key-disclaimer_accept_button"] button * {{
+        color: #FFFFFF !important;
+    }}
+
+    /* ==================== BOUTONS PRIMAIRES (NON-FORMULAIRE) ==================== */
+    button[kind="primary"],
+    button[data-testid="stBaseButton-primary"],
+    .stButton button[kind="primary"] {{
+        padding: var(--space-sm) var(--space-lg) !important;
+        font-family: 'Inter', sans-serif !important;
+        font-size: 0.875rem !important;
+        font-weight: 400 !important;
+        letter-spacing: 0.05em !important;
+        text-transform: uppercase !important;
+        border-radius: 0 !important;
+        transition: all 0.3s ease !important;
+        cursor: pointer !important;
     }}
 
     /* Icône check pour boutons de formulaire uniquement */

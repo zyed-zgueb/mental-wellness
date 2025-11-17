@@ -136,7 +136,7 @@ def show_disclaimer():
 
         # Bouton de consentement minimaliste
         st.markdown("<div style='text-align: center;'>", unsafe_allow_html=True)
-        if st.button("J'ai compris et j'accepte de continuer", type="primary", use_container_width=True):
+        if st.button("J'ai compris et j'accepte de continuer", type="primary", use_container_width=True, key="disclaimer_accept_button"):
             st.session_state.disclaimer_acknowledged = True
             st.rerun()
         st.markdown("</div>", unsafe_allow_html=True)
