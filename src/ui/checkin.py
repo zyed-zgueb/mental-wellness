@@ -83,12 +83,12 @@ def show_checkin():
     # ==================== FORMULAIRE DE CHECK-IN ====================
     
     st.markdown("### Nouveau Check-in")
-    
+
     with st.form("checkin_form", clear_on_submit=True):
         # Slider avec label
         st.markdown(
-            f"<p style='font-weight: 500; color: {COLORS['text_dark']}; "
-            f"margin-bottom: 0.5rem;'>Comment vous sentez-vous maintenant ?</p>",
+            "<p style='font-weight: 600; color: var(--text-primary); "
+            "margin-bottom: 0.75rem; font-size: 1.05rem;'>Comment vous sentez-vous maintenant ?</p>",
             unsafe_allow_html=True
         )
         
@@ -110,8 +110,8 @@ def show_checkin():
         
         # Zone de notes
         st.markdown(
-            f"<p style='font-weight: 500; color: {COLORS['text_dark']}; "
-            f"margin-bottom: 0.5rem; margin-top: 1rem;'>Notes (optionnel)</p>",
+            "<p style='font-weight: 600; color: var(--text-primary); "
+            "margin-bottom: 0.75rem; margin-top: 1rem; font-size: 1.05rem;'>Notes (optionnel)</p>",
             unsafe_allow_html=True
         )
         

@@ -1,38 +1,41 @@
 """
 Composants UI réutilisables pour l'application Serene
 Facilite la maintenance et garantit la cohérence visuelle
+Theme-aware avec CSS variables
 """
-
-from src.ui.styles.serene_styles import COLORS
 
 
 def mood_display_card(mood_score: int, mood_emoji: str, mood_label: str, mood_color: str) -> str:
     """
     Génère le HTML pour l'affichage du mood actuel.
-    
+
     Args:
         mood_score: Score de l'humeur (1-10)
         mood_emoji: Emoji représentant l'humeur
         mood_label: Label textuel de l'humeur
         mood_color: Couleur associée à l'humeur
-        
+
     Returns:
         HTML string du composant
     """
     return f"""
     <div class="mood-display" style="
-        text-align: center; 
-        margin: 1.5rem 0; 
-        padding: 2rem;
-        background: linear-gradient(135deg, {COLORS['neutral_bg']} 0%, {mood_color}15 100%);
-        border-radius: 16px;
-        border: 2px solid {mood_color}20;
+        text-align: center;
+        margin: 2rem 0;
+        padding: 2.5rem;
+        background: linear-gradient(135deg, var(--bg-tertiary) 0%, {mood_color}15 100%);
+        border-radius: var(--radius-lg);
+        border: 2px solid {mood_color}30;
+        box-shadow: var(--shadow-md);
+        animation: scaleIn 0.3s ease-out;
     ">
-        <div style="font-size: 4rem; margin-bottom: 1rem;">{mood_emoji}</div>
-        <div style="font-size: 1.5rem; font-weight: 600; color: {mood_color}; margin-bottom: 0.25rem;">
+        <div style="font-size: 4.5rem; margin-bottom: 1rem; filter: drop-shadow(0 2px 8px {mood_color}40);">
+            {mood_emoji}
+        </div>
+        <div style="font-size: 1.75rem; font-weight: 700; color: {mood_color}; margin-bottom: 0.5rem;">
             {mood_label}
         </div>
-        <div style="font-size: 1rem; color: {COLORS['text_light']};">
+        <div style="font-size: 1.1rem; color: var(--text-tertiary); font-weight: 500;">
             Score: {mood_score}/10
         </div>
     </div>
@@ -42,23 +45,24 @@ def mood_display_card(mood_score: int, mood_emoji: str, mood_label: str, mood_co
 def stats_banner(total_checkins: int) -> str:
     """
     Génère le HTML pour la bannière de statistiques.
-    
+
     Args:
         total_checkins: Nombre total de check-ins
-        
+
     Returns:
         HTML string du composant
     """
     return f"""
     <div style="
-        background: linear-gradient(135deg, {COLORS['primary']} 0%, {COLORS['primary_dark']} 100%);
-        padding: 1.25rem 1.75rem; 
-        border-radius: 12px; 
-        margin-bottom: 1.5rem;
-        box-shadow: {COLORS['shadow_md']};
+        background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+        padding: 1.5rem 2rem;
+        border-radius: var(--radius-md);
+        margin-bottom: 2rem;
+        box-shadow: var(--shadow-lg), 0 0 30px var(--color-primary-glow);
         animation: fadeInUp 0.4s ease-out;
+        border: 1px solid var(--border-accent);
     ">
-        <p style="color: white; margin: 0; font-size: 1.05rem; font-weight: 500;">
+        <p style="color: var(--text-inverse); margin: 0; font-size: 1.1rem; font-weight: 600;">
             📊 <strong>{total_checkins} check-in(s)</strong> enregistré(s) ce mois-ci
         </p>
     </div>
@@ -98,16 +102,17 @@ def history_card(
                      .replace('>', '&gt;')
                      .replace('"', '&quot;')
                      .replace("'", '&#39;'))
-        
+
         notes_html = f"""
         <div style="
-            color: {COLORS['text_medium']}; 
-            margin-top: 0.75rem; 
-            line-height: 1.6; 
-            font-size: 0.95rem;
-            padding: 0.75rem;
-            background-color: {COLORS['neutral_bg']};
-            border-radius: 8px;
+            color: var(--text-secondary);
+            margin-top: 1rem;
+            line-height: 1.7;
+            font-size: 1rem;
+            padding: 1rem;
+            background-color: var(--bg-tertiary);
+            border-radius: var(--radius-sm);
+            border-left: 3px solid {mood_color};
             font-style: italic;
         ">
             {safe_notes}
@@ -116,26 +121,30 @@ def history_card(
     
     # Animation delay basée sur l'index
     animation_delay = index * 0.05
-    
+
     return f"""
     <div class="history-card" style="
-        background-color: {COLORS['white']}; 
-        padding: 1.5rem; 
-        border-radius: 12px; 
-        margin-bottom: 1rem;
-        border-left: 4px solid {mood_color}; 
-        box-shadow: {COLORS['shadow_sm']};
+        background-color: var(--bg-elevated);
+        padding: 2rem;
+        border-radius: var(--radius-lg);
+        margin-bottom: 1.5rem;
+        border-left: 4px solid {mood_color};
+        box-shadow: var(--shadow-md);
         animation: fadeInUp {0.4 + animation_delay}s ease-out;
+        border: 1px solid var(--border-primary);
+        border-left: 4px solid {mood_color};
     ">
-        <div style="display: flex; align-items: center; margin-bottom: 0.5rem;">
-            <div style="font-size: 2.5rem; margin-right: 1rem;">{mood_emoji}</div>
+        <div style="display: flex; align-items: center; margin-bottom: 0.75rem;">
+            <div style="font-size: 3rem; margin-right: 1.25rem; filter: drop-shadow(0 2px 4px {mood_color}40);">
+                {mood_emoji}
+            </div>
             <div style="flex: 1;">
-                <div style="font-weight: 600; font-size: 1.1rem; color: {mood_color};">
+                <div style="font-weight: 700; font-size: 1.25rem; color: {mood_color};">
                     {mood_label}
                 </div>
-                <div style="font-size: 0.875rem; color: {COLORS['text_light']}; margin-top: 0.25rem;">
-                    📅 {formatted_date} à {formatted_time} · 
-                    <span style="color: {mood_color}; font-weight: 500;">
+                <div style="font-size: 0.95rem; color: var(--text-tertiary); margin-top: 0.5rem;">
+                    📅 {formatted_date} à {formatted_time} ·
+                    <span style="color: {mood_color}; font-weight: 600;">
                         Score: {checkin["mood_score"]}/10
                     </span>
                 </div>
@@ -155,45 +164,48 @@ def empty_state(
 ) -> str:
     """
     Génère le HTML pour un état vide.
-    
+
     Args:
         icon: Emoji à afficher
         title: Titre principal
         description: Description
         tip_title: Titre du conseil
         tip_content: Contenu du conseil
-        
+
     Returns:
         HTML string du composant
     """
     return f"""
     <div style="
-        background: linear-gradient(135deg, {COLORS['neutral_bg']} 0%, {COLORS['primary_lighter']}30 100%);
-        padding: 3rem 2rem; 
-        border-radius: 16px;
-        text-align: center; 
-        border: 2px dashed {COLORS['primary_light']};
+        background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--color-primary-glow) 100%);
+        padding: 4rem 2rem;
+        border-radius: var(--radius-xl);
+        text-align: center;
+        border: 2px dashed var(--border-accent);
         animation: fadeInUp 0.5s ease-out;
     ">
-        <div style="font-size: 4rem; margin-bottom: 1.5rem;">{icon}</div>
-        <div style="font-size: 1.3rem; font-weight: 600; color: {COLORS['primary']}; margin-bottom: 0.75rem;">
+        <div style="font-size: 5rem; margin-bottom: 2rem; animation: bounce 2s infinite;">
+            {icon}
+        </div>
+        <div style="font-size: 1.5rem; font-weight: 700; color: var(--color-primary); margin-bottom: 1rem;">
             {title}
         </div>
-        <div style="font-size: 1rem; color: {COLORS['text_medium']}; margin-bottom: 1.5rem; line-height: 1.6;">
+        <div style="font-size: 1.1rem; color: var(--text-secondary); margin-bottom: 2rem; line-height: 1.7;">
             {description}
         </div>
         <div style="
-            background-color: {COLORS['white']}; 
-            padding: 1.5rem; 
-            border-radius: 12px;
-            box-shadow: {COLORS['shadow_sm']};
+            background-color: var(--bg-elevated);
+            padding: 2rem;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-md);
             max-width: 500px;
             margin: 0 auto;
+            border: 1px solid var(--border-primary);
         ">
-            <div style="color: {COLORS['primary']}; font-weight: 500; font-size: 0.95rem; margin-bottom: 0.5rem;">
+            <div style="color: var(--color-primary); font-weight: 600; font-size: 1.05rem; margin-bottom: 0.75rem;">
                 {tip_title}
             </div>
-            <div style="color: {COLORS['text_medium']}; font-size: 0.9rem; line-height: 1.5;">
+            <div style="color: var(--text-secondary); font-size: 1rem; line-height: 1.6;">
                 {tip_content}
             </div>
         </div>
@@ -204,33 +216,37 @@ def empty_state(
 def page_header(title: str, emoji: str, description: str) -> str:
     """
     Génère le HTML pour l'en-tête de page.
-    
+
     Args:
         title: Titre de la page
         emoji: Emoji associé
         description: Description de la page
-        
+
     Returns:
         HTML string du composant
     """
     return f"""
-    <div style="animation: fadeInDown 0.4s ease-out; margin-bottom: 1.5rem;">
+    <div style="animation: fadeInDown 0.4s ease-out; margin-bottom: 2rem;">
         <h1 style="
-            font-size: 2.25rem; 
-            color: {COLORS['text_dark']}; 
-            font-weight: 600; 
-            margin-bottom: 0.5rem;
+            font-size: 2.5rem;
+            color: var(--text-primary);
+            font-weight: 700;
+            margin-bottom: 0.75rem;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.75rem;
+            letter-spacing: -0.02em;
         ">
-            {emoji} {title}
+            <span style="filter: drop-shadow(0 2px 8px var(--color-primary-glow));">
+                {emoji}
+            </span>
+            {title}
         </h1>
         <p style="
-            font-size: 1.075rem; 
-            color: {COLORS['text_medium']}; 
+            font-size: 1.15rem;
+            color: var(--text-secondary);
             margin: 0;
-            line-height: 1.6;
+            line-height: 1.7;
         ">
             {description}
         </p>
