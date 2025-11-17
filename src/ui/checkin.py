@@ -128,7 +128,7 @@ def show_checkin():
         
         # Bouton de soumission
         submitted = st.form_submit_button(
-            "💾 Enregistrer Check-in",
+            "Enregistrer Check-in",
             type="primary",
             use_container_width=True
         )

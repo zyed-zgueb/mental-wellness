@@ -373,7 +373,7 @@ def get_main_css():
         font-weight: 300 !important;
     }}
 
-    /* ==================== SUBMIT BUTTON - MINIMALIST ==================== */
+    /* ==================== SUBMIT BUTTON - MINIMALIST WITH FONTAWESOME ==================== */
     .stForm button[kind="primary"] {{
         background-color: var(--black) !important;
         color: var(--white) !important;
@@ -389,6 +389,17 @@ def get_main_css():
         box-shadow: none !important;
         width: 100%;
         cursor: pointer;
+        position: relative;
+    }}
+
+    /* Icône FontAwesome subtile sur les boutons de formulaire */
+    .stForm button[kind="primary"]::before {{
+        font-family: 'Font Awesome 6 Free' !important;
+        font-weight: 900 !important;
+        content: '\\f00c' !important; /* fa-check - icône de validation */
+        margin-right: 0.5rem !important;
+        opacity: 0.7 !important;
+        font-size: 0.75rem !important;
     }}
 
     .stForm button[kind="primary"]:hover {{
@@ -396,8 +407,48 @@ def get_main_css():
         box-shadow: var(--shadow-soft) !important;
     }}
 
+    .stForm button[kind="primary"]:hover::before {{
+        opacity: 1 !important;
+    }}
+
     .stForm button[kind="primary"]:active {{
         transform: scale(0.98);
+    }}
+
+    /* Boutons primaires généraux (hors formulaire) avec icônes */
+    button[kind="primary"]:not(.stForm button) {{
+        background-color: var(--black) !important;
+        color: var(--white) !important;
+        border: none !important;
+        padding: var(--space-sm) var(--space-lg) !important;
+        font-family: 'Inter', sans-serif !important;
+        font-size: 0.875rem !important;
+        font-weight: 400 !important;
+        letter-spacing: 0.05em !important;
+        text-transform: uppercase !important;
+        border-radius: var(--radius-none) !important;
+        transition: var(--transition-elegant) !important;
+        position: relative;
+    }}
+
+    button[kind="primary"]:not(.stForm button)::after {{
+        font-family: 'Font Awesome 6 Free' !important;
+        font-weight: 900 !important;
+        content: '\\f061' !important; /* fa-arrow-right - flèche droite */
+        margin-left: 0.5rem !important;
+        opacity: 0.7 !important;
+        font-size: 0.75rem !important;
+        transition: var(--transition-elegant) !important;
+    }}
+
+    button[kind="primary"]:not(.stForm button):hover {{
+        background-color: var(--charcoal) !important;
+        box-shadow: var(--shadow-soft) !important;
+    }}
+
+    button[kind="primary"]:not(.stForm button):hover::after {{
+        opacity: 1 !important;
+        transform: translateX(2px);
     }}
 
     /* ==================== DIVIDER - THIN GEOMETRIC LINE ==================== */
