@@ -25,7 +25,7 @@ def get_conversation_manager():
 
 def show_conversation():
     """Afficher la page de conversation avec design empathique."""
-    st.title("💬 Conversation")
+    st.title("Conversation")
     st.markdown("""
     <p style='font-size: 1.1rem; color: #4A5568; margin-bottom: 2rem;'>
     Un espace d'écoute bienveillant et sans jugement. Parlez librement de ce que vous ressentez.

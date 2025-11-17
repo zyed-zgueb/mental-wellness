@@ -59,7 +59,7 @@ def stats_banner(total_checkins: int) -> str:
         animation: fadeInUp 0.4s ease-out;
     ">
         <p style="color: white; margin: 0; font-size: 1.05rem; font-weight: 500;">
-            📊 <strong>{total_checkins} check-in(s)</strong> enregistré(s) ce mois-ci
+            <strong>{total_checkins} check-in(s)</strong> enregistré(s) ce mois-ci
         </p>
     </div>
     """

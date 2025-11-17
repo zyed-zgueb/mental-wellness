@@ -73,7 +73,7 @@ def show_checkin():
     st.markdown(
         page_header(
             title="Quick Check-in",
-            emoji="🌸",
+            emoji="",
             description="Prenez un moment pour enregistrer votre état émotionnel. "
                        "Cela vous aidera à suivre votre bien-être au fil du temps."
         ),
@@ -149,7 +149,7 @@ def show_checkin():
     # ==================== HISTORIQUE ====================
     
     st.divider()
-    st.markdown("### 📊 Historique")
+    st.markdown("### Historique")
     
     db = get_database()
     history = db.get_mood_history(days=30)

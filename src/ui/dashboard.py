@@ -33,7 +33,7 @@ def get_insights_generator():
 
 def show_dashboard():
     """Afficher le dashboard avec charts et insights IA - Style Apple Santé."""
-    st.title("📊 Dashboard")
+    st.title("Dashboard")
     st.markdown("""
     <p style='font-size: 1.1rem; color: #4A5568; margin-bottom: 2rem;'>
     Visualisez vos tendances de bien-être et recevez des insights personnalisés.
@@ -43,7 +43,7 @@ def show_dashboard():
     db = get_database()
 
     # Section 1: Grande métrique centrale - Style Apple Santé
-    st.markdown("### 💜 Votre Bien-être")
+    st.markdown("### Votre Bien-être")
 
     # Sélecteur de période avec style élégant
     period_options = {
@@ -152,7 +152,7 @@ def show_dashboard():
         st.markdown("<div style='margin: 2rem 0;'></div>", unsafe_allow_html=True)
 
         # Graphique avec style Apple Santé - points individuels avec gradient de couleur
-        st.markdown(f"### 📈 Tendance ({selected_period_label})")
+        st.markdown(f"### Tendance ({selected_period_label})")
 
         fig_mood = px.scatter(
             df_mood,
@@ -213,7 +213,7 @@ def show_dashboard():
     st.markdown("<div style='margin: 3rem 0;'></div>", unsafe_allow_html=True)
 
     # Section 2: Activité Conversations
-    st.markdown("### 💬 Activité Conversations")
+    st.markdown("### Activité Conversations")
 
     conv_history = db.get_conversation_history(limit=100)
 
@@ -286,7 +286,7 @@ def show_dashboard():
     st.markdown("<div style='margin: 3rem 0;'></div>", unsafe_allow_html=True)
 
     # Section 3: AI Insights - L'expérience signature
-    st.markdown("### ✨ Vos Insights Personnalisés")
+    st.markdown("### Vos Insights Personnalisés")
     st.markdown("""
     <p style='color: #4A5568; margin-bottom: 1.5rem; font-size: 0.95rem;'>
     Découvrez des révélations actionnables sur votre bien-être mental
@@ -317,7 +317,7 @@ def show_dashboard():
                 <div class='skeleton' style='height: 1rem; width: 85%;'></div>
             </div>
             <p style='color: var(--color-primary); font-size: 0.9rem; text-align: center; margin-top: 1.5rem;'>
-                ✨ Génération de vos insights personnalisés...
+                Génération de vos insights personnalisés...
             </p>
             """, unsafe_allow_html=True)
 
@@ -339,8 +339,8 @@ def show_dashboard():
         except ValueError as e:
             loading_placeholder.empty()
             st.markdown("</div>", unsafe_allow_html=True)
-            st.error(f"❌ Configuration manquante: {e}")
-            st.info("💡 Assurez-vous que ANTHROPIC_API_KEY est définie dans votre fichier .env")
+            st.error(f"Configuration manquante: {e}")
+            st.info("Assurez-vous que ANTHROPIC_API_KEY est définie dans votre fichier .env")
             return
         except Exception as e:
             loading_placeholder.empty()
@@ -378,9 +378,9 @@ def show_dashboard():
 
                 # Afficher si cached ou frais
                 if age < timedelta(hours=24):
-                    st.success(f"✨ Insight récent (généré il y a {age.seconds // 3600}h)")
+                    st.success(f"Insight récent (généré il y a {age.seconds // 3600}h)")
                 else:
-                    st.warning("⚠️ Insight ancien, rechargez la page pour en générer un nouveau")
+                    st.warning("Insight ancien, rechargez la page pour en générer un nouveau")
 
     else:
         # Empty state élégant avec animation
@@ -390,7 +390,7 @@ def show_dashboard():
                     text-align: center; border: 2px dashed #CBD5E0;
                     animation: fadeInUp 0.5s ease-out;
                     box-shadow: 0 4px 12px rgba(107, 70, 193, 0.05);'>
-            <div style='font-size: 4rem; margin-bottom: 1.5rem; animation: pulse 2s infinite;'>📊</div>
+            <i class="fa-solid fa-chart-simple" style='font-size: 4rem; color: #CBD5E0; margin-bottom: 1.5rem;'></i>
             <div style='font-size: 1.2rem; font-weight: 600; color: var(--color-primary); margin-bottom: 0.75rem;'>
                 Aucune donnée disponible
             </div>
