@@ -32,18 +32,26 @@ def get_insights_generator():
 
 
 def show_dashboard():
-    """Afficher le dashboard avec charts et insights IA - Style Apple Santé."""
-    st.title("📊 Dashboard")
+    """Afficher le dashboard avec charts et insights IA - Premium Modern Design."""
     st.markdown("""
-    <p style='font-size: 1.05rem; color: var(--color-text-medium); margin-bottom: 2rem; line-height: 1.6;'>
-    Visualisez vos tendances de bien-être et recevez des insights personnalisés.
-    </p>
+    <div style='margin-bottom: 2rem;'>
+        <h1 style='font-size: 2.5rem; margin-bottom: 0.5rem; color: var(--text-primary);'>
+            📊 Dashboard
+        </h1>
+        <p style='font-size: 1.1rem; color: var(--text-secondary); line-height: 1.7;'>
+            Visualisez vos tendances de bien-être et recevez des insights personnalisés.
+        </p>
+    </div>
     """, unsafe_allow_html=True)
 
     db = get_database()
 
-    # Section 1: Grande métrique centrale - Style Apple Santé
-    st.markdown("### 💜 Votre Bien-être")
+    # Section 1: Grande métrique centrale - Modern Design
+    st.markdown("""
+    <h2 style='font-size: 1.75rem; margin: 2rem 0 1.5rem 0; color: var(--text-primary);'>
+        💜 Votre Bien-être
+    </h2>
+    """, unsafe_allow_html=True)
 
     # Sélecteur de période avec style élégant
     period_options = {
@@ -80,23 +88,34 @@ def show_dashboard():
         # Calculer le delta (comparaison avec la moyenne)
         delta = latest_mood - avg_mood
 
-        # Grande métrique centrale - Style Apple Santé
+        # Grande métrique centrale - Premium Design
         st.markdown(f"""
         <div style='background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
-                    padding: 2.5rem; border-radius: 16px; text-align: center; margin-bottom: 1.5rem;
-                    box-shadow: 0 4px 12px rgba(107, 144, 128, 0.15);'>
-            <div style='color: rgba(255, 255, 255, 0.9); font-size: 0.9rem; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 0.5rem;'>
-                Score Actuel
-            </div>
-            <div style='color: white; font-size: 3.5rem; font-weight: 700; line-height: 1; margin-bottom: 0.25rem;'>
-                {latest_mood:.1f}
-            </div>
-            <div style='color: rgba(255, 255, 255, 0.85); font-size: 1rem;'>
-                sur 10
-            </div>
-            <div style='color: {"rgba(72, 187, 120, 1)" if delta >= 0 else "rgba(245, 101, 101, 1)"};
-                        font-size: 0.95rem; margin-top: 1rem; font-weight: 500;'>
-                {'+' if delta >= 0 else ''}{delta:.1f} vs moyenne
+                    padding: 3.5rem 2.5rem; border-radius: var(--radius-xl); text-align: center; margin-bottom: 2rem;
+                    box-shadow: var(--shadow-xl), 0 0 60px var(--color-primary-glow);
+                    border: 1px solid var(--border-accent);
+                    position: relative; overflow: hidden;'>
+            <div style='position: absolute; top: -50%; right: -50%; width: 200%; height: 200%;
+                        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+                        animation: pulse 8s infinite; pointer-events: none;'></div>
+            <div style='position: relative; z-index: 1;'>
+                <div style='color: rgba(255, 255, 255, 0.9); font-size: 0.95rem; font-weight: 600;
+                            letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1rem;'>
+                    Score Actuel
+                </div>
+                <div style='color: white; font-size: 4.5rem; font-weight: 900; line-height: 1;
+                            margin-bottom: 0.5rem; text-shadow: 0 4px 20px rgba(0,0,0,0.2);'>
+                    {latest_mood:.1f}
+                </div>
+                <div style='color: rgba(255, 255, 255, 0.85); font-size: 1.1rem; margin-bottom: 1.5rem;'>
+                    sur 10
+                </div>
+                <div style='display: inline-block; padding: 0.5rem 1.5rem; border-radius: var(--radius-md);
+                            background: {"rgba(72, 187, 120, 0.2)" if delta >= 0 else "rgba(245, 101, 101, 0.2)"};
+                            border: 1px solid {"rgba(72, 187, 120, 0.4)" if delta >= 0 else "rgba(245, 101, 101, 0.4)"};
+                            color: white; font-size: 1rem; font-weight: 600;'>
+                    {'+' if delta >= 0 else ''}{delta:.1f} vs moyenne
+                </div>
             </div>
         </div>
         """, unsafe_allow_html=True)

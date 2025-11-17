@@ -3,68 +3,161 @@ Styles CSS centralisés pour l'application Serene
 Design system cohérent avec palette apaisante pour santé mentale
 """
 
-# Palette de couleurs unifiée
-COLORS = {
+# Palette de couleurs - Light Theme
+COLORS_LIGHT = {
     # Primaires - Tons apaisants vert sauge
     "primary": "#6B9080",
     "primary_light": "#A4C3B2",
     "primary_lighter": "#CCE3DE",
     "primary_dark": "#557568",
-    
-    # Neutres
-    "neutral_bg": "#F7FAFC",
-    "neutral_light": "#EDF2F7",
-    "white": "#FFFFFF",
-    
+    "primary_glow": "rgba(107, 144, 128, 0.15)",
+
+    # Backgrounds
+    "bg_primary": "#FAFBFC",
+    "bg_secondary": "#FFFFFF",
+    "bg_tertiary": "#F7FAFC",
+    "bg_elevated": "#FFFFFF",
+
+    # Borders
+    "border_primary": "#E2E8F0",
+    "border_secondary": "#EDF2F7",
+    "border_accent": "#CCE3DE",
+
     # Texte
-    "text_dark": "#2D3748",
-    "text_medium": "#4A5568",
-    "text_light": "#718096",
-    
-    # Mood colors (gradient subtil)
-    "mood_excellent": "#48BB78",  # Vert
-    "mood_bien": "#6B9080",       # Vert sauge (primary)
-    "mood_neutre": "#718096",     # Gris
-    "mood_difficile": "#ED8936",  # Orange doux
-    "mood_tres_difficile": "#E76F51",  # Rouge terre cuite
-    
+    "text_primary": "#1A202C",
+    "text_secondary": "#4A5568",
+    "text_tertiary": "#718096",
+    "text_inverse": "#FFFFFF",
+
+    # Mood colors
+    "mood_excellent": "#48BB78",
+    "mood_bien": "#6B9080",
+    "mood_neutre": "#718096",
+    "mood_difficile": "#ED8936",
+    "mood_tres_difficile": "#E76F51",
+
     # Feedback
     "success": "#48BB78",
     "error": "#E76F51",
     "warning": "#ED8936",
-    
+    "info": "#4299E1",
+
     # Ombres
-    "shadow_sm": "0 1px 3px rgba(0, 0, 0, 0.04)",
-    "shadow_md": "0 4px 12px rgba(107, 144, 128, 0.08)",
-    "shadow_lg": "0 8px 24px rgba(107, 144, 128, 0.12)",
+    "shadow_sm": "0 1px 3px rgba(0, 0, 0, 0.06)",
+    "shadow_md": "0 4px 16px rgba(0, 0, 0, 0.08)",
+    "shadow_lg": "0 12px 32px rgba(0, 0, 0, 0.12)",
+    "shadow_xl": "0 20px 48px rgba(0, 0, 0, 0.16)",
 }
 
+# Palette de couleurs - Dark Theme
+COLORS_DARK = {
+    # Primaires - Tons apaisants vert sauge (ajustés pour dark)
+    "primary": "#7BA896",
+    "primary_light": "#98C4B0",
+    "primary_lighter": "#B5D9C9",
+    "primary_dark": "#5D8575",
+    "primary_glow": "rgba(123, 168, 150, 0.25)",
 
-def get_main_css():
-    """Retourne le CSS principal de l'application."""
+    # Backgrounds - Dark elevated surfaces
+    "bg_primary": "#0F1419",
+    "bg_secondary": "#1A1F26",
+    "bg_tertiary": "#242A33",
+    "bg_elevated": "#2D3440",
+
+    # Borders
+    "border_primary": "#2D3440",
+    "border_secondary": "#3A4250",
+    "border_accent": "#5D8575",
+
+    # Texte
+    "text_primary": "#E8EBF0",
+    "text_secondary": "#A0AEC0",
+    "text_tertiary": "#718096",
+    "text_inverse": "#1A202C",
+
+    # Mood colors (brightened for dark theme)
+    "mood_excellent": "#5ECFA0",
+    "mood_bien": "#7BA896",
+    "mood_neutre": "#8A95A5",
+    "mood_difficile": "#F59E6C",
+    "mood_tres_difficile": "#F08A73",
+
+    # Feedback
+    "success": "#5ECFA0",
+    "error": "#F08A73",
+    "warning": "#F59E6C",
+    "info": "#63B3ED",
+
+    # Ombres (plus prononcées pour dark theme)
+    "shadow_sm": "0 1px 3px rgba(0, 0, 0, 0.3)",
+    "shadow_md": "0 4px 16px rgba(0, 0, 0, 0.4)",
+    "shadow_lg": "0 12px 32px rgba(0, 0, 0, 0.5)",
+    "shadow_xl": "0 20px 48px rgba(0, 0, 0, 0.6)",
+}
+
+# Default to light theme
+COLORS = COLORS_LIGHT
+
+
+def get_theme_colors(theme="light"):
+    """Retourne la palette de couleurs pour le thème spécifié."""
+    return COLORS_DARK if theme == "dark" else COLORS_LIGHT
+
+
+def get_main_css(theme="light"):
+    """Retourne le CSS principal de l'application avec support du thème."""
+    colors = get_theme_colors(theme)
+
     return f"""
     <style>
-    /* ==================== ROOT VARIABLES ==================== */
+    /* ==================== ROOT VARIABLES - THEME DYNAMIC ==================== */
     :root {{
-        --color-primary: {COLORS['primary']};
-        --color-primary-light: {COLORS['primary_light']};
-        --color-primary-lighter: {COLORS['primary_lighter']};
-        --color-primary-dark: {COLORS['primary_dark']};
-        --color-neutral-bg: {COLORS['neutral_bg']};
-        --color-neutral-light: {COLORS['neutral_light']};
-        --color-white: {COLORS['white']};
-        --color-text-dark: {COLORS['text_dark']};
-        --color-text-medium: {COLORS['text_medium']};
-        --color-text-light: {COLORS['text_light']};
-        --color-success: {COLORS['success']};
-        --color-error: {COLORS['error']};
-        --shadow-sm: {COLORS['shadow_sm']};
-        --shadow-md: {COLORS['shadow_md']};
-        --shadow-lg: {COLORS['shadow_lg']};
+        /* Colors */
+        --color-primary: {colors['primary']};
+        --color-primary-light: {colors['primary_light']};
+        --color-primary-lighter: {colors['primary_lighter']};
+        --color-primary-dark: {colors['primary_dark']};
+        --color-primary-glow: {colors['primary_glow']};
+
+        /* Backgrounds */
+        --bg-primary: {colors['bg_primary']};
+        --bg-secondary: {colors['bg_secondary']};
+        --bg-tertiary: {colors['bg_tertiary']};
+        --bg-elevated: {colors['bg_elevated']};
+
+        /* Borders */
+        --border-primary: {colors['border_primary']};
+        --border-secondary: {colors['border_secondary']};
+        --border-accent: {colors['border_accent']};
+
+        /* Text */
+        --text-primary: {colors['text_primary']};
+        --text-secondary: {colors['text_secondary']};
+        --text-tertiary: {colors['text_tertiary']};
+        --text-inverse: {colors['text_inverse']};
+
+        /* Feedback */
+        --color-success: {colors['success']};
+        --color-error: {colors['error']};
+        --color-warning: {colors['warning']};
+        --color-info: {colors['info']};
+
+        /* Shadows */
+        --shadow-sm: {colors['shadow_sm']};
+        --shadow-md: {colors['shadow_md']};
+        --shadow-lg: {colors['shadow_lg']};
+        --shadow-xl: {colors['shadow_xl']};
+
+        /* Radius */
         --radius-sm: 8px;
-        --radius-md: 12px;
-        --radius-lg: 16px;
-        --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        --radius-md: 14px;
+        --radius-lg: 18px;
+        --radius-xl: 24px;
+
+        /* Transitions */
+        --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+        --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     }}
     
     /* ==================== ANIMATIONS SUBTILES ==================== */
@@ -113,101 +206,191 @@ def get_main_css():
     }}
     
     /* ==================== GLOBAL STYLES ==================== */
+    * {{
+        transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+    }}
+
     .main {{
-        background-color: var(--color-neutral-bg);
+        background-color: var(--bg-primary);
         padding: 2rem 3rem;
     }}
-    
+
     .main .block-container {{
         padding-top: 2rem;
-        max-width: 900px;
+        max-width: 1000px;
     }}
-    
+
     /* Réduire l'espacement entre éléments */
     .element-container {{
         margin-bottom: 0.75rem;
     }}
-    
-    /* ==================== SIDEBAR ==================== */
-    [data-testid="stSidebar"] {{
-        background: linear-gradient(180deg, var(--color-white) 0%, var(--color-neutral-bg) 100%);
-        padding: 2rem 1.5rem;
-        min-width: 280px !important;
+
+    /* Smooth scroll */
+    html {{
+        scroll-behavior: smooth;
+    }}
+
+    body {{
+        background-color: var(--bg-primary);
     }}
     
+    /* ==================== SIDEBAR - MODERN DESIGN ==================== */
+    [data-testid="stSidebar"] {{
+        background: var(--bg-secondary);
+        padding: 1.5rem 1rem;
+        min-width: 280px !important;
+        border-right: 1px solid var(--border-primary);
+        backdrop-filter: blur(20px);
+    }}
+
+    [data-testid="stSidebar"]::before {{
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 200px;
+        background: linear-gradient(180deg, var(--color-primary-glow) 0%, transparent 100%);
+        pointer-events: none;
+        z-index: 0;
+    }}
+
+    [data-testid="stSidebar"] > div {{
+        position: relative;
+        z-index: 1;
+    }}
+
     [data-testid="stSidebar"] h1 {{
         font-size: 1.75rem;
         color: var(--color-primary);
-        font-weight: 600;
+        font-weight: 700;
         margin-bottom: 0.5rem;
         text-align: center;
     }}
-    
-    /* Navigation radio buttons */
+
+    /* Navigation radio buttons - Modern cards */
     [data-testid="stSidebar"] .stRadio > div {{
         gap: 0.5rem;
     }}
-    
+
     [data-testid="stSidebar"] .stRadio label {{
-        background-color: transparent;
-        padding: 0.875rem 1rem;
+        background: var(--bg-tertiary);
+        padding: 1rem 1.25rem;
         border-radius: var(--radius-md);
         transition: var(--transition-smooth);
-        border: 1px solid transparent;
+        border: 1px solid var(--border-primary);
         cursor: pointer;
+        font-weight: 500;
+        color: var(--text-secondary);
+        position: relative;
+        overflow: hidden;
     }}
-    
+
+    [data-testid="stSidebar"] .stRadio label::before {{
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: var(--color-primary);
+        transform: scaleY(0);
+        transition: transform 0.3s ease;
+    }}
+
     [data-testid="stSidebar"] .stRadio label:hover {{
-        background-color: var(--color-primary-lighter);
-        border-color: var(--color-primary-light);
+        background: var(--bg-elevated);
+        border-color: var(--border-accent);
+        transform: translateX(4px);
+        box-shadow: var(--shadow-sm);
+    }}
+
+    [data-testid="stSidebar"] .stRadio label:has(input:checked) {{
+        background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+        border-color: var(--color-primary);
+        color: var(--text-inverse);
+        box-shadow: var(--shadow-md), 0 0 20px var(--color-primary-glow);
+    }}
+
+    [data-testid="stSidebar"] .stRadio label:has(input:checked)::before {{
+        transform: scaleY(1);
     }}
     
-    /* ==================== TYPOGRAPHY ==================== */
+    /* ==================== TYPOGRAPHY - ENHANCED ==================== */
     h1, h2, h3 {{
-        color: var(--color-text-dark);
-        font-weight: 600;
-        line-height: 1.3;
+        color: var(--text-primary);
+        font-weight: 700;
+        line-height: 1.2;
+        letter-spacing: -0.02em;
     }}
 
     h1 {{
-        font-size: 2rem;
-        margin-bottom: 0.75rem;
+        font-size: 2.25rem;
+        margin-bottom: 1rem;
+        background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
     }}
 
     h2 {{
-        font-size: 1.5rem;
-        margin: 2rem 0 1rem 0;
+        font-size: 1.75rem;
+        margin: 2.5rem 0 1.25rem 0;
+        color: var(--text-primary);
     }}
 
     h3 {{
-        font-size: 1.15rem;
-        margin: 1.5rem 0 0.75rem 0;
+        font-size: 1.25rem;
+        margin: 2rem 0 1rem 0;
         font-weight: 600;
+        color: var(--text-primary);
     }}
 
     h4 {{
-        font-size: 1.05rem;
-        margin: 1rem 0 0.5rem 0;
+        font-size: 1.1rem;
+        margin: 1.5rem 0 0.75rem 0;
         font-weight: 600;
-        color: var(--color-text-dark);
+        color: var(--text-primary);
     }}
 
     p {{
-        color: var(--color-text-medium);
-        line-height: 1.6;
-        font-size: 0.95rem;
+        color: var(--text-secondary);
+        line-height: 1.7;
+        font-size: 1rem;
+    }}
+
+    /* Enhanced text */
+    .text-gradient {{
+        background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-weight: 700;
     }}
     
     /* ==================== FORMS ==================== */
     
-    /* Form container */
+    /* Form container - Modern glassmorphism */
     .stForm {{
-        background-color: var(--color-white);
-        padding: 2rem;
+        background: var(--bg-elevated);
+        padding: 2.5rem;
         border-radius: var(--radius-lg);
-        box-shadow: var(--shadow-md);
-        margin: 1.5rem 0;
-        border: 1px solid var(--color-neutral-light);
+        box-shadow: var(--shadow-lg);
+        margin: 2rem 0;
+        border: 1px solid var(--border-primary);
+        backdrop-filter: blur(10px);
+        position: relative;
+        overflow: hidden;
+    }}
+
+    .stForm::before {{
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
     }}
     
     /* Slider */
@@ -216,30 +399,43 @@ def get_main_css():
     }}
 
     .stSlider > label {{
-        font-weight: 500 !important;
-        color: var(--color-text-dark) !important;
-        font-size: 1rem !important;
+        font-weight: 600 !important;
+        color: var(--text-primary) !important;
+        font-size: 1.05rem !important;
     }}
 
     .stSlider [data-baseweb="slider"] {{
-        margin-top: 0.5rem;
+        margin-top: 1rem;
     }}
 
     .stSlider [role="slider"] {{
-        background-color: var(--color-primary) !important;
-        width: 22px !important;
-        height: 22px !important;
-        box-shadow: var(--shadow-sm);
-        border: 2px solid var(--color-white);
+        background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%) !important;
+        width: 24px !important;
+        height: 24px !important;
+        box-shadow: var(--shadow-md), 0 0 0 4px var(--color-primary-glow);
+        border: 3px solid var(--bg-elevated);
+        cursor: grab;
     }}
 
     .stSlider [role="slider"]:hover {{
-        box-shadow: 0 0 0 4px rgba(107, 144, 128, 0.15);
+        box-shadow: var(--shadow-lg), 0 0 0 6px var(--color-primary-glow);
+        transform: scale(1.1);
     }}
 
-    /* Barre du slider */
+    .stSlider [role="slider"]:active {{
+        cursor: grabbing;
+        transform: scale(0.95);
+    }}
+
+    /* Barre du slider - with gradient track */
     .stSlider [data-baseweb="slider"] > div:first-child {{
-        background-color: var(--white) !important;
+        background: linear-gradient(90deg,
+            var(--color-error) 0%,
+            var(--color-warning) 40%,
+            var(--color-primary) 70%,
+            var(--color-success) 100%) !important;
+        height: 6px !important;
+        border-radius: 3px;
     }}
 
 
@@ -251,49 +447,73 @@ def get_main_css():
 
     
 
-    /* Text Area */
+    /* Text Area - Modern design */
     .stTextArea > label {{
-        font-weight: 500 !important;
-        color: var(--color-text-dark) !important;
-        margin-bottom: 0.5rem;
+        font-weight: 600 !important;
+        color: var(--text-primary) !important;
+        margin-bottom: 0.75rem;
+        font-size: 1.05rem !important;
     }}
-    
+
     .stTextArea textarea {{
         border-radius: var(--radius-md) !important;
-        border: 2px solid var(--color-neutral-light) !important;
-        padding: 0.875rem !important;
-        font-size: 0.95rem !important;
+        border: 2px solid var(--border-primary) !important;
+        padding: 1rem 1.25rem !important;
+        font-size: 1rem !important;
         transition: var(--transition-smooth);
-        background-color: var(--color-white);
-        line-height: 1.5 !important;
+        background-color: var(--bg-tertiary);
+        color: var(--text-primary);
+        line-height: 1.6 !important;
     }}
-    
+
     .stTextArea textarea:focus {{
         border-color: var(--color-primary) !important;
-        box-shadow: 0 0 0 3px rgba(107, 144, 128, 0.1) !important;
+        box-shadow: 0 0 0 4px var(--color-primary-glow), var(--shadow-md) !important;
         outline: none !important;
+        background-color: var(--bg-elevated);
+    }}
+
+    .stTextArea textarea::placeholder {{
+        color: var(--text-tertiary);
+        opacity: 0.7;
     }}
     
-    /* Submit Button */
+    /* Submit Button - Premium design */
     .stForm button[kind="primary"] {{
-        background-color: var(--color-primary) !important;
-        color: white !important;
+        background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%) !important;
+        color: var(--text-inverse) !important;
         border: none !important;
-        padding: 0.875rem 2rem !important;
-        font-size: 1rem !important;
-        font-weight: 500 !important;
+        padding: 1rem 2.5rem !important;
+        font-size: 1.05rem !important;
+        font-weight: 600 !important;
         border-radius: var(--radius-md) !important;
         transition: var(--transition-smooth) !important;
-        box-shadow: var(--shadow-sm);
+        box-shadow: var(--shadow-md), 0 4px 20px var(--color-primary-glow);
         width: 100%;
+        position: relative;
+        overflow: hidden;
     }}
-    
+
+    .stForm button[kind="primary"]::before {{
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s ease;
+    }}
+
     .stForm button[kind="primary"]:hover {{
-        background-color: var(--color-primary-dark) !important;
-        box-shadow: var(--shadow-md);
-        transform: translateY(-1px);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg), 0 8px 30px var(--color-primary-glow);
     }}
-    
+
+    .stForm button[kind="primary"]:hover::before {{
+        left: 100%;
+    }}
+
     .stForm button[kind="primary"]:active {{
         transform: translateY(0);
     }}
@@ -494,52 +714,103 @@ def get_main_css():
 
     /* ==================== CARD COMPONENTS ==================== */
 
-    /* Statistical cards for dashboard metrics */
+    /* Statistical cards - Modern glassmorphism */
     .stat-card {{
-        background-color: var(--color-neutral-bg);
-        padding: 1.5rem;
-        border-radius: var(--radius-md);
-        text-align: center;
-        box-shadow: var(--shadow-sm);
-        transition: var(--transition-smooth);
-        border: 1px solid var(--color-neutral-light);
-    }}
-
-    .stat-card:hover {{
-        transform: translateY(-2px);
-        box-shadow: var(--shadow-md);
-    }}
-
-    /* Feature cards for home page */
-    .feature-card {{
-        background-color: var(--color-white);
-        padding: 2rem;
-        border-radius: var(--radius-md);
-        box-shadow: var(--shadow-sm);
-        transition: var(--transition-smooth);
-        border: 1px solid var(--color-neutral-light);
-    }}
-
-    .feature-card:hover {{
-        transform: translateY(-2px);
-        box-shadow: var(--shadow-md);
-        border-color: var(--color-primary-light);
-    }}
-
-    /* Call-to-action cards */
-    .cta-card {{
-        background: linear-gradient(135deg, var(--color-primary-lighter) 0%, var(--color-neutral-bg) 100%);
+        background: var(--bg-elevated);
         padding: 2rem;
         border-radius: var(--radius-lg);
         text-align: center;
-        border-left: 4px solid var(--color-primary);
         box-shadow: var(--shadow-md);
         transition: var(--transition-smooth);
+        border: 1px solid var(--border-primary);
+        backdrop-filter: blur(10px);
+        position: relative;
+        overflow: hidden;
+    }}
+
+    .stat-card::before {{
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+    }}
+
+    .stat-card:hover {{
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-xl);
+        border-color: var(--border-accent);
+    }}
+
+    /* Feature cards - Premium design */
+    .feature-card {{
+        background: var(--bg-elevated);
+        padding: 2.5rem;
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-md);
+        transition: var(--transition-smooth);
+        border: 1px solid var(--border-primary);
+        backdrop-filter: blur(10px);
+        position: relative;
+        overflow: hidden;
+    }}
+
+    .feature-card::after {{
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, var(--color-primary-glow) 0%, transparent 70%);
+        opacity: 0;
+        transition: opacity 0.5s ease;
+        pointer-events: none;
+    }}
+
+    .feature-card:hover {{
+        transform: translateY(-6px);
+        box-shadow: var(--shadow-xl);
+        border-color: var(--color-primary);
+    }}
+
+    .feature-card:hover::after {{
+        opacity: 1;
+    }}
+
+    /* Call-to-action cards - Enhanced gradient */
+    .cta-card {{
+        background: linear-gradient(135deg, var(--bg-elevated) 0%, var(--bg-tertiary) 100%);
+        padding: 3rem 2rem;
+        border-radius: var(--radius-xl);
+        text-align: center;
+        border: 2px solid var(--border-accent);
+        box-shadow: var(--shadow-lg), 0 0 40px var(--color-primary-glow);
+        transition: var(--transition-smooth);
+        position: relative;
+        overflow: hidden;
+    }}
+
+    .cta-card::before {{
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(107, 144, 128, 0.1), transparent);
+        transition: left 0.6s ease;
     }}
 
     .cta-card:hover {{
-        transform: scale(1.01);
-        box-shadow: var(--shadow-lg);
+        transform: scale(1.02);
+        box-shadow: var(--shadow-xl), 0 0 60px var(--color-primary-glow);
+    }}
+
+    .cta-card:hover::before {{
+        left: 100%;
     }}
 
     /* Gradient text */
