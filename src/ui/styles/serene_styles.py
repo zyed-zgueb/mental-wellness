@@ -374,7 +374,9 @@ def get_main_css():
     }}
 
     /* ==================== BOUTONS PRIMAIRES - STYLE UNIFIÉ NOIR ==================== */
-    /* Règle globale simple pour TOUS les boutons primaires - Fond noir */
+    /* Cibler les classes Streamlit Emotion CSS générées */
+    button.st-emotion-cache-916x6u,
+    button[class*="st-emotion-cache"],
     button[kind="primary"] {{
         background-color: #000000 !important;
         background: #000000 !important;
@@ -394,12 +396,18 @@ def get_main_css():
         cursor: pointer !important;
     }}
 
+    button.st-emotion-cache-916x6u:hover,
+    button[class*="st-emotion-cache"]:hover,
     button[kind="primary"]:hover {{
         background-color: #1A1A1A !important;
         background: #1A1A1A !important;
         background-image: none !important;
     }}
 
+    button.st-emotion-cache-916x6u:active,
+    button.st-emotion-cache-916x6u:focus,
+    button[class*="st-emotion-cache"]:active,
+    button[class*="st-emotion-cache"]:focus,
     button[kind="primary"]:active,
     button[kind="primary"]:focus {{
         background-color: #000000 !important;
@@ -409,6 +417,8 @@ def get_main_css():
     }}
 
     /* Texte blanc dans tous les boutons primaires */
+    button.st-emotion-cache-916x6u *,
+    button[class*="st-emotion-cache"] *,
     button[kind="primary"] *,
     button[kind="primary"] p,
     button[kind="primary"] div,
