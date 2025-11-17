@@ -88,7 +88,7 @@ def show_checkin():
     with st.form("checkin_form", clear_on_submit=True):
         # Slider avec label
         st.markdown(
-            f"<p style='font-weight: 500; color: {COLORS['text_dark']}; "
+            f"<p style='font-weight: 500; color: {COLORS['charcoal']}; "
             f"margin-bottom: 0.5rem;'>Comment vous sentez-vous maintenant ?</p>",
             unsafe_allow_html=True
         )
@@ -111,7 +111,7 @@ def show_checkin():
         
         # Zone de notes
         st.markdown(
-            f"<p style='font-weight: 500; color: {COLORS['text_dark']}; "
+            f"<p style='font-weight: 500; color: {COLORS['charcoal']}; "
             f"margin-bottom: 0.5rem; margin-top: 1rem;'>Notes (optionnel)</p>",
             unsafe_allow_html=True
         )
