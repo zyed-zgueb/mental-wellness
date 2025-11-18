@@ -308,6 +308,18 @@ def get_main_css():
         font-weight: 300;
     }}
 
+    /* Masquer les ancres automatiques de Streamlit dans les titres */
+    h1 a, h2 a, h3 a, h4 a,
+    h1 .anchor-link, h2 .anchor-link, h3 .anchor-link, h4 .anchor-link {{
+        display: none !important;
+    }}
+
+    /* Masquer les liens d'ancrage adjacents générés par Streamlit */
+    a[href^="#"]:has(+ h1), a[href^="#"]:has(+ h2), a[href^="#"]:has(+ h3), a[href^="#"]:has(+ h4),
+    h1 + a[href^="#"], h2 + a[href^="#"], h3 + a[href^="#"], h4 + a[href^="#"] {{
+        display: none !important;
+    }}
+
     /* ==================== FORMS - EDITORIAL LUXURY ==================== */
 
     /* Form container - Minimal white box */
