@@ -83,7 +83,10 @@ def show_checkin():
     
     # ==================== FORMULAIRE DE CHECK-IN ====================
     
-    st.markdown("### Nouveau Check-in")
+    st.markdown("""<h2 style='font-family: "Cormorant Garamond", serif; font-size: 2rem; font-weight: 300;
+                color: var(--black); margin-bottom: 2rem; letter-spacing: 0.02em;'>
+    Nouveau Check-in</h2>
+                """, unsafe_allow_html=True)
     
     with st.form("checkin_form", clear_on_submit=True):
         # Slider avec label
@@ -150,7 +153,10 @@ def show_checkin():
     # ==================== HISTORIQUE ====================
     
     st.divider()
-    st.markdown("### Historique")
+    st.markdown("""<h2 style='font-family: "Cormorant Garamond", serif; font-size: 2rem; font-weight: 300;
+                color: var(--black); margin-bottom: 2rem; letter-spacing: 0.02em;'>
+    Historique</h2>
+                """, unsafe_allow_html=True)
     
     db = get_database()
     history = db.get_mood_history(days=30)
