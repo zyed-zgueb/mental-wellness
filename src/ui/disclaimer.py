@@ -21,9 +21,7 @@ def show_disclaimer():
                     border-bottom: 1px solid var(--line-light);'>
             <h1 style='font-family: "Cormorant Garamond", serif; color: var(--black);
                        font-size: 3rem; font-weight: 300; margin-bottom: 1rem;
-                       letter-spacing: 0.05em; text-transform: uppercase;'>
-                SERENE
-            </h1>
+                       letter-spacing: 0.05em; text-transform: uppercase;'>SERENE</h1>
             <div style='width: 80px; height: 1px; background-color: var(--line-dark); margin: 1.5rem auto;'></div>
             <p style='font-family: "Inter", sans-serif; color: var(--gray-dark);
                      font-size: 0.9375rem; font-weight: 300; letter-spacing: 0.02em;'>
