@@ -208,7 +208,7 @@ def get_main_css():
     [data-testid="stSidebar"] {{
         background-color: var(--white);
         border-right: var(--border-thin) solid var(--line-light);
-        padding: var(--space-xl) 0;
+        padding: 0;
         min-width: 240px !important;
         max-width: 240px !important;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
@@ -234,7 +234,7 @@ def get_main_css():
         font-weight: 300;
         letter-spacing: 0.05em;
         margin-bottom: var(--space-lg);
-        text-align: left;
+        text-align: center;
         text-transform: uppercase;
         border-bottom: var(--border-thin) solid var(--line-light);
         padding-bottom: var(--space-sm);
