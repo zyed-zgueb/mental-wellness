@@ -151,6 +151,7 @@ def get_main_css():
     .main {{
         background-color: var(--ivory);
         padding: var(--space-xl) var(--space-lg);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
     }}
 
     .main .block-container {{
@@ -158,6 +159,44 @@ def get_main_css():
         max-width: 800px;
         padding-left: var(--space-md);
         padding-right: var(--space-md);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    }}
+
+    /* Contenu principal étendu quand la sidebar est masquée */
+    section.main {{
+        transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    }}
+
+    /* Ajuster le conteneur principal pour occuper tout l'espace quand sidebar est cachée */
+    [data-testid="stSidebar"][aria-expanded="false"] ~ section.main,
+    [data-testid="stSidebar"].collapsed ~ section.main {{
+        margin-left: 0 !important;
+        width: 100% !important;
+    }}
+
+    [data-testid="stSidebar"][aria-expanded="false"] ~ section.main .block-container,
+    [data-testid="stSidebar"].collapsed ~ section.main .block-container {{
+        max-width: 1200px !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }}
+
+    /* Alternative: Détecter quand sidebar est masquée via CSS container query */
+    /* Quand la sidebar a une largeur très petite (< 50px), considérer qu'elle est masquée */
+    @supports (container-type: inline-size) {{
+        section[data-testid="stSidebar"] {{
+            container-type: inline-size;
+        }}
+    }}
+
+    /* Styles pour forcer l'expansion du contenu en cas de sidebar très étroite */
+    section.main {{
+        margin-left: auto !important;
+    }}
+
+    /* Override Streamlit default behavior pour sidebar collapse */
+    [data-testid="stSidebarNav"] {{
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
     }}
 
     /* Espacements généreux entre éléments */
@@ -172,10 +211,20 @@ def get_main_css():
         padding: var(--space-xl) 0;
         min-width: 240px !important;
         max-width: 240px !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
     }}
 
     [data-testid="stSidebar"] > div:first-child {{
         padding: 0 var(--space-md);
+    }}
+
+    /* Sidebar en mode réduit (collapsed) */
+    [data-testid="stSidebar"][aria-expanded="false"],
+    [data-testid="stSidebar"].collapsed {{
+        min-width: 0 !important;
+        max-width: 0 !important;
+        padding: 0 !important;
+        border-right: none !important;
     }}
 
     [data-testid="stSidebar"] h1 {{
@@ -823,6 +872,67 @@ def get_main_css():
         }}
     }}
     </style>
+
+    <script>
+    // Observer les changements de largeur de la sidebar pour ajuster le contenu principal
+    (function() {{
+        // Fonction pour ajuster le contenu en fonction de l'état de la sidebar
+        function adjustMainContent() {{
+            const sidebar = document.querySelector('[data-testid="stSidebar"]');
+            const mainContent = document.querySelector('section.main');
+
+            if (sidebar && mainContent) {{
+                const sidebarWidth = sidebar.offsetWidth;
+
+                // Si la sidebar est très étroite (< 100px), on considère qu'elle est masquée
+                if (sidebarWidth < 100) {{
+                    mainContent.style.marginLeft = '0';
+                    mainContent.style.width = '100%';
+                    const blockContainer = mainContent.querySelector('.block-container');
+                    if (blockContainer) {{
+                        blockContainer.style.maxWidth = '1200px';
+                        blockContainer.style.marginLeft = 'auto';
+                        blockContainer.style.marginRight = 'auto';
+                    }}
+                }} else {{
+                    // Reset aux valeurs par défaut quand la sidebar est visible
+                    mainContent.style.marginLeft = '';
+                    mainContent.style.width = '';
+                    const blockContainer = mainContent.querySelector('.block-container');
+                    if (blockContainer) {{
+                        blockContainer.style.maxWidth = '800px';
+                    }}
+                }}
+            }}
+        }}
+
+        // Observer les changements de taille avec ResizeObserver
+        const sidebar = document.querySelector('[data-testid="stSidebar"]');
+        if (sidebar) {{
+            const resizeObserver = new ResizeObserver(adjustMainContent);
+            resizeObserver.observe(sidebar);
+        }}
+
+        // Observer les changements dans le DOM (au cas où la sidebar est ajoutée dynamiquement)
+        const observer = new MutationObserver(function(mutations) {{
+            adjustMainContent();
+        }});
+
+        // Démarrer l'observation
+        observer.observe(document.body, {{
+            childList: true,
+            subtree: true,
+            attributes: true,
+            attributeFilter: ['style', 'class', 'aria-expanded']
+        }});
+
+        // Appel initial
+        setTimeout(adjustMainContent, 100);
+
+        // Réajuster lors du redimensionnement de la fenêtre
+        window.addEventListener('resize', adjustMainContent);
+    }})();
+    </script>
     """
 
 
