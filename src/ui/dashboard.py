@@ -62,33 +62,33 @@ def show_dashboard():
     """Afficher le dashboard - Gallery minimalist style."""
 
     # Header minimaliste
-    st.markdown("""
-    <div style='animation: fadeInDown 0.4s ease-out; margin-bottom: 3rem;
-                padding-bottom: 2rem; border-bottom: 1px solid var(--line-light);'>
-        <h1 style='font-family: "Cormorant Garamond", serif; font-size: 3rem;
-                   color: var(--black); font-weight: 300; margin-bottom: 1rem;
-                   letter-spacing: 0.02em; line-height: 1.1;'>
-            Dashboard
-        </h1>
-        <p style='font-family: "Inter", sans-serif; font-size: 0.9375rem;
-                 color: var(--gray-dark); margin: 0; line-height: 1.8;
-                 font-weight: 300; max-width: 600px;'>
-            Visualisez vos tendances de bien-être et recevez des insights personnalisés.
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown("""\
+<div style='animation: fadeInDown 0.4s ease-out; margin-bottom: 3rem; \
+padding-bottom: 2rem; border-bottom: 1px solid var(--line-light);'>
+<h1 style='font-family: "Cormorant Garamond", serif; font-size: 3rem; \
+color: var(--black); font-weight: 300; margin-bottom: 1rem; \
+letter-spacing: 0.02em; line-height: 1.1;'>\
+Dashboard\
+</h1>
+<p style='font-family: "Inter", sans-serif; font-size: 0.9375rem; \
+color: var(--gray-dark); margin: 0; line-height: 1.8; \
+font-weight: 300; max-width: 600px;'>\
+Visualisez vos tendances de bien-être et recevez des insights personnalisés.\
+</p>
+</div>
+""", unsafe_allow_html=True)
 
     db = get_database()
 
     # Section 1: Grande métrique centrale - Style minimaliste
-    st.markdown("""
-    <h2 style='font-family: "Cormorant Garamond", serif; font-size: 2rem;
-               font-weight: 300; color: var(--black); margin-bottom: 2rem;
-               letter-spacing: 0.02em;'>
-        <i class="fa-regular fa-heart" style='margin-right: 0.75rem; opacity: 0.65; font-size: 1.75rem;'></i>
-        Votre Bien-être
-    </h2>
-    """, unsafe_allow_html=True)
+    st.markdown("""\
+<h2 style='font-family: "Cormorant Garamond", serif; font-size: 2rem; \
+font-weight: 300; color: var(--black); margin-bottom: 2rem; \
+letter-spacing: 0.02em;'>\
+<i class="fa-regular fa-heart" style='margin-right: 0.75rem; opacity: 0.65; font-size: 1.75rem;'></i>\
+Votre Bien-être\
+</h2>
+""", unsafe_allow_html=True)
 
     # Sélecteur de période avec style élégant
     period_options = {
@@ -126,107 +126,107 @@ def show_dashboard():
         delta = latest_mood - avg_mood
 
         # Grande métrique centrale - Style minimaliste
-        st.markdown(f"""
-        <div style='background-color: var(--white); padding: 3rem 2rem;
-                    border: 1px solid var(--line-light); text-align: center;
-                    margin-bottom: 2rem; box-shadow: var(--shadow-subtle);'>
-            <div style='font-family: "Inter", sans-serif; color: var(--gray-medium);
-                       font-size: 0.75rem; font-weight: 400; letter-spacing: 0.1em;
-                       text-transform: uppercase; margin-bottom: 1rem;'>
-                Score Actuel
-            </div>
-            <div style='font-family: "Cormorant Garamond", serif; color: var(--black);
-                       font-size: 5rem; font-weight: 300; line-height: 1; margin-bottom: 0.5rem;'>
-                {latest_mood:.1f}
-            </div>
-            <div style='font-family: "Inter", sans-serif; color: var(--gray-medium);
-                       font-size: 0.875rem; font-weight: 300; margin-bottom: 1.5rem;'>
-                sur 10
-            </div>
-            <div style='width: 60px; height: 1px; background-color: var(--line-dark); margin: 1.5rem auto;'></div>
-            <div style='font-family: "Inter", sans-serif; color: var(--charcoal);
-                       font-size: 0.875rem; margin-top: 1rem; font-weight: 300;'>
-                {'+' if delta >= 0 else ''}{delta:.1f} vs moyenne
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown(f"""\
+<div style='background-color: var(--white); padding: 3rem 2rem; \
+border: 1px solid var(--line-light); text-align: center; \
+margin-bottom: 2rem; box-shadow: var(--shadow-subtle);'>
+<div style='font-family: "Inter", sans-serif; color: var(--gray-medium); \
+font-size: 0.75rem; font-weight: 400; letter-spacing: 0.1em; \
+text-transform: uppercase; margin-bottom: 1rem;'>\
+Score Actuel\
+</div>
+<div style='font-family: "Cormorant Garamond", serif; color: var(--black); \
+font-size: 5rem; font-weight: 300; line-height: 1; margin-bottom: 0.5rem;'>\
+{latest_mood:.1f}\
+</div>
+<div style='font-family: "Inter", sans-serif; color: var(--gray-medium); \
+font-size: 0.875rem; font-weight: 300; margin-bottom: 1.5rem;'>\
+sur 10\
+</div>
+<div style='width: 60px; height: 1px; background-color: var(--line-dark); margin: 1.5rem auto;'></div>
+<div style='font-family: "Inter", sans-serif; color: var(--charcoal); \
+font-size: 0.875rem; margin-top: 1rem; font-weight: 300;'>\
+{'+' if delta >= 0 else ''}{delta:.1f} vs moyenne\
+</div>
+</div>
+""", unsafe_allow_html=True)
 
         # Stats secondaires - Style minimaliste
         col1, col2, col3 = st.columns(3)
 
         with col1:
-            st.markdown(f"""
-            <div style='background-color: var(--white); padding: 1.5rem; text-align: center;
-                        border: 1px solid var(--line-light); box-shadow: var(--shadow-subtle);
-                        animation: fadeInUp 0.5s ease-out;'>
-                <div style='font-family: "Inter", sans-serif; color: var(--gray-light);
-                           font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.1em;
-                           margin-bottom: 0.75rem; font-weight: 400;'>
-                    Moyenne ({selected_period_label})
-                </div>
-                <div style='font-family: "Cormorant Garamond", serif; color: var(--black);
-                           font-size: 2.5rem; font-weight: 300;'>
-                    {avg_mood:.1f}
-                </div>
-                <div style='font-family: "Inter", sans-serif; color: var(--gray-medium);
-                           font-size: 0.75rem; font-weight: 300;'>
-                    sur 10
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
+            st.markdown(f"""\
+<div style='background-color: var(--white); padding: 1.5rem; text-align: center; \
+border: 1px solid var(--line-light); box-shadow: var(--shadow-subtle); \
+animation: fadeInUp 0.5s ease-out;'>
+<div style='font-family: "Inter", sans-serif; color: var(--gray-light); \
+font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.1em; \
+margin-bottom: 0.75rem; font-weight: 400;'>\
+Moyenne ({selected_period_label})\
+</div>
+<div style='font-family: "Cormorant Garamond", serif; color: var(--black); \
+font-size: 2.5rem; font-weight: 300;'>\
+{avg_mood:.1f}\
+</div>
+<div style='font-family: "Inter", sans-serif; color: var(--gray-medium); \
+font-size: 0.75rem; font-weight: 300;'>\
+sur 10\
+</div>
+</div>
+""", unsafe_allow_html=True)
 
         with col2:
-            st.markdown(f"""
-            <div style='background-color: var(--white); padding: 1.5rem; text-align: center;
-                        border: 1px solid var(--line-light); box-shadow: var(--shadow-subtle);
-                        animation: fadeInUp 0.6s ease-out;'>
-                <div style='font-family: "Inter", sans-serif; color: var(--gray-light);
-                           font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.1em;
-                           margin-bottom: 0.75rem; font-weight: 400;'>
-                    Minimum ({selected_period_label})
-                </div>
-                <div style='font-family: "Cormorant Garamond", serif; color: var(--black);
-                           font-size: 2.5rem; font-weight: 300;'>
-                    {min_mood}
-                </div>
-                <div style='font-family: "Inter", sans-serif; color: var(--gray-medium);
-                           font-size: 0.75rem; font-weight: 300;'>
-                    sur 10
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
+            st.markdown(f"""\
+<div style='background-color: var(--white); padding: 1.5rem; text-align: center; \
+border: 1px solid var(--line-light); box-shadow: var(--shadow-subtle); \
+animation: fadeInUp 0.6s ease-out;'>
+<div style='font-family: "Inter", sans-serif; color: var(--gray-light); \
+font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.1em; \
+margin-bottom: 0.75rem; font-weight: 400;'>\
+Minimum ({selected_period_label})\
+</div>
+<div style='font-family: "Cormorant Garamond", serif; color: var(--black); \
+font-size: 2.5rem; font-weight: 300;'>\
+{min_mood}\
+</div>
+<div style='font-family: "Inter", sans-serif; color: var(--gray-medium); \
+font-size: 0.75rem; font-weight: 300;'>\
+sur 10\
+</div>
+</div>
+""", unsafe_allow_html=True)
 
         with col3:
-            st.markdown(f"""
-            <div style='background-color: var(--white); padding: 1.5rem; text-align: center;
-                        border: 1px solid var(--line-light); box-shadow: var(--shadow-subtle);
-                        animation: fadeInUp 0.7s ease-out;'>
-                <div style='font-family: "Inter", sans-serif; color: var(--gray-light);
-                           font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.1em;
-                           margin-bottom: 0.75rem; font-weight: 400;'>
-                    Maximum ({selected_period_label})
-                </div>
-                <div style='font-family: "Cormorant Garamond", serif; color: var(--black);
-                           font-size: 2.5rem; font-weight: 300;'>
-                    {max_mood}
-                </div>
-                <div style='font-family: "Inter", sans-serif; color: var(--gray-medium);
-                           font-size: 0.75rem; font-weight: 300;'>
-                    sur 10
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
+            st.markdown(f"""\
+<div style='background-color: var(--white); padding: 1.5rem; text-align: center; \
+border: 1px solid var(--line-light); box-shadow: var(--shadow-subtle); \
+animation: fadeInUp 0.7s ease-out;'>
+<div style='font-family: "Inter", sans-serif; color: var(--gray-light); \
+font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.1em; \
+margin-bottom: 0.75rem; font-weight: 400;'>\
+Maximum ({selected_period_label})\
+</div>
+<div style='font-family: "Cormorant Garamond", serif; color: var(--black); \
+font-size: 2.5rem; font-weight: 300;'>\
+{max_mood}\
+</div>
+<div style='font-family: "Inter", sans-serif; color: var(--gray-medium); \
+font-size: 0.75rem; font-weight: 300;'>\
+sur 10\
+</div>
+</div>
+""", unsafe_allow_html=True)
 
         st.markdown("<div style='margin: 2rem 0;'></div>", unsafe_allow_html=True)
 
         # Graphique minimaliste monochrome
-        st.markdown(f"""
-        <h3 style='font-family: "Cormorant Garamond", serif; font-size: 1.5rem;
-                   font-weight: 400; color: var(--black); margin: var(--space-md) 0 var(--space-sm) 0;
-                   letter-spacing: 0.02em;'>
-            Tendance ({selected_period_label})
-        </h3>
-        """, unsafe_allow_html=True)
+        st.markdown(f"""\
+<h3 style='font-family: "Cormorant Garamond", serif; font-size: 1.5rem; \
+font-weight: 400; color: var(--black); margin: var(--space-md) 0 var(--space-sm) 0; \
+letter-spacing: 0.02em;'>\
+Tendance ({selected_period_label})\
+</h3>
+""", unsafe_allow_html=True)
 
         # Graphique avec échelle de gris
         fig_mood = px.scatter(
@@ -276,34 +276,34 @@ def show_dashboard():
 
     else:
         # État vide minimaliste
-        st.markdown("""
-        <div style='background-color: var(--ivory-dark); padding: 4rem 3rem;
-                    border: 1px solid var(--line-light); text-align: center;
-                    animation: fadeInUp 0.5s ease-out;'>
-            <div style='font-family: "Cormorant Garamond", serif; font-size: 1.75rem;
-                       font-weight: 300; color: var(--black); margin-bottom: 1rem;
-                       letter-spacing: 0.02em;'>
-                Commencez votre suivi
-            </div>
-            <div style='font-family: "Inter", sans-serif; font-size: 0.875rem;
-                       color: var(--gray-dark); font-weight: 300; line-height: 1.7;'>
-                Créez votre premier check-in pour visualiser vos tendances de bien-être
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown("""\
+<div style='background-color: var(--ivory-dark); padding: 4rem 3rem; \
+border: 1px solid var(--line-light); text-align: center; \
+animation: fadeInUp 0.5s ease-out;'>
+<div style='font-family: "Cormorant Garamond", serif; font-size: 1.75rem; \
+font-weight: 300; color: var(--black); margin-bottom: 1rem; \
+letter-spacing: 0.02em;'>\
+Commencez votre suivi\
+</div>
+<div style='font-family: "Inter", sans-serif; font-size: 0.875rem; \
+color: var(--gray-dark); font-weight: 300; line-height: 1.7;'>\
+Créez votre premier check-in pour visualiser vos tendances de bien-être\
+</div>
+</div>
+""", unsafe_allow_html=True)
 
     # Divider minimaliste
     st.markdown("<hr style='border: none; border-top: 1px solid var(--line-light); margin: 3rem 0;'>", unsafe_allow_html=True)
 
     # Section 2: Activité Conversations
-    st.markdown("""
-    <h2 style='font-family: "Cormorant Garamond", serif; font-size: 2rem;
-               font-weight: 300; color: var(--black); margin-bottom: 2rem;
-               letter-spacing: 0.02em;'>
-        <i class="fa-regular fa-message" style='margin-right: 0.75rem; opacity: 0.65; font-size: 1.75rem;'></i>
-        Activité Conversations
-    </h2>
-    """, unsafe_allow_html=True)
+    st.markdown("""\
+<h2 style='font-family: "Cormorant Garamond", serif; font-size: 2rem; \
+font-weight: 300; color: var(--black); margin-bottom: 2rem; \
+letter-spacing: 0.02em;'>\
+<i class="fa-regular fa-message" style='margin-right: 0.75rem; opacity: 0.65; font-size: 1.75rem;'></i>\
+Activité Conversations\
+</h2>
+""", unsafe_allow_html=True)
 
     conv_history = db.get_conversation_history(limit=100)
 
@@ -324,79 +324,79 @@ def show_dashboard():
         col1, col2 = st.columns(2)
 
         with col1:
-            st.markdown(f"""
-            <div style='background-color: var(--white); padding: 1.5rem; text-align: center;
-                        border: 1px solid var(--line-light); box-shadow: var(--shadow-subtle);'>
-                <div style='font-family: "Inter", sans-serif; color: var(--gray-light);
-                           font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.1em;
-                           margin-bottom: 0.75rem; font-weight: 400;'>
-                    Total
-                </div>
-                <div style='font-family: "Cormorant Garamond", serif; color: var(--black);
-                           font-size: 2.5rem; font-weight: 300;'>
-                    {total_conv}
-                </div>
-                <div style='font-family: "Inter", sans-serif; color: var(--gray-medium);
-                           font-size: 0.75rem; font-weight: 300;'>
-                    conversations
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
+            st.markdown(f"""\
+<div style='background-color: var(--white); padding: 1.5rem; text-align: center; \
+border: 1px solid var(--line-light); box-shadow: var(--shadow-subtle);'>
+<div style='font-family: "Inter", sans-serif; color: var(--gray-light); \
+font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.1em; \
+margin-bottom: 0.75rem; font-weight: 400;'>\
+Total\
+</div>
+<div style='font-family: "Cormorant Garamond", serif; color: var(--black); \
+font-size: 2.5rem; font-weight: 300;'>\
+{total_conv}\
+</div>
+<div style='font-family: "Inter", sans-serif; color: var(--gray-medium); \
+font-size: 0.75rem; font-weight: 300;'>\
+conversations\
+</div>
+</div>
+""", unsafe_allow_html=True)
 
         with col2:
-            st.markdown(f"""
-            <div style='background-color: var(--white); padding: 1.5rem; text-align: center;
-                        border: 1px solid var(--line-light); box-shadow: var(--shadow-subtle);'>
-                <div style='font-family: "Inter", sans-serif; color: var(--gray-light);
-                           font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.1em;
-                           margin-bottom: 0.75rem; font-weight: 400;'>
-                    Moyenne
-                </div>
-                <div style='font-family: "Cormorant Garamond", serif; color: var(--black);
-                           font-size: 2.5rem; font-weight: 300;'>
-                    {avg_per_day:.1f}
-                </div>
-                <div style='font-family: "Inter", sans-serif; color: var(--gray-medium);
-                           font-size: 0.75rem; font-weight: 300;'>
-                    par jour
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
+            st.markdown(f"""\
+<div style='background-color: var(--white); padding: 1.5rem; text-align: center; \
+border: 1px solid var(--line-light); box-shadow: var(--shadow-subtle);'>
+<div style='font-family: "Inter", sans-serif; color: var(--gray-light); \
+font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.1em; \
+margin-bottom: 0.75rem; font-weight: 400;'>\
+Moyenne\
+</div>
+<div style='font-family: "Cormorant Garamond", serif; color: var(--black); \
+font-size: 2.5rem; font-weight: 300;'>\
+{avg_per_day:.1f}\
+</div>
+<div style='font-family: "Inter", sans-serif; color: var(--gray-medium); \
+font-size: 0.75rem; font-weight: 300;'>\
+par jour\
+</div>
+</div>
+""", unsafe_allow_html=True)
 
     else:
         # État vide minimaliste
-        st.markdown("""
-        <div style='background-color: var(--ivory-dark); padding: 4rem 3rem;
-                    border: 1px solid var(--line-light); text-align: center;
-                    animation: fadeInUp 0.5s ease-out;'>
-            <div style='font-family: "Cormorant Garamond", serif; font-size: 1.75rem;
-                       font-weight: 300; color: var(--black); margin-bottom: 1rem;
-                       letter-spacing: 0.02em;'>
-                Démarrez votre première conversation
-            </div>
-            <div style='font-family: "Inter", sans-serif; font-size: 0.875rem;
-                       color: var(--gray-dark); font-weight: 300; line-height: 1.7;'>
-                Partagez vos pensées avec votre compagnon IA empathique
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown("""\
+<div style='background-color: var(--ivory-dark); padding: 4rem 3rem; \
+border: 1px solid var(--line-light); text-align: center; \
+animation: fadeInUp 0.5s ease-out;'>
+<div style='font-family: "Cormorant Garamond", serif; font-size: 1.75rem; \
+font-weight: 300; color: var(--black); margin-bottom: 1rem; \
+letter-spacing: 0.02em;'>\
+Démarrez votre première conversation\
+</div>
+<div style='font-family: "Inter", sans-serif; font-size: 0.875rem; \
+color: var(--gray-dark); font-weight: 300; line-height: 1.7;'>\
+Partagez vos pensées avec votre compagnon IA empathique\
+</div>
+</div>
+""", unsafe_allow_html=True)
 
     # Divider minimaliste
     st.markdown("<hr style='border: none; border-top: 1px solid var(--line-light); margin: 3rem 0;'>", unsafe_allow_html=True)
 
     # Section 3: AI Insights
-    st.markdown("""
-    <h2 style='font-family: "Cormorant Garamond", serif; font-size: 2rem;
-               font-weight: 300; color: var(--black); margin-bottom: 1rem;
-               letter-spacing: 0.02em;'>
-        <i class="fa-solid fa-sparkles" style='margin-right: 0.75rem; opacity: 0.65; font-size: 1.75rem;'></i>
-        Vos Insights Personnalisés
-    </h2>
-    <p style='font-family: "Inter", sans-serif; color: var(--gray-dark);
-             margin-bottom: 2rem; font-size: 0.875rem; font-weight: 300; line-height: 1.7;'>
-        Découvrez des révélations actionnables sur votre bien-être mental
-    </p>
-    """, unsafe_allow_html=True)
+    st.markdown("""\
+<h2 style='font-family: "Cormorant Garamond", serif; font-size: 2rem; \
+font-weight: 300; color: var(--black); margin-bottom: 1rem; \
+letter-spacing: 0.02em;'>\
+<i class="fa-solid fa-sparkles" style='margin-right: 0.75rem; opacity: 0.65; font-size: 1.75rem;'></i>\
+Vos Insights Personnalisés\
+</h2>
+<p style='font-family: "Inter", sans-serif; color: var(--gray-dark); \
+margin-bottom: 2rem; font-size: 0.875rem; font-weight: 300; line-height: 1.7;'>\
+Découvrez des révélations actionnables sur votre bien-être mental\
+</p>
+""", unsafe_allow_html=True)
 
     # Vérifier si des données existent (au moins 1 check-in ou 1 conversation)
     checkin_count = len(mood_data) if mood_data else 0
@@ -404,12 +404,12 @@ def show_dashboard():
 
     if checkin_count > 0 or conv_count > 0:
         # Card minimaliste pour insights
-        st.markdown("""
-        <div style='background-color: var(--white); padding: 2rem;
-                    border: 1px solid var(--line-light); border-left: 2px solid var(--black);
-                    box-shadow: var(--shadow-subtle); margin-bottom: 1rem;
-                    animation: fadeInUp 0.5s ease-out;'>
-        """, unsafe_allow_html=True)
+        st.markdown("""\
+<div style='background-color: var(--white); padding: 2rem; \
+border: 1px solid var(--line-light); border-left: 2px solid var(--black); \
+box-shadow: var(--shadow-subtle); margin-bottom: 1rem; \
+animation: fadeInUp 0.5s ease-out;'>
+""", unsafe_allow_html=True)
 
         # Loading skeleton pendant la génération
         loading_placeholder = st.empty()
@@ -438,13 +438,13 @@ def show_dashboard():
             clean_content = remove_emojis(insight_content)
 
             # Afficher l'insight avec style minimaliste
-            st.markdown(f"""
-            <div style='font-family: "Inter", sans-serif; color: var(--charcoal);
-                       line-height: 1.8; font-size: 0.9375rem; font-weight: 300;
-                       animation: fadeIn 0.5s ease-out;'>
-                {clean_content}
-            </div>
-            """, unsafe_allow_html=True)
+            st.markdown(f"""\
+<div style='font-family: "Inter", sans-serif; color: var(--charcoal); \
+line-height: 1.8; font-size: 0.9375rem; font-weight: 300; \
+animation: fadeIn 0.5s ease-out;'>\
+{clean_content}\
+</div>
+""", unsafe_allow_html=True)
 
         except ValueError as e:
             loading_placeholder.empty()
@@ -494,21 +494,21 @@ def show_dashboard():
 
     else:
         # Empty state minimaliste
-        st.markdown("""
-        <div style='background-color: var(--ivory-dark); padding: 4rem 3rem;
-                    border: 1px solid var(--line-light); text-align: center;
-                    animation: fadeInUp 0.5s ease-out;'>
-            <div style='font-family: "Cormorant Garamond", serif; font-size: 1.75rem;
-                       font-weight: 300; color: var(--black); margin-bottom: 1rem;
-                       letter-spacing: 0.02em;'>
-                Aucune donnée disponible
-            </div>
-            <div style='font-family: "Inter", sans-serif; font-size: 0.875rem;
-                       color: var(--gray-dark); margin-bottom: 2rem; line-height: 1.8;
-                       font-weight: 300; max-width: 500px; margin-left: auto; margin-right: auto;'>
-                Commencez votre voyage vers le bien-être en créant votre premier check-in
-                ou en ayant une conversation avec votre compagnon IA
-            </div>
-            <div style='width: 80px; height: 1px; background-color: var(--line-dark); margin: 0 auto;'></div>
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown("""\
+<div style='background-color: var(--ivory-dark); padding: 4rem 3rem; \
+border: 1px solid var(--line-light); text-align: center; \
+animation: fadeInUp 0.5s ease-out;'>
+<div style='font-family: "Cormorant Garamond", serif; font-size: 1.75rem; \
+font-weight: 300; color: var(--black); margin-bottom: 1rem; \
+letter-spacing: 0.02em;'>\
+Aucune donnée disponible\
+</div>
+<div style='font-family: "Inter", sans-serif; font-size: 0.875rem; \
+color: var(--gray-dark); margin-bottom: 2rem; line-height: 1.8; \
+font-weight: 300; max-width: 500px; margin-left: auto; margin-right: auto;'>\
+Commencez votre voyage vers le bien-être en créant votre premier check-in \
+ou en ayant une conversation avec votre compagnon IA\
+</div>
+<div style='width: 80px; height: 1px; background-color: var(--line-dark); margin: 0 auto;'></div>
+</div>
+""", unsafe_allow_html=True)

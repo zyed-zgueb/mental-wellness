@@ -29,144 +29,144 @@ def show_home():
     """Afficher la page d'accueil - Gallery minimalist style."""
 
     # Hero section minimaliste
-    st.markdown("""
-    <div style='text-align: center; padding: 4rem 2rem; background-color: var(--white);
-                border: 1px solid var(--line-light); margin-bottom: 3rem;
-                animation: fadeInDown 0.6s ease-out;'>
-        <h1 style='font-family: "Cormorant Garamond", serif; color: var(--black); font-size: 4rem;
-                   font-weight: 300; margin-bottom: 1rem; letter-spacing: 0.05em; animation: fadeIn 0.8s ease-out;'>
-            SERENE
-        </h1>
-        <div style='width: 80px; height: 1px; background-color: var(--line-dark); margin: 1.5rem auto;'></div>
-        <p style='font-family: "Inter", sans-serif; color: var(--gray-dark); font-size: 0.9375rem;
-                  margin-bottom: 0; animation: fadeIn 1s ease-out; font-weight: 300; letter-spacing: 0.02em;'>
-            Votre compagnon de bien-être mental
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown("""\
+<div style='text-align: center; padding: 4rem 2rem; background-color: var(--white); \
+border: 1px solid var(--line-light); margin-bottom: 3rem; \
+animation: fadeInDown 0.6s ease-out;'>
+<h1 style='font-family: "Cormorant Garamond", serif; color: var(--black); font-size: 4rem; \
+font-weight: 300; margin-bottom: 1rem; letter-spacing: 0.05em; animation: fadeIn 0.8s ease-out;'>\
+SERENE\
+</h1>
+<div style='width: 80px; height: 1px; background-color: var(--line-dark); margin: 1.5rem auto;'></div>
+<p style='font-family: "Inter", sans-serif; color: var(--gray-dark); font-size: 0.9375rem; \
+margin-bottom: 0; animation: fadeIn 1s ease-out; font-weight: 300; letter-spacing: 0.02em;'>\
+Votre compagnon de bien-être mental\
+</p>
+</div>
+""", unsafe_allow_html=True)
 
     # Introduction
-    st.markdown("""
-    <p style='font-family: "Inter", sans-serif; font-size: 0.9375rem; color: var(--gray-dark);
-              text-align: center; margin-bottom: 4rem; line-height: 1.8; font-weight: 300; max-width: 600px;
-              margin-left: auto; margin-right: auto;'>
-    Serene vous accompagne avec empathie dans votre parcours de bien-être mental.<br/>
-    Un espace d'écoute, de suivi et de découverte de soi.
-    </p>
-    """, unsafe_allow_html=True)
+    st.markdown("""\
+<p style='font-family: "Inter", sans-serif; font-size: 0.9375rem; color: var(--gray-dark); \
+text-align: center; margin-bottom: 4rem; line-height: 1.8; font-weight: 300; max-width: 600px; \
+margin-left: auto; margin-right: auto;'>\
+Serene vous accompagne avec empathie dans votre parcours de bien-être mental.<br/>\
+Un espace d'écoute, de suivi et de découverte de soi.\
+</p>
+""", unsafe_allow_html=True)
 
     # Fonctionnalités - Cards minimalistes
-    st.markdown("""
-    <h2 style='font-family: "Cormorant Garamond", serif; font-size: 2rem; font-weight: 300;
-               color: var(--black); margin-bottom: 2rem; letter-spacing: 0.02em;'>
-        Fonctionnalités
-    </h2>
-    """, unsafe_allow_html=True)
+    st.markdown("""\
+<h2 style='font-family: "Cormorant Garamond", serif; font-size: 2rem; font-weight: 300; \
+color: var(--black); margin-bottom: 2rem; letter-spacing: 0.02em;'>\
+Fonctionnalités\
+</h2>
+""", unsafe_allow_html=True)
 
     col1, col2 = st.columns(2)
 
     with col1:
-        st.markdown("""
-        <div style='background-color: var(--white); padding: 2rem; border: 1px solid var(--line-light);
-                    height: 100%; box-shadow: var(--shadow-subtle);
-                    transition: all 0.3s ease-out; animation: fadeInUp 0.7s ease-out;'
-             onmouseover='this.style.boxShadow="var(--shadow-soft)";'
-             onmouseout='this.style.boxShadow="var(--shadow-subtle)";'>
-            <h4 style='font-family: "Inter", sans-serif; color: var(--black); margin-top: 0;
-                       font-size: 0.75rem; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase;
-                       margin-bottom: 1rem;'>
-                <i class="fa-regular fa-comments" style='margin-right: 0.5rem; opacity: 0.7;'></i>
-                Conversation Empathique
-            </h4>
-            <p style='font-family: "Inter", sans-serif; color: var(--gray-dark); line-height: 1.8;
-                     font-size: 0.875rem; font-weight: 300;'>
-                Un espace d'écoute bienveillant et sans jugement. Parlez librement de ce que vous ressentez
-                avec un compagnon IA qui vous écoute vraiment.
-            </p>
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown("""\
+<div style='background-color: var(--white); padding: 2rem; border: 1px solid var(--line-light); \
+height: 100%; box-shadow: var(--shadow-subtle); \
+transition: all 0.3s ease-out; animation: fadeInUp 0.7s ease-out;' \
+onmouseover='this.style.boxShadow="var(--shadow-soft)";' \
+onmouseout='this.style.boxShadow="var(--shadow-subtle)";'>
+<h4 style='font-family: "Inter", sans-serif; color: var(--black); margin-top: 0; \
+font-size: 0.75rem; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase; \
+margin-bottom: 1rem;'>\
+<i class="fa-regular fa-comments" style='margin-right: 0.5rem; opacity: 0.7;'></i>\
+Conversation Empathique\
+</h4>
+<p style='font-family: "Inter", sans-serif; color: var(--gray-dark); line-height: 1.8; \
+font-size: 0.875rem; font-weight: 300;'>\
+Un espace d'écoute bienveillant et sans jugement. Parlez librement de ce que vous ressentez \
+avec un compagnon IA qui vous écoute vraiment.\
+</p>
+</div>
+""", unsafe_allow_html=True)
 
-        st.markdown("""
-        <div style='background-color: var(--white); padding: 2rem; border: 1px solid var(--line-light);
-                    margin-top: 1rem; box-shadow: var(--shadow-subtle);
-                    transition: all 0.3s ease-out; animation: fadeInUp 0.9s ease-out;'
-             onmouseover='this.style.boxShadow="var(--shadow-soft)";'
-             onmouseout='this.style.boxShadow="var(--shadow-subtle)";'>
-            <h4 style='font-family: "Inter", sans-serif; color: var(--black); margin-top: 0;
-                       font-size: 0.75rem; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase;
-                       margin-bottom: 1rem;'>
-                <i class="fa-solid fa-chart-line" style='margin-right: 0.5rem; opacity: 0.7;'></i>
-                Tableau de Bord
-            </h4>
-            <p style='font-family: "Inter", sans-serif; color: var(--gray-dark); line-height: 1.8;
-                     font-size: 0.875rem; font-weight: 300;'>
-                Visualisez vos tendances de bien-être avec des graphiques élégants.
-                Comprenez vos patterns émotionnels en un coup d'œil.
-            </p>
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown("""\
+<div style='background-color: var(--white); padding: 2rem; border: 1px solid var(--line-light); \
+margin-top: 1rem; box-shadow: var(--shadow-subtle); \
+transition: all 0.3s ease-out; animation: fadeInUp 0.9s ease-out;' \
+onmouseover='this.style.boxShadow="var(--shadow-soft)";' \
+onmouseout='this.style.boxShadow="var(--shadow-subtle)";'>
+<h4 style='font-family: "Inter", sans-serif; color: var(--black); margin-top: 0; \
+font-size: 0.75rem; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase; \
+margin-bottom: 1rem;'>\
+<i class="fa-solid fa-chart-line" style='margin-right: 0.5rem; opacity: 0.7;'></i>\
+Tableau de Bord\
+</h4>
+<p style='font-family: "Inter", sans-serif; color: var(--gray-dark); line-height: 1.8; \
+font-size: 0.875rem; font-weight: 300;'>\
+Visualisez vos tendances de bien-être avec des graphiques élégants. \
+Comprenez vos patterns émotionnels en un coup d'œil.\
+</p>
+</div>
+""", unsafe_allow_html=True)
 
     with col2:
-        st.markdown("""
-        <div style='background-color: var(--white); padding: 2rem; border: 1px solid var(--line-light);
-                    height: 100%; box-shadow: var(--shadow-subtle);
-                    transition: all 0.3s ease-out; animation: fadeInUp 0.8s ease-out;'
-             onmouseover='this.style.boxShadow="var(--shadow-soft)";'
-             onmouseout='this.style.boxShadow="var(--shadow-subtle)";'>
-            <h4 style='font-family: "Inter", sans-serif; color: var(--black); margin-top: 0;
-                       font-size: 0.75rem; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase;
-                       margin-bottom: 1rem;'>
-                <i class="fa-regular fa-circle-check" style='margin-right: 0.5rem; opacity: 0.7;'></i>
-                Quick Check-in
-            </h4>
-            <p style='font-family: "Inter", sans-serif; color: var(--gray-dark); line-height: 1.8;
-                     font-size: 0.875rem; font-weight: 300;'>
-                Suivez votre humeur au quotidien en quelques secondes. Une pratique simple qui nourrit
-                vos insights personnalisés et vous aide à mieux vous comprendre.
-            </p>
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown("""\
+<div style='background-color: var(--white); padding: 2rem; border: 1px solid var(--line-light); \
+height: 100%; box-shadow: var(--shadow-subtle); \
+transition: all 0.3s ease-out; animation: fadeInUp 0.8s ease-out;' \
+onmouseover='this.style.boxShadow="var(--shadow-soft)";' \
+onmouseout='this.style.boxShadow="var(--shadow-subtle)";'>
+<h4 style='font-family: "Inter", sans-serif; color: var(--black); margin-top: 0; \
+font-size: 0.75rem; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase; \
+margin-bottom: 1rem;'>\
+<i class="fa-regular fa-circle-check" style='margin-right: 0.5rem; opacity: 0.7;'></i>\
+Quick Check-in\
+</h4>
+<p style='font-family: "Inter", sans-serif; color: var(--gray-dark); line-height: 1.8; \
+font-size: 0.875rem; font-weight: 300;'>\
+Suivez votre humeur au quotidien en quelques secondes. Une pratique simple qui nourrit \
+vos insights personnalisés et vous aide à mieux vous comprendre.\
+</p>
+</div>
+""", unsafe_allow_html=True)
 
-        st.markdown("""
-        <div style='background-color: var(--white); padding: 2rem; border: 1px solid var(--line-light);
-                    margin-top: 1rem; box-shadow: var(--shadow-subtle);
-                    transition: all 0.3s ease-out; animation: fadeInUp 1s ease-out;'
-             onmouseover='this.style.boxShadow="var(--shadow-soft)";'
-             onmouseout='this.style.boxShadow="var(--shadow-subtle)";'>
-            <h4 style='font-family: "Inter", sans-serif; color: var(--black); margin-top: 0;
-                       font-size: 0.75rem; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase;
-                       margin-bottom: 1rem;'>
-                <i class="fa-solid fa-lightbulb" style='margin-right: 0.5rem; opacity: 0.7;'></i>
-                Insights IA Actionnables
-            </h4>
-            <p style='font-family: "Inter", sans-serif; color: var(--gray-dark); line-height: 1.8;
-                     font-size: 0.875rem; font-weight: 300;'>
-                Recevez des révélations personnalisées sur vos patterns émotionnels. Des insights qui
-                vous donnent espoir et pouvoir d'agir sur votre bien-être.
-            </p>
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown("""\
+<div style='background-color: var(--white); padding: 2rem; border: 1px solid var(--line-light); \
+margin-top: 1rem; box-shadow: var(--shadow-subtle); \
+transition: all 0.3s ease-out; animation: fadeInUp 1s ease-out;' \
+onmouseover='this.style.boxShadow="var(--shadow-soft)";' \
+onmouseout='this.style.boxShadow="var(--shadow-subtle)";'>
+<h4 style='font-family: "Inter", sans-serif; color: var(--black); margin-top: 0; \
+font-size: 0.75rem; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase; \
+margin-bottom: 1rem;'>\
+<i class="fa-solid fa-lightbulb" style='margin-right: 0.5rem; opacity: 0.7;'></i>\
+Insights IA Actionnables\
+</h4>
+<p style='font-family: "Inter", sans-serif; color: var(--gray-dark); line-height: 1.8; \
+font-size: 0.875rem; font-weight: 300;'>\
+Recevez des révélations personnalisées sur vos patterns émotionnels. Des insights qui \
+vous donnent espoir et pouvoir d'agir sur votre bien-être.\
+</p>
+</div>
+""", unsafe_allow_html=True)
 
     # Call to action minimaliste
     st.markdown("<div style='margin: 4rem 0 2rem 0;'></div>", unsafe_allow_html=True)
 
-    st.markdown("""
-    <div style='background-color: var(--white); padding: 3rem 2rem; border: 1px solid var(--line-light);
-                text-align: center; animation: fadeInUp 0.6s ease-out; box-shadow: var(--shadow-subtle);
-                transition: all 0.3s ease-out;'
-         onmouseover='this.style.boxShadow="var(--shadow-soft)";'
-         onmouseout='this.style.boxShadow="var(--shadow-subtle)";'>
-        <h3 style='font-family: "Cormorant Garamond", serif; color: var(--black); margin-top: 0;
-                   font-size: 1.5rem; font-weight: 300; letter-spacing: 0.02em; margin-bottom: 1rem;'>
-            Prêt à commencer ?
-        </h3>
-        <div style='width: 60px; height: 1px; background-color: var(--line-dark); margin: 1.5rem auto;'></div>
-        <p style='font-family: "Inter", sans-serif; color: var(--gray-dark); font-size: 0.875rem;
-                  margin-bottom: 0; font-weight: 300; line-height: 1.7;'>
-            Utilisez le menu de navigation à gauche pour commencer votre parcours de bien-être mental.
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown("""\
+<div style='background-color: var(--white); padding: 3rem 2rem; border: 1px solid var(--line-light); \
+text-align: center; animation: fadeInUp 0.6s ease-out; box-shadow: var(--shadow-subtle); \
+transition: all 0.3s ease-out;' \
+onmouseover='this.style.boxShadow="var(--shadow-soft)";' \
+onmouseout='this.style.boxShadow="var(--shadow-subtle)";'>
+<h3 style='font-family: "Cormorant Garamond", serif; color: var(--black); margin-top: 0; \
+font-size: 1.5rem; font-weight: 300; letter-spacing: 0.02em; margin-bottom: 1rem;'>\
+Prêt à commencer ?\
+</h3>
+<div style='width: 60px; height: 1px; background-color: var(--line-dark); margin: 1.5rem auto;'></div>
+<p style='font-family: "Inter", sans-serif; color: var(--gray-dark); font-size: 0.875rem; \
+margin-bottom: 0; font-weight: 300; line-height: 1.7;'>\
+Utilisez le menu de navigation à gauche pour commencer votre parcours de bien-être mental.\
+</p>
+</div>
+""", unsafe_allow_html=True)
 
 
 def main():
@@ -179,14 +179,14 @@ def main():
         # Afficher le menu de navigation dans la sidebar - Gallery minimalist
         with st.sidebar:
             # Logo et titre minimaliste
-            st.markdown("""
-            <div style='text-align: left; padding: 0 0 2rem 0; margin-bottom: 2rem;
-                        border-bottom: 1px solid var(--line-light);'>
-                <h1 style='font-family: "Cormorant Garamond", serif; font-size: 1.75rem;
-                          color: var(--black); margin: 0; font-weight: 300; letter-spacing: 0.05em;
-                          text-transform: uppercase;'>Serene</h1>
-            </div>
-            """, unsafe_allow_html=True)
+            st.markdown("""\
+<div style='text-align: left; padding: 0 0 2rem 0; margin-bottom: 2rem; \
+border-bottom: 1px solid var(--line-light);'>
+<h1 style='font-family: "Cormorant Garamond", serif; font-size: 1.75rem; \
+color: var(--black); margin: 0; font-weight: 300; letter-spacing: 0.05em; \
+text-transform: uppercase;'>Serene</h1>
+</div>
+""", unsafe_allow_html=True)
 
             # Initialiser la page courante si nécessaire
             if 'current_page' not in st.session_state:

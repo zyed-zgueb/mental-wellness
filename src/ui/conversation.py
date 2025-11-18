@@ -27,40 +27,40 @@ def show_conversation():
     """Afficher la page de conversation - Gallery minimalist style."""
 
     # Header minimaliste
-    st.markdown("""
-    <div style='animation: fadeInDown 0.4s ease-out; margin-bottom: 3rem;
-                padding-bottom: 2rem; border-bottom: 1px solid var(--line-light);'>
-        <h1 style='font-family: "Cormorant Garamond", serif; font-size: 3rem;
-                   color: var(--black); font-weight: 300; margin-bottom: 1rem;
-                   letter-spacing: 0.02em; line-height: 1.1;'>
-            Conversation
-        </h1>
-        <p style='font-family: "Inter", sans-serif; font-size: 0.9375rem;
-                 color: var(--gray-dark); margin: 0; line-height: 1.8;
-                 font-weight: 300; max-width: 600px;'>
-            Un espace d'écoute bienveillant et sans jugement. Parlez librement de ce que vous ressentez.
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown("""\
+<div style='animation: fadeInDown 0.4s ease-out; margin-bottom: 3rem; \
+padding-bottom: 2rem; border-bottom: 1px solid var(--line-light);'>
+<h1 style='font-family: "Cormorant Garamond", serif; font-size: 3rem; \
+color: var(--black); font-weight: 300; margin-bottom: 1rem; \
+letter-spacing: 0.02em; line-height: 1.1;'>\
+Conversation\
+</h1>
+<p style='font-family: "Inter", sans-serif; font-size: 0.9375rem; \
+color: var(--gray-dark); margin: 0; line-height: 1.8; \
+font-weight: 300; max-width: 600px;'>\
+Un espace d'écoute bienveillant et sans jugement. Parlez librement de ce que vous ressentez.\
+</p>
+</div>
+""", unsafe_allow_html=True)
 
     try:
         manager = get_conversation_manager()
     except ValueError as e:
         # Error state minimaliste
-        st.markdown("""
-        <div style='background-color: var(--white); padding: 2rem; border: 1px solid var(--line-light);
-                    border-left: 2px solid var(--black); box-shadow: var(--shadow-subtle);'>
-            <h3 style='font-family: "Inter", sans-serif; color: var(--black); margin-top: 0;
-                       font-size: 0.75rem; font-weight: 400; letter-spacing: 0.1em;
-                       text-transform: uppercase; margin-bottom: 1rem;'>
-                Configuration manquante
-            </h3>
-            <p style='font-family: "Inter", sans-serif; color: var(--gray-dark);
-                     line-height: 1.8; font-size: 0.875rem; font-weight: 300;'>
-                Veuillez configurer votre ANTHROPIC_API_KEY dans un fichier .env
-            </p>
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown("""\
+<div style='background-color: var(--white); padding: 2rem; border: 1px solid var(--line-light); \
+border-left: 2px solid var(--black); box-shadow: var(--shadow-subtle);'>
+<h3 style='font-family: "Inter", sans-serif; color: var(--black); margin-top: 0; \
+font-size: 0.75rem; font-weight: 400; letter-spacing: 0.1em; \
+text-transform: uppercase; margin-bottom: 1rem;'>\
+Configuration manquante\
+</h3>
+<p style='font-family: "Inter", sans-serif; color: var(--gray-dark); \
+line-height: 1.8; font-size: 0.875rem; font-weight: 300;'>\
+Veuillez configurer votre ANTHROPIC_API_KEY dans un fichier .env\
+</p>
+</div>
+""", unsafe_allow_html=True)
         st.code("ANTHROPIC_API_KEY=sk-ant-your-key-here", language="bash")
         return
 
