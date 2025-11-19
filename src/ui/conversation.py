@@ -66,7 +66,7 @@ def show_conversation():
 
     # Initialiser l'historique dans session_state si nécessaire
     if 'conversation_history' not in st.session_state:
-        history = manager.db.get_conversation_history(limit=50)
+        history = manager.db.get_conversation_history(limit=5)
         # Inverser pour afficher du plus ancien au plus récent
         st.session_state.conversation_history = list(history)
 
