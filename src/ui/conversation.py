@@ -72,10 +72,10 @@ def show_conversation():
 
     # Afficher l'historique (avatars stylisés via CSS)
     for conv in st.session_state.conversation_history:
-        with st.chat_message("user"):
-            st.write(conv['user_message'])
-        with st.chat_message("assistant"):
-            st.write(conv['ai_response'])
+        with st.chat_message("Moi", avatar =":material/circle:"):
+            st.write('<span style=\"opacity: 0.87\"><b>MOI</b><br>&#8209;&nbsp;', conv['user_message'], '</span>', unsafe_allow_html=True)
+        with st.chat_message("Serene", avatar =":material/circle:"):
+            st.write('<b>SERENE</b><br>&#8209;&nbsp;', conv['ai_response'], unsafe_allow_html=True)
 
     # Input utilisateur
     if user_input := st.chat_input("Votre message..."):
