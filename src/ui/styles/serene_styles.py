@@ -710,6 +710,10 @@ def get_main_css():
         transform: translate(-50%, -50%) !important;
     }}
 
+    [data-testid="stChatMessageAvatarCustom"] {{
+        display: none !important;
+    }}
+
     .stChatMessage[data-testid="chat-message-assistant"] .stAvatar::after {{
         content: 'S' !important;
         font-family: 'Inter', sans-serif !important;
