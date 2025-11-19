@@ -20,12 +20,13 @@ class InsightsGenerator:
     La durée du cache en heures est dans REGENERATE_INSIGHTS_AFTER_HOURS
     """
 
-    def __init__(self, db_manager: DatabaseManager):
+    def __init__(self, db_manager: DatabaseManager, user_id: int):
         """
         Initialiser le générateur d'insights.
 
         Args:
             db_manager: Instance de DatabaseManager pour la persistance.
+            user_id: ID de l'utilisateur pour lequel générer les insights.
 
         Raises:
             ValueError: Si ANTHROPIC_API_KEY n'est pas définie.
@@ -36,6 +37,7 @@ class InsightsGenerator:
 
         self.client = Anthropic(api_key=api_key)
         self.db = db_manager
+        self.user_id = user_id
 
     def get_adaptive_insight(self) -> str:
         """
@@ -53,7 +55,7 @@ class InsightsGenerator:
         # Vérifier si régénération nécessaire
         if not self._should_regenerate_insights():
             # Retourner insight cached
-            cached = self.db.get_latest_insight("weekly")
+            cached = self.db.get_latest_insight(self.user_id, "weekly")
             if cached:
                 return cached["content"]
 
@@ -79,9 +81,9 @@ class InsightsGenerator:
         """
         try:
             # Récupérer toutes les données disponibles
-            mood_data = self.db.get_mood_history(days=30)
-            conv_count = self.db.get_conversation_count(days=30)
-            conv_history = self.db.get_conversation_history(limit=10)  # 10 dernières conversations
+            mood_data = self.db.get_mood_history(self.user_id, days=30)
+            conv_count = self.db.get_conversation_count(self.user_id, days=30)
+            conv_history = self.db.get_conversation_history(self.user_id, limit=10)  # 10 dernières conversations
 
             # Déterminer niveau de maturité
             days_with_data = len(mood_data)
@@ -118,6 +120,7 @@ class InsightsGenerator:
 
             # Sauvegarder dans DB
             self.db.save_insight(
+                self.user_id,
                 insight_type="weekly",
                 content=insight_content,
                 based_on_data=based_on_data,
@@ -138,7 +141,7 @@ class InsightsGenerator:
         Returns:
             True si régénération nécessaire, False si insight cached valide.
         """
-        latest = self.db.get_latest_insight("weekly")
+        latest = self.db.get_latest_insight(self.user_id, "weekly")
 
         if not latest:
             # Aucun insight existant
