@@ -68,7 +68,7 @@ def show_conversation():
     if 'conversation_history' not in st.session_state:
         history = manager.db.get_conversation_history(limit=50)
         # Inverser pour afficher du plus ancien au plus récent
-        st.session_state.conversation_history = list(reversed(history))
+        st.session_state.conversation_history = list(history)
 
     # Afficher l'historique (avatars stylisés via CSS)
     for conv in st.session_state.conversation_history:
