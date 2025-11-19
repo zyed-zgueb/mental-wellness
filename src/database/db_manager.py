@@ -2,6 +2,8 @@
 
 import sqlite3
 import os
+import hashlib
+import json
 from typing import List, Dict, Any, Optional
 from datetime import datetime, timedelta
 
@@ -263,6 +265,219 @@ class DatabaseManager:
 
         result = cursor.fetchone()
         return dict(result) if result else None
+
+    # ===== User Authentication Methods =====
+
+    @staticmethod
+    def _hash_password(password: str) -> str:
+        """
+        Hash a password using SHA-256.
+
+        Args:
+            password: Plain text password.
+
+        Returns:
+            Hashed password.
+        """
+        return hashlib.sha256(password.encode()).hexdigest()
+
+    def create_user(
+        self, email: str, password: str, display_name: Optional[str] = None
+    ) -> int:
+        """
+        Create a new user account.
+
+        Args:
+            email: User's email address (must be unique).
+            password: Plain text password (will be hashed).
+            display_name: Optional display name for the user.
+
+        Returns:
+            ID of the created user.
+
+        Raises:
+            ValueError: If email already exists or inputs are invalid.
+        """
+        if not email or not password:
+            raise ValueError("Email et mot de passe sont requis")
+
+        # Check if email already exists
+        existing_user = self.get_user_by_email(email)
+        if existing_user:
+            raise ValueError(f"Un utilisateur avec l'email '{email}' existe déjà")
+
+        password_hash = self._hash_password(password)
+
+        try:
+            cursor = self.conn.execute(
+                """
+                INSERT INTO users (email, password_hash, display_name, created_at)
+                VALUES (?, ?, ?, ?)
+                """,
+                (email, password_hash, display_name, datetime.now().isoformat()),
+            )
+            self.conn.commit()
+            return cursor.lastrowid
+        except sqlite3.IntegrityError as e:
+            raise ValueError(f"Erreur lors de la création de l'utilisateur: {e}")
+
+    def authenticate_user(self, email: str, password: str) -> Optional[Dict[str, Any]]:
+        """
+        Authenticate a user with email and password.
+
+        Args:
+            email: User's email address.
+            password: Plain text password.
+
+        Returns:
+            User dict if authentication successful, None otherwise.
+            Dict contains: id, email, display_name, created_at, last_login, preferences
+        """
+        if not email or not password:
+            return None
+
+        user = self.get_user_by_email(email)
+        if not user:
+            return None
+
+        password_hash = self._hash_password(password)
+        if user["password_hash"] != password_hash:
+            return None
+
+        # Update last login
+        self.update_last_login(user["id"])
+
+        # Remove password_hash from returned data
+        user_data = {k: v for k, v in user.items() if k != "password_hash"}
+        return user_data
+
+    def get_user_by_id(self, user_id: int) -> Optional[Dict[str, Any]]:
+        """
+        Get user by ID.
+
+        Args:
+            user_id: User's ID.
+
+        Returns:
+            User dict or None if not found.
+        """
+        cursor = self.conn.execute(
+            """
+            SELECT id, email, password_hash, display_name, created_at, last_login, preferences
+            FROM users
+            WHERE id = ?
+            """,
+            (user_id,),
+        )
+
+        result = cursor.fetchone()
+        return dict(result) if result else None
+
+    def get_user_by_email(self, email: str) -> Optional[Dict[str, Any]]:
+        """
+        Get user by email.
+
+        Args:
+            email: User's email address.
+
+        Returns:
+            User dict or None if not found.
+        """
+        cursor = self.conn.execute(
+            """
+            SELECT id, email, password_hash, display_name, created_at, last_login, preferences
+            FROM users
+            WHERE email = ?
+            """,
+            (email,),
+        )
+
+        result = cursor.fetchone()
+        return dict(result) if result else None
+
+    def update_last_login(self, user_id: int) -> None:
+        """
+        Update user's last login timestamp.
+
+        Args:
+            user_id: User's ID.
+        """
+        self.conn.execute(
+            """
+            UPDATE users
+            SET last_login = ?
+            WHERE id = ?
+            """,
+            (datetime.now().isoformat(), user_id),
+        )
+        self.conn.commit()
+
+    def update_user_preferences(
+        self, user_id: int, preferences: Dict[str, Any]
+    ) -> None:
+        """
+        Update user preferences.
+
+        Args:
+            user_id: User's ID.
+            preferences: Dict of user preferences (will be stored as JSON).
+        """
+        preferences_json = json.dumps(preferences)
+
+        self.conn.execute(
+            """
+            UPDATE users
+            SET preferences = ?
+            WHERE id = ?
+            """,
+            (preferences_json, user_id),
+        )
+        self.conn.commit()
+
+    def get_user_preferences(self, user_id: int) -> Dict[str, Any]:
+        """
+        Get user preferences.
+
+        Args:
+            user_id: User's ID.
+
+        Returns:
+            Dict of user preferences, or empty dict if none set.
+        """
+        user = self.get_user_by_id(user_id)
+        if not user or not user.get("preferences"):
+            return {}
+
+        try:
+            return json.loads(user["preferences"])
+        except json.JSONDecodeError:
+            return {}
+
+    def change_password(self, user_id: int, new_password: str) -> None:
+        """
+        Change user's password.
+
+        Args:
+            user_id: User's ID.
+            new_password: New plain text password (will be hashed).
+
+        Raises:
+            ValueError: If password is empty.
+        """
+        if not new_password:
+            raise ValueError("Le mot de passe ne peut pas être vide")
+
+        password_hash = self._hash_password(new_password)
+
+        self.conn.execute(
+            """
+            UPDATE users
+            SET password_hash = ?
+            WHERE id = ?
+            """,
+            (password_hash, user_id),
+        )
+        self.conn.commit()
 
     def close(self):
         """Fermer la connexion à la base de données."""
