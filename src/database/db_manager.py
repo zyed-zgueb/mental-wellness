@@ -69,11 +69,12 @@ class DatabaseManager:
         self.conn.executescript(schema)
         self.conn.commit()
 
-    def save_checkin(self, mood_score: int, notes: str = "") -> int:
+    def save_checkin(self, user_id: int, mood_score: int, notes: str = "") -> int:
         """
         Enregistrer un check-in.
 
         Args:
+            user_id: ID de l'utilisateur.
             mood_score: Score d'humeur (0-10).
             notes: Notes optionnelles de l'utilisateur.
 
@@ -81,28 +82,32 @@ class DatabaseManager:
             ID du check-in créé.
 
         Raises:
-            ValueError: Si mood_score est hors limites (0-10).
+            ValueError: Si mood_score est hors limites (0-10) ou user_id invalide.
         """
         if not isinstance(mood_score, int) or not 0 <= mood_score <= 10:
             raise ValueError(
                 f"mood_score doit être un entier entre 0 et 10, reçu: {mood_score}"
             )
 
+        if not user_id:
+            raise ValueError("user_id est requis")
+
         try:
             cursor = self.conn.execute(
-                "INSERT INTO check_ins (mood_score, notes) VALUES (?, ?)",
-                (mood_score, notes),
+                "INSERT INTO check_ins (user_id, mood_score, notes) VALUES (?, ?, ?)",
+                (user_id, mood_score, notes),
             )
             self.conn.commit()
             return cursor.lastrowid
         except sqlite3.IntegrityError as e:
             raise ValueError(f"Erreur d'intégrité de la base de données: {e}")
 
-    def get_mood_history(self, days: int = 30) -> List[Dict[str, Any]]:
+    def get_mood_history(self, user_id: int, days: int = 30) -> List[Dict[str, Any]]:
         """
         Récupérer l'historique des check-ins (derniers N jours).
 
         Args:
+            user_id: ID de l'utilisateur.
             days: Nombre de jours d'historique à récupérer (défaut: 30).
 
         Returns:
@@ -115,21 +120,22 @@ class DatabaseManager:
             """
             SELECT id, timestamp, mood_score, notes, created_at
             FROM check_ins
-            WHERE timestamp >= ?
+            WHERE user_id = ? AND timestamp >= ?
             ORDER BY timestamp DESC
             """,
-            (cutoff_date,),
+            (user_id, cutoff_date),
         )
 
         return [dict(row) for row in cursor.fetchall()]
 
     def save_conversation(
-        self, user_message: str, ai_response: str, tokens_used: int = 0
+        self, user_id: int, user_message: str, ai_response: str, tokens_used: int = 0
     ) -> int:
         """
         Enregistrer une conversation.
 
         Args:
+            user_id: ID de l'utilisateur.
             user_message: Message de l'utilisateur.
             ai_response: Réponse de l'IA.
             tokens_used: Nombre de tokens utilisés (optionnel).
@@ -138,29 +144,33 @@ class DatabaseManager:
             ID de la conversation créée.
 
         Raises:
-            ValueError: Si les messages sont vides.
+            ValueError: Si les messages sont vides ou user_id invalide.
         """
         if not user_message or not ai_response:
             raise ValueError("Les messages ne peuvent pas être vides")
 
+        if not user_id:
+            raise ValueError("user_id est requis")
+
         try:
             cursor = self.conn.execute(
                 """
-                INSERT INTO conversations (user_message, ai_response, tokens_used)
-                VALUES (?, ?, ?)
+                INSERT INTO conversations (user_id, user_message, ai_response, tokens_used)
+                VALUES (?, ?, ?, ?)
                 """,
-                (user_message, ai_response, tokens_used),
+                (user_id, user_message, ai_response, tokens_used),
             )
             self.conn.commit()
             return cursor.lastrowid
         except sqlite3.IntegrityError as e:
             raise ValueError(f"Erreur d'intégrité de la base de données: {e}")
 
-    def get_conversation_history(self, limit: int = 50) -> List[Dict[str, Any]]:
+    def get_conversation_history(self, user_id: int, limit: int = 50) -> List[Dict[str, Any]]:
         """
         Récupérer l'historique des conversations.
 
         Args:
+            user_id: ID de l'utilisateur.
             limit: Nombre maximum de conversations à récupérer (défaut: 50).
 
         Returns:
@@ -171,19 +181,21 @@ class DatabaseManager:
             """
             SELECT id, timestamp, user_message, ai_response, tokens_used, created_at
             FROM conversations
+            WHERE user_id = ?
             ORDER BY timestamp ASC
             LIMIT ?
             """,
-            (limit,),
+            (user_id, limit),
         )
 
         return [dict(row) for row in cursor.fetchall()]
 
-    def get_conversation_count(self, days: int = 7) -> int:
+    def get_conversation_count(self, user_id: int, days: int = 7) -> int:
         """
         Compter le nombre de conversations (derniers N jours).
 
         Args:
+            user_id: ID de l'utilisateur.
             days: Nombre de jours à considérer (défaut: 7).
 
         Returns:
@@ -195,9 +207,9 @@ class DatabaseManager:
             """
             SELECT COUNT(*) as count
             FROM conversations
-            WHERE timestamp >= ?
+            WHERE user_id = ? AND timestamp >= ?
             """,
-            (cutoff_date,),
+            (user_id, cutoff_date),
         )
 
         result = cursor.fetchone()
@@ -205,6 +217,7 @@ class DatabaseManager:
 
     def save_insight(
         self,
+        user_id: int,
         insight_type: str,
         content: str,
         based_on_data: str = "",
@@ -214,6 +227,7 @@ class DatabaseManager:
         Enregistrer un insight IA.
 
         Args:
+            user_id: ID de l'utilisateur.
             insight_type: Type d'insight (ex: "weekly", "monthly").
             content: Contenu de l'insight généré.
             based_on_data: Métadonnées sur les données utilisées (JSON string optionnel).
@@ -228,24 +242,28 @@ class DatabaseManager:
         if not insight_type or not content:
             raise ValueError("insight_type et content ne peuvent pas être vides")
 
+        if not user_id:
+            raise ValueError("user_id est requis")
+
         try:
             cursor = self.conn.execute(
                 """
-                INSERT INTO insights_log (insight_type, content, based_on_data, tokens_used)
-                VALUES (?, ?, ?, ?)
+                INSERT INTO insights_log (user_id, insight_type, content, based_on_data, tokens_used)
+                VALUES (?, ?, ?, ?, ?)
                 """,
-                (insight_type, content, based_on_data, tokens_used),
+                (user_id, insight_type, content, based_on_data, tokens_used),
             )
             self.conn.commit()
             return cursor.lastrowid
         except sqlite3.IntegrityError as e:
             raise ValueError(f"Erreur d'intégrité de la base de données: {e}")
 
-    def get_latest_insight(self, insight_type: str) -> Optional[Dict[str, Any]]:
+    def get_latest_insight(self, user_id: int, insight_type: str) -> Optional[Dict[str, Any]]:
         """
         Récupérer le dernier insight d'un type donné.
 
         Args:
+            user_id: ID de l'utilisateur.
             insight_type: Type d'insight à récupérer.
 
         Returns:
@@ -256,11 +274,11 @@ class DatabaseManager:
             """
             SELECT id, created_at, insight_type, content, based_on_data, tokens_used
             FROM insights_log
-            WHERE insight_type = ?
+            WHERE user_id = ? AND insight_type = ?
             ORDER BY created_at DESC
             LIMIT 1
             """,
-            (insight_type,),
+            (user_id, insight_type),
         )
 
         result = cursor.fetchone()
