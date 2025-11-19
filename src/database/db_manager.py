@@ -169,7 +169,7 @@ class DatabaseManager:
             """
             SELECT id, timestamp, user_message, ai_response, tokens_used, created_at
             FROM conversations
-            ORDER BY timestamp DESC
+            ORDER BY timestamp ASC
             LIMIT ?
             """,
             (limit,),
