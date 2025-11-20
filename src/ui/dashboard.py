@@ -36,6 +36,74 @@ def remove_emojis(text: str) -> str:
     return emoji_pattern.sub('', text).strip()
 
 
+def convert_markdown_to_html(text: str) -> str:
+    """
+    Convertit les marqueurs markdown en HTML pour un rendu correct.
+
+    Args:
+        text: Le texte markdown à convertir
+
+    Returns:
+        Le texte avec les marqueurs markdown convertis en HTML
+    """
+    # Convertir les titres H2 (##)
+    text = re.sub(
+        r'^## (.+)$',
+        r"<h2 style='font-family: \"Cormorant Garamond\", serif; font-size: 1.5rem; font-weight: 400; color: var(--black); margin-bottom: 1rem; letter-spacing: 0.02em;'>\1</h2>",
+        text,
+        flags=re.MULTILINE
+    )
+
+    # Convertir les titres H3 (###)
+    text = re.sub(
+        r'^### (.+)$',
+        r"<h3 style='font-family: \"Cormorant Garamond\", serif; font-size: 1.25rem; font-weight: 400; color: var(--black); margin: 1rem 0 0.75rem 0; letter-spacing: 0.02em;'>\1</h3>",
+        text,
+        flags=re.MULTILINE
+    )
+
+    # Convertir le texte en gras (**text**) - AVANT l'italique pour éviter les conflits
+    text = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', text)
+
+    # Convertir le texte en italique (*text* ou _text_)
+    # Gérer les cas avec espaces avant la fermeture (ex: "texte *")
+    text = re.sub(r'\*([^*]+?)\s*\*', r'<em>\1</em>', text)
+    text = re.sub(r'_([^_]+?)_', r'<em>\1</em>', text)
+
+    # Convertir les listes numérotées (1. item, 2. item, etc.)
+    text = re.sub(r'^\d+\.\s+(.+)$', r'<li-num style="margin-bottom: 0.75rem;">\1</li-num>', text, flags=re.MULTILINE)
+
+    # Envelopper les groupes de <li-num> dans <ol>
+    text = re.sub(
+        r'(<li-num[^>]*>.*?</li-num>(?:\s*<li-num[^>]*>.*?</li-num>)*)',
+        r'<ol style="margin: 1rem 0; padding-left: 1.5rem; line-height: 1.8;">\1</ol>',
+        text,
+        flags=re.DOTALL
+    )
+
+    # Remplacer <li-num> par <li>
+    text = text.replace('<li-num', '<li').replace('</li-num>', '</li>')
+
+    # Convertir les listes à puces (- item)
+    text = re.sub(r'^- (.+)$', r'<li-bullet style="margin-bottom: 0.5rem;">\1</li-bullet>', text, flags=re.MULTILINE)
+
+    # Envelopper les groupes de <li-bullet> dans <ul>
+    text = re.sub(
+        r'(<li-bullet[^>]*>.*?</li-bullet>(?:\s*<li-bullet[^>]*>.*?</li-bullet>)*)',
+        r'<ul style="margin: 1rem 0; padding-left: 1.5rem;">\1</ul>',
+        text,
+        flags=re.DOTALL
+    )
+
+    # Remplacer <li-bullet> par <li>
+    text = text.replace('<li-bullet', '<li').replace('</li-bullet>', '</li>')
+
+    # Convertir les sauts de ligne en <br> pour les paragraphes
+    text = text.replace('\n\n', '<br/><br/>')
+
+    return text
+
+
 @st.cache_resource
 def get_database():
     """
@@ -443,12 +511,15 @@ def show_dashboard():
             # Nettoyer le texte des emojis pour un style épuré
             clean_content = remove_emojis(insight_content)
 
+            # Convertir le markdown en HTML pour un rendu correct
+            formatted_content = convert_markdown_to_html(clean_content)
+
             # Afficher l'insight avec style minimaliste
             st.markdown(f"""
             <div style='font-family: "Inter", sans-serif; color: var(--charcoal);
                        line-height: 1.8; font-size: 0.9375rem; font-weight: 300;
                        animation: fadeIn 0.5s ease-out;'>
-                {clean_content}
+                {formatted_content}
             </div>
             """, unsafe_allow_html=True)
 
