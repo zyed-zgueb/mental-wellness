@@ -6,6 +6,7 @@ import pandas as pd
 import re
 from datetime import datetime, timedelta
 from src.database.db_manager import DatabaseManager
+from src.ui.auth import get_current_user_id
 from src.llm.insights_generator import InsightsGenerator
 
 
@@ -46,16 +47,18 @@ def get_database():
     return DatabaseManager("serene.db")
 
 
-@st.cache_resource
-def get_insights_generator():
+def get_insights_generator(user_id: int):
     """
-    Singleton InsightsGenerator pour toute l'application.
+    Get InsightsGenerator for a specific user.
+
+    Args:
+        user_id: ID de l'utilisateur.
 
     Returns:
-        Instance unique de InsightsGenerator.
+        Instance de InsightsGenerator pour cet utilisateur.
     """
     db = get_database()
-    return InsightsGenerator(db)
+    return InsightsGenerator(db, user_id)
 
 
 def show_dashboard():
@@ -109,7 +112,8 @@ def show_dashboard():
 
     selected_days = period_options[selected_period_label]
 
-    mood_data = db.get_mood_history(days=selected_days)
+    user_id = get_current_user_id()
+    mood_data = db.get_mood_history(user_id, days=selected_days)
 
     if mood_data and len(mood_data) > 0:
         # Convertir en DataFrame pour Plotly
@@ -305,7 +309,8 @@ def show_dashboard():
     </h2>
     """, unsafe_allow_html=True)
 
-    conv_history = db.get_conversation_history(limit=100)
+    user_id = get_current_user_id()
+    conv_history = db.get_conversation_history(user_id, limit=100)
 
     if conv_history and len(conv_history) > 0:
         # Statistiques conversations - Cards compactes
@@ -428,7 +433,8 @@ def show_dashboard():
 
         # Générer les insights
         try:
-            insights_gen = get_insights_generator()
+            user_id = get_current_user_id()
+            insights_gen = get_insights_generator(user_id)
             insight_content = insights_gen.get_adaptive_insight()
 
             # Effacer le skeleton et afficher le contenu
@@ -463,7 +469,8 @@ def show_dashboard():
         # Metadata insight dans un expander subtil
         with st.expander("Détails de l'analyse", expanded=False):
             db = get_database()
-            latest_insight = db.get_latest_insight("weekly")
+            user_id = get_current_user_id()
+            latest_insight = db.get_latest_insight(user_id, "weekly")
 
             if latest_insight:
                 created_at = datetime.fromisoformat(latest_insight["created_at"])

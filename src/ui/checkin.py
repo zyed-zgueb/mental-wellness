@@ -6,6 +6,7 @@ Design cohérent, maintenable et optimisé pour la santé mentale
 import streamlit as st
 from datetime import datetime
 from src.database.db_manager import DatabaseManager
+from src.ui.auth import get_current_user_id
 from src.ui.styles.serene_styles import COLORS
 from src.ui.ui_components.mood_components import (
     mood_display_card,
@@ -138,8 +139,9 @@ def show_checkin():
         
         if submitted:
             db = get_database()
+            user_id = get_current_user_id()
             try:
-                checkin_id = db.save_checkin(mood_score, notes)
+                checkin_id = db.save_checkin(user_id, mood_score, notes)
                 st.success(
                     f"✅ Check-in enregistré avec succès ! "
                     f"Mood: {mood_label} ({mood_score}/10)"
@@ -157,9 +159,10 @@ def show_checkin():
                 color: var(--black); margin-bottom: 2rem; letter-spacing: 0.02em;'>
     Historique</h2>
                 """, unsafe_allow_html=True)
-    
+
     db = get_database()
-    history = db.get_mood_history(days=30)
+    user_id = get_current_user_id()
+    history = db.get_mood_history(user_id, days=30)
     
     if history:
         # Bannière de statistiques

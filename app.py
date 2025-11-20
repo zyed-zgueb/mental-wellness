@@ -4,6 +4,7 @@ Main Streamlit application entry point
 """
 import streamlit as st
 from src.ui.disclaimer import show_disclaimer
+from src.ui.auth import show_auth, is_authenticated, show_user_menu
 from src.ui.checkin import show_checkin
 from src.ui.conversation import show_conversation
 from src.ui.dashboard import show_dashboard
@@ -172,9 +173,17 @@ def show_home():
 def main():
     """Point d'entrée principal de l'application."""
 
-    # Vérifier si l'utilisateur a reconnu le disclaimer
+    # Étape 1: Vérifier si l'utilisateur a reconnu le disclaimer
     if not st.session_state.get('disclaimer_acknowledged', False):
         show_disclaimer()
+        return
+
+    # Étape 2: Vérifier si l'utilisateur est authentifié
+    if not is_authenticated():
+        show_auth()
+        return
+
+    # Étape 3: Utilisateur authentifié et disclaimer accepté - afficher l'application
     else:
         # Afficher le menu de navigation dans la sidebar - Gallery minimalist
         with st.sidebar:
@@ -187,6 +196,9 @@ def main():
                           text-transform: uppercase;'>Serene</h1>
             </div>
             """, unsafe_allow_html=True)
+
+            # Menu utilisateur (affiche nom + logout)
+            show_user_menu()
 
             # Initialiser la page courante si nécessaire
             if 'current_page' not in st.session_state:

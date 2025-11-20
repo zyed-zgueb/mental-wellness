@@ -2,6 +2,8 @@
 
 import sqlite3
 import os
+import hashlib
+import json
 from typing import List, Dict, Any, Optional
 from datetime import datetime, timedelta
 
@@ -67,11 +69,12 @@ class DatabaseManager:
         self.conn.executescript(schema)
         self.conn.commit()
 
-    def save_checkin(self, mood_score: int, notes: str = "") -> int:
+    def save_checkin(self, user_id: int, mood_score: int, notes: str = "") -> int:
         """
         Enregistrer un check-in.
 
         Args:
+            user_id: ID de l'utilisateur.
             mood_score: Score d'humeur (0-10).
             notes: Notes optionnelles de l'utilisateur.
 
@@ -79,28 +82,32 @@ class DatabaseManager:
             ID du check-in créé.
 
         Raises:
-            ValueError: Si mood_score est hors limites (0-10).
+            ValueError: Si mood_score est hors limites (0-10) ou user_id invalide.
         """
         if not isinstance(mood_score, int) or not 0 <= mood_score <= 10:
             raise ValueError(
                 f"mood_score doit être un entier entre 0 et 10, reçu: {mood_score}"
             )
 
+        if not user_id:
+            raise ValueError("user_id est requis")
+
         try:
             cursor = self.conn.execute(
-                "INSERT INTO check_ins (mood_score, notes) VALUES (?, ?)",
-                (mood_score, notes),
+                "INSERT INTO check_ins (user_id, mood_score, notes) VALUES (?, ?, ?)",
+                (user_id, mood_score, notes),
             )
             self.conn.commit()
             return cursor.lastrowid
         except sqlite3.IntegrityError as e:
             raise ValueError(f"Erreur d'intégrité de la base de données: {e}")
 
-    def get_mood_history(self, days: int = 30) -> List[Dict[str, Any]]:
+    def get_mood_history(self, user_id: int, days: int = 30) -> List[Dict[str, Any]]:
         """
         Récupérer l'historique des check-ins (derniers N jours).
 
         Args:
+            user_id: ID de l'utilisateur.
             days: Nombre de jours d'historique à récupérer (défaut: 30).
 
         Returns:
@@ -113,21 +120,22 @@ class DatabaseManager:
             """
             SELECT id, timestamp, mood_score, notes, created_at
             FROM check_ins
-            WHERE timestamp >= ?
+            WHERE user_id = ? AND timestamp >= ?
             ORDER BY timestamp DESC
             """,
-            (cutoff_date,),
+            (user_id, cutoff_date),
         )
 
         return [dict(row) for row in cursor.fetchall()]
 
     def save_conversation(
-        self, user_message: str, ai_response: str, tokens_used: int = 0
+        self, user_id: int, user_message: str, ai_response: str, tokens_used: int = 0
     ) -> int:
         """
         Enregistrer une conversation.
 
         Args:
+            user_id: ID de l'utilisateur.
             user_message: Message de l'utilisateur.
             ai_response: Réponse de l'IA.
             tokens_used: Nombre de tokens utilisés (optionnel).
@@ -136,29 +144,33 @@ class DatabaseManager:
             ID de la conversation créée.
 
         Raises:
-            ValueError: Si les messages sont vides.
+            ValueError: Si les messages sont vides ou user_id invalide.
         """
         if not user_message or not ai_response:
             raise ValueError("Les messages ne peuvent pas être vides")
 
+        if not user_id:
+            raise ValueError("user_id est requis")
+
         try:
             cursor = self.conn.execute(
                 """
-                INSERT INTO conversations (user_message, ai_response, tokens_used)
-                VALUES (?, ?, ?)
+                INSERT INTO conversations (user_id, user_message, ai_response, tokens_used)
+                VALUES (?, ?, ?, ?)
                 """,
-                (user_message, ai_response, tokens_used),
+                (user_id, user_message, ai_response, tokens_used),
             )
             self.conn.commit()
             return cursor.lastrowid
         except sqlite3.IntegrityError as e:
             raise ValueError(f"Erreur d'intégrité de la base de données: {e}")
 
-    def get_conversation_history(self, limit: int = 50) -> List[Dict[str, Any]]:
+    def get_conversation_history(self, user_id: int, limit: int = 50) -> List[Dict[str, Any]]:
         """
         Récupérer l'historique des conversations.
 
         Args:
+            user_id: ID de l'utilisateur.
             limit: Nombre maximum de conversations à récupérer (défaut: 50).
 
         Returns:
@@ -169,19 +181,21 @@ class DatabaseManager:
             """
             SELECT id, timestamp, user_message, ai_response, tokens_used, created_at
             FROM conversations
+            WHERE user_id = ?
             ORDER BY timestamp ASC
             LIMIT ?
             """,
-            (limit,),
+            (user_id, limit),
         )
 
         return [dict(row) for row in cursor.fetchall()]
 
-    def get_conversation_count(self, days: int = 7) -> int:
+    def get_conversation_count(self, user_id: int, days: int = 7) -> int:
         """
         Compter le nombre de conversations (derniers N jours).
 
         Args:
+            user_id: ID de l'utilisateur.
             days: Nombre de jours à considérer (défaut: 7).
 
         Returns:
@@ -193,9 +207,9 @@ class DatabaseManager:
             """
             SELECT COUNT(*) as count
             FROM conversations
-            WHERE timestamp >= ?
+            WHERE user_id = ? AND timestamp >= ?
             """,
-            (cutoff_date,),
+            (user_id, cutoff_date),
         )
 
         result = cursor.fetchone()
@@ -203,6 +217,7 @@ class DatabaseManager:
 
     def save_insight(
         self,
+        user_id: int,
         insight_type: str,
         content: str,
         based_on_data: str = "",
@@ -212,6 +227,7 @@ class DatabaseManager:
         Enregistrer un insight IA.
 
         Args:
+            user_id: ID de l'utilisateur.
             insight_type: Type d'insight (ex: "weekly", "monthly").
             content: Contenu de l'insight généré.
             based_on_data: Métadonnées sur les données utilisées (JSON string optionnel).
@@ -226,24 +242,28 @@ class DatabaseManager:
         if not insight_type or not content:
             raise ValueError("insight_type et content ne peuvent pas être vides")
 
+        if not user_id:
+            raise ValueError("user_id est requis")
+
         try:
             cursor = self.conn.execute(
                 """
-                INSERT INTO insights_log (insight_type, content, based_on_data, tokens_used)
-                VALUES (?, ?, ?, ?)
+                INSERT INTO insights_log (user_id, insight_type, content, based_on_data, tokens_used)
+                VALUES (?, ?, ?, ?, ?)
                 """,
-                (insight_type, content, based_on_data, tokens_used),
+                (user_id, insight_type, content, based_on_data, tokens_used),
             )
             self.conn.commit()
             return cursor.lastrowid
         except sqlite3.IntegrityError as e:
             raise ValueError(f"Erreur d'intégrité de la base de données: {e}")
 
-    def get_latest_insight(self, insight_type: str) -> Optional[Dict[str, Any]]:
+    def get_latest_insight(self, user_id: int, insight_type: str) -> Optional[Dict[str, Any]]:
         """
         Récupérer le dernier insight d'un type donné.
 
         Args:
+            user_id: ID de l'utilisateur.
             insight_type: Type d'insight à récupérer.
 
         Returns:
@@ -254,15 +274,228 @@ class DatabaseManager:
             """
             SELECT id, created_at, insight_type, content, based_on_data, tokens_used
             FROM insights_log
-            WHERE insight_type = ?
+            WHERE user_id = ? AND insight_type = ?
             ORDER BY created_at DESC
             LIMIT 1
             """,
-            (insight_type,),
+            (user_id, insight_type),
         )
 
         result = cursor.fetchone()
         return dict(result) if result else None
+
+    # ===== User Authentication Methods =====
+
+    @staticmethod
+    def _hash_password(password: str) -> str:
+        """
+        Hash a password using SHA-256.
+
+        Args:
+            password: Plain text password.
+
+        Returns:
+            Hashed password.
+        """
+        return hashlib.sha256(password.encode()).hexdigest()
+
+    def create_user(
+        self, email: str, password: str, display_name: Optional[str] = None
+    ) -> int:
+        """
+        Create a new user account.
+
+        Args:
+            email: User's email address (must be unique).
+            password: Plain text password (will be hashed).
+            display_name: Optional display name for the user.
+
+        Returns:
+            ID of the created user.
+
+        Raises:
+            ValueError: If email already exists or inputs are invalid.
+        """
+        if not email or not password:
+            raise ValueError("Email et mot de passe sont requis")
+
+        # Check if email already exists
+        existing_user = self.get_user_by_email(email)
+        if existing_user:
+            raise ValueError(f"Un utilisateur avec l'email '{email}' existe déjà")
+
+        password_hash = self._hash_password(password)
+
+        try:
+            cursor = self.conn.execute(
+                """
+                INSERT INTO users (email, password_hash, display_name, created_at)
+                VALUES (?, ?, ?, ?)
+                """,
+                (email, password_hash, display_name, datetime.now().isoformat()),
+            )
+            self.conn.commit()
+            return cursor.lastrowid
+        except sqlite3.IntegrityError as e:
+            raise ValueError(f"Erreur lors de la création de l'utilisateur: {e}")
+
+    def authenticate_user(self, email: str, password: str) -> Optional[Dict[str, Any]]:
+        """
+        Authenticate a user with email and password.
+
+        Args:
+            email: User's email address.
+            password: Plain text password.
+
+        Returns:
+            User dict if authentication successful, None otherwise.
+            Dict contains: id, email, display_name, created_at, last_login, preferences
+        """
+        if not email or not password:
+            return None
+
+        user = self.get_user_by_email(email)
+        if not user:
+            return None
+
+        password_hash = self._hash_password(password)
+        if user["password_hash"] != password_hash:
+            return None
+
+        # Update last login
+        self.update_last_login(user["id"])
+
+        # Remove password_hash from returned data
+        user_data = {k: v for k, v in user.items() if k != "password_hash"}
+        return user_data
+
+    def get_user_by_id(self, user_id: int) -> Optional[Dict[str, Any]]:
+        """
+        Get user by ID.
+
+        Args:
+            user_id: User's ID.
+
+        Returns:
+            User dict or None if not found.
+        """
+        cursor = self.conn.execute(
+            """
+            SELECT id, email, password_hash, display_name, created_at, last_login, preferences
+            FROM users
+            WHERE id = ?
+            """,
+            (user_id,),
+        )
+
+        result = cursor.fetchone()
+        return dict(result) if result else None
+
+    def get_user_by_email(self, email: str) -> Optional[Dict[str, Any]]:
+        """
+        Get user by email.
+
+        Args:
+            email: User's email address.
+
+        Returns:
+            User dict or None if not found.
+        """
+        cursor = self.conn.execute(
+            """
+            SELECT id, email, password_hash, display_name, created_at, last_login, preferences
+            FROM users
+            WHERE email = ?
+            """,
+            (email,),
+        )
+
+        result = cursor.fetchone()
+        return dict(result) if result else None
+
+    def update_last_login(self, user_id: int) -> None:
+        """
+        Update user's last login timestamp.
+
+        Args:
+            user_id: User's ID.
+        """
+        self.conn.execute(
+            """
+            UPDATE users
+            SET last_login = ?
+            WHERE id = ?
+            """,
+            (datetime.now().isoformat(), user_id),
+        )
+        self.conn.commit()
+
+    def update_user_preferences(
+        self, user_id: int, preferences: Dict[str, Any]
+    ) -> None:
+        """
+        Update user preferences.
+
+        Args:
+            user_id: User's ID.
+            preferences: Dict of user preferences (will be stored as JSON).
+        """
+        preferences_json = json.dumps(preferences)
+
+        self.conn.execute(
+            """
+            UPDATE users
+            SET preferences = ?
+            WHERE id = ?
+            """,
+            (preferences_json, user_id),
+        )
+        self.conn.commit()
+
+    def get_user_preferences(self, user_id: int) -> Dict[str, Any]:
+        """
+        Get user preferences.
+
+        Args:
+            user_id: User's ID.
+
+        Returns:
+            Dict of user preferences, or empty dict if none set.
+        """
+        user = self.get_user_by_id(user_id)
+        if not user or not user.get("preferences"):
+            return {}
+
+        try:
+            return json.loads(user["preferences"])
+        except json.JSONDecodeError:
+            return {}
+
+    def change_password(self, user_id: int, new_password: str) -> None:
+        """
+        Change user's password.
+
+        Args:
+            user_id: User's ID.
+            new_password: New plain text password (will be hashed).
+
+        Raises:
+            ValueError: If password is empty.
+        """
+        if not new_password:
+            raise ValueError("Le mot de passe ne peut pas être vide")
+
+        password_hash = self._hash_password(new_password)
+
+        self.conn.execute(
+            """
+            UPDATE users
+            SET password_hash = ?
+            WHERE id = ?
+            """,
+            (password_hash, user_id),
+        )
+        self.conn.commit()
 
     def close(self):
         """Fermer la connexion à la base de données."""

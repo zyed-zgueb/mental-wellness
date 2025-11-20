@@ -3,6 +3,7 @@
 import streamlit as st
 from dotenv import load_dotenv
 from src.database.db_manager import DatabaseManager
+from src.ui.auth import get_current_user_id
 from src.llm.conversation_manager import ConversationManager
 from src.utils.prompts import EMERGENCY_RESOURCES
 
@@ -66,7 +67,8 @@ def show_conversation():
 
     # Initialiser l'historique dans session_state si nécessaire
     if 'conversation_history' not in st.session_state:
-        history = manager.db.get_conversation_history(limit=5)
+        user_id = get_current_user_id()
+        history = manager.db.get_conversation_history(user_id, limit=5)
         # Inverser pour afficher du plus ancien au plus récent
         st.session_state.conversation_history = list(history)
 
@@ -88,11 +90,12 @@ def show_conversation():
             st.warning(EMERGENCY_RESOURCES)
 
         # Streaming réponse IA (avatar stylisé via CSS)
+        user_id = get_current_user_id()
         with st.chat_message("assistant"):
             placeholder = st.empty()
             full_response = ""
             try:
-                for chunk in manager.send_message(user_input):
+                for chunk in manager.send_message(user_id, user_input):
                     full_response += chunk
                     placeholder.markdown(full_response + "▌")
                 placeholder.markdown(full_response)

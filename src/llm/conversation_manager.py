@@ -29,11 +29,12 @@ class ConversationManager:
         self.db = db_manager
         self.system_prompt = CONVERSATION_SYSTEM_PROMPT
 
-    def send_message(self, user_message: str) -> Generator[str, None, None]:
+    def send_message(self, user_id: int, user_message: str) -> Generator[str, None, None]:
         """
         Envoyer un message à Claude avec streaming.
 
         Args:
+            user_id: ID de l'utilisateur.
             user_message: Message de l'utilisateur.
 
         Yields:
@@ -57,7 +58,7 @@ class ConversationManager:
                 # Sauvegarder après complétion
                 usage = stream.get_final_message().usage
                 tokens = usage.input_tokens + usage.output_tokens
-                self.db.save_conversation(user_message, response_text, tokens)
+                self.db.save_conversation(user_id, user_message, response_text, tokens)
 
         except Exception as e:
             error_msg = "Je suis désolé, je rencontre des difficultés techniques. Veuillez réessayer."
