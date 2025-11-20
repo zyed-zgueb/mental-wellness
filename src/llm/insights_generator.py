@@ -86,7 +86,14 @@ class InsightsGenerator:
             conv_history = self.db.get_conversation_history(self.user_id, limit=10)  # 10 dernières conversations
 
             # Déterminer niveau de maturité
-            days_with_data = len(mood_data)
+            # Calculer le nombre de jours depuis le premier check-in
+            if mood_data:
+                # mood_data est trié du plus récent au plus ancien
+                oldest_checkin = datetime.fromisoformat(mood_data[-1]["timestamp"])
+                days_with_data = (datetime.now() - oldest_checkin).days + 1  # +1 pour inclure le jour actuel
+            else:
+                days_with_data = 0
+
             maturity_level = self._get_data_maturity_level(days_with_data)
 
             # Construire contexte des données
