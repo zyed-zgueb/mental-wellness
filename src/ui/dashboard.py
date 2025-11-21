@@ -8,6 +8,15 @@ from datetime import datetime, timedelta
 from src.database.db_manager import DatabaseManager
 from src.ui.auth import get_current_user_id
 from src.llm.insights_generator import InsightsGenerator
+from src.ui.styles.serene_styles import (
+    create_page_header,
+    create_section_header,
+    create_metric_card_large,
+    create_metric_card_small,
+    create_empty_state,
+    create_divider,
+    create_insight_content
+)
 
 
 def remove_emojis(text: str) -> str:
@@ -133,33 +142,21 @@ def show_dashboard():
     """Afficher le dashboard - Gallery minimalist style."""
 
     # Header minimaliste
-    st.markdown("""
-    <div style='animation: fadeInDown 0.4s ease-out; margin-bottom: 3rem;
-                padding-bottom: 2rem; border-bottom: 1px solid var(--line-light);'>
-        <h1 style='font-family: "Cormorant Garamond", serif; font-size: 3rem;
-                   color: var(--black); font-weight: 300; margin-bottom: 1rem;
-                   letter-spacing: 0.02em; line-height: 1.1;'>
-            Dashboard
-        </h1>
-        <p style='font-family: "Inter", sans-serif; font-size: 0.9375rem;
-                 color: var(--gray-dark); margin: 0; line-height: 1.8;
-                 font-weight: 300; max-width: 600px;'>
-            Visualisez vos tendances de bien-être et recevez des insights personnalisés.
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown(
+        create_page_header(
+            "Dashboard",
+            "Visualisez vos tendances de bien-être et recevez des insights personnalisés."
+        ),
+        unsafe_allow_html=True
+    )
 
     db = get_database()
 
     # Section 1: Grande métrique centrale - Style minimaliste
-    st.markdown("""
-    <h2 style='font-family: "Cormorant Garamond", serif; font-size: 2rem;
-               font-weight: 300; color: var(--black); margin-bottom: 2rem;
-               letter-spacing: 0.02em;'>
-        <i class="fa-regular fa-heart" style='margin-right: 0.75rem; opacity: 0.65; font-size: 1.75rem;'></i>
-        Votre Bien-être
-    </h2>
-    """, unsafe_allow_html=True)
+    st.markdown(
+        create_section_header("fa-regular fa-heart", "Votre Bien-être"),
+        unsafe_allow_html=True
+    )
 
     # Sélecteur de période avec style élégant
     period_options = {
@@ -198,96 +195,51 @@ def show_dashboard():
         delta = latest_mood - avg_mood
 
         # Grande métrique centrale - Style minimaliste
-        st.markdown(f"""
-        <div style='background-color: var(--white); padding: 3rem 2rem;
-                    border: 1px solid var(--line-light); text-align: center;
-                    margin-bottom: 2rem; box-shadow: var(--shadow-subtle);'>
-            <div style='font-family: "Inter", sans-serif; color: var(--gray-medium);
-                       font-size: 0.75rem; font-weight: 400; letter-spacing: 0.1em;
-                       text-transform: uppercase; margin-bottom: 1rem;'>
-                Score Actuel
-            </div>
-            <div style='font-family: "Cormorant Garamond", serif; color: var(--black);
-                       font-size: 5rem; font-weight: 300; line-height: 1; margin-bottom: 0.5rem;'>
-                {latest_mood:.1f}
-            </div>
-            <div style='font-family: "Inter", sans-serif; color: var(--gray-medium);
-                       font-size: 0.875rem; font-weight: 300; margin-bottom: 1.5rem;'>
-                sur 10
-            </div>
-            <div style='width: 60px; height: 1px; background-color: var(--line-dark); margin: 1.5rem auto;'></div>
-            <div style='font-family: "Inter", sans-serif; color: var(--charcoal);
-                       font-size: 0.875rem; margin-top: 1rem; font-weight: 300;'>
-                {'+' if delta >= 0 else ''}{delta:.1f} vs moyenne
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown(
+            create_metric_card_large(
+                label="Score Actuel",
+                value=f"{latest_mood:.1f}",
+                unit="sur 10",
+                delta=delta
+            ),
+            unsafe_allow_html=True
+        )
 
         # Stats secondaires - Style minimaliste
         col1, col2, col3 = st.columns(3)
 
         with col1:
-            st.markdown(f"""
-            <div style='background-color: var(--white); padding: 1.5rem; text-align: center;
-                        border: 1px solid var(--line-light); box-shadow: var(--shadow-subtle);
-                        animation: fadeInUp 0.5s ease-out;'>
-                <div style='font-family: "Inter", sans-serif; color: var(--gray-light);
-                           font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.1em;
-                           margin-bottom: 0.75rem; font-weight: 400;'>
-                    Moyenne ({selected_period_label})
-                </div>
-                <div style='font-family: "Cormorant Garamond", serif; color: var(--black);
-                           font-size: 2.5rem; font-weight: 300;'>
-                    {avg_mood:.1f}
-                </div>
-                <div style='font-family: "Inter", sans-serif; color: var(--gray-medium);
-                           font-size: 0.75rem; font-weight: 300;'>
-                    sur 10
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
+            st.markdown(
+                create_metric_card_small(
+                    label=f"Moyenne ({selected_period_label})",
+                    value=f"{avg_mood:.1f}",
+                    unit="sur 10",
+                    animation_delay="0.5s"
+                ),
+                unsafe_allow_html=True
+            )
 
         with col2:
-            st.markdown(f"""
-            <div style='background-color: var(--white); padding: 1.5rem; text-align: center;
-                        border: 1px solid var(--line-light); box-shadow: var(--shadow-subtle);
-                        animation: fadeInUp 0.6s ease-out;'>
-                <div style='font-family: "Inter", sans-serif; color: var(--gray-light);
-                           font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.1em;
-                           margin-bottom: 0.75rem; font-weight: 400;'>
-                    Minimum ({selected_period_label})
-                </div>
-                <div style='font-family: "Cormorant Garamond", serif; color: var(--black);
-                           font-size: 2.5rem; font-weight: 300;'>
-                    {min_mood}
-                </div>
-                <div style='font-family: "Inter", sans-serif; color: var(--gray-medium);
-                           font-size: 0.75rem; font-weight: 300;'>
-                    sur 10
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
+            st.markdown(
+                create_metric_card_small(
+                    label=f"Minimum ({selected_period_label})",
+                    value=f"{min_mood}",
+                    unit="sur 10",
+                    animation_delay="0.6s"
+                ),
+                unsafe_allow_html=True
+            )
 
         with col3:
-            st.markdown(f"""
-            <div style='background-color: var(--white); padding: 1.5rem; text-align: center;
-                        border: 1px solid var(--line-light); box-shadow: var(--shadow-subtle);
-                        animation: fadeInUp 0.7s ease-out;'>
-                <div style='font-family: "Inter", sans-serif; color: var(--gray-light);
-                           font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.1em;
-                           margin-bottom: 0.75rem; font-weight: 400;'>
-                    Maximum ({selected_period_label})
-                </div>
-                <div style='font-family: "Cormorant Garamond", serif; color: var(--black);
-                           font-size: 2.5rem; font-weight: 300;'>
-                    {max_mood}
-                </div>
-                <div style='font-family: "Inter", sans-serif; color: var(--gray-medium);
-                           font-size: 0.75rem; font-weight: 300;'>
-                    sur 10
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
+            st.markdown(
+                create_metric_card_small(
+                    label=f"Maximum ({selected_period_label})",
+                    value=f"{max_mood}",
+                    unit="sur 10",
+                    animation_delay="0.7s"
+                ),
+                unsafe_allow_html=True
+            )
 
         st.markdown("<div style='margin: 2rem 0;'></div>", unsafe_allow_html=True)
 
@@ -348,34 +300,22 @@ def show_dashboard():
 
     else:
         # État vide minimaliste
-        st.markdown("""
-        <div style='background-color: var(--ivory-dark); padding: 4rem 3rem;
-                    border: 1px solid var(--line-light); text-align: center;
-                    animation: fadeInUp 0.5s ease-out;'>
-            <div style='font-family: "Cormorant Garamond", serif; font-size: 1.75rem;
-                       font-weight: 300; color: var(--black); margin-bottom: 1rem;
-                       letter-spacing: 0.02em;'>
-                Commencez votre suivi
-            </div>
-            <div style='font-family: "Inter", sans-serif; font-size: 0.875rem;
-                       color: var(--gray-dark); font-weight: 300; line-height: 1.7;'>
-                Créez votre premier check-in pour visualiser vos tendances de bien-être
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown(
+            create_empty_state(
+                "Commencez votre suivi",
+                "Créez votre premier check-in pour visualiser vos tendances de bien-être"
+            ),
+            unsafe_allow_html=True
+        )
 
     # Divider minimaliste
-    st.markdown("<hr style='border: none; border-top: 1px solid var(--line-light); margin: 3rem 0;'>", unsafe_allow_html=True)
+    st.markdown(create_divider(), unsafe_allow_html=True)
 
     # Section 2: Activité Conversations
-    st.markdown("""
-    <h2 style='font-family: "Cormorant Garamond", serif; font-size: 2rem;
-               font-weight: 300; color: var(--black); margin-bottom: 2rem;
-               letter-spacing: 0.02em;'>
-        <i class="fa-regular fa-message" style='margin-right: 0.75rem; opacity: 0.65; font-size: 1.75rem;'></i>
-        Activité Conversations
-    </h2>
-    """, unsafe_allow_html=True)
+    st.markdown(
+        create_section_header("fa-regular fa-message", "Activité Conversations"),
+        unsafe_allow_html=True
+    )
 
     user_id = get_current_user_id()
     conv_history = db.get_conversation_history(user_id, limit=100)
@@ -397,145 +337,116 @@ def show_dashboard():
         col1, col2 = st.columns(2)
 
         with col1:
-            st.markdown(f"""
-            <div style='background-color: var(--white); padding: 1.5rem; text-align: center;
-                        border: 1px solid var(--line-light); box-shadow: var(--shadow-subtle);'>
-                <div style='font-family: "Inter", sans-serif; color: var(--gray-light);
-                           font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.1em;
-                           margin-bottom: 0.75rem; font-weight: 400;'>
-                    Total
-                </div>
-                <div style='font-family: "Cormorant Garamond", serif; color: var(--black);
-                           font-size: 2.5rem; font-weight: 300;'>
-                    {total_conv}
-                </div>
-                <div style='font-family: "Inter", sans-serif; color: var(--gray-medium);
-                           font-size: 0.75rem; font-weight: 300;'>
-                    conversations
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
+            st.markdown(
+                create_metric_card_small(
+                    label="Total",
+                    value=f"{total_conv}",
+                    unit="conversations"
+                ),
+                unsafe_allow_html=True
+            )
 
         with col2:
-            st.markdown(f"""
-            <div style='background-color: var(--white); padding: 1.5rem; text-align: center;
-                        border: 1px solid var(--line-light); box-shadow: var(--shadow-subtle);'>
-                <div style='font-family: "Inter", sans-serif; color: var(--gray-light);
-                           font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.1em;
-                           margin-bottom: 0.75rem; font-weight: 400;'>
-                    Moyenne
-                </div>
-                <div style='font-family: "Cormorant Garamond", serif; color: var(--black);
-                           font-size: 2.5rem; font-weight: 300;'>
-                    {avg_per_day:.1f}
-                </div>
-                <div style='font-family: "Inter", sans-serif; color: var(--gray-medium);
-                           font-size: 0.75rem; font-weight: 300;'>
-                    par jour
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
+            st.markdown(
+                create_metric_card_small(
+                    label="Moyenne",
+                    value=f"{avg_per_day:.1f}",
+                    unit="par jour"
+                ),
+                unsafe_allow_html=True
+            )
 
     else:
         # État vide minimaliste
-        st.markdown("""
-        <div style='background-color: var(--ivory-dark); padding: 4rem 3rem;
-                    border: 1px solid var(--line-light); text-align: center;
-                    animation: fadeInUp 0.5s ease-out;'>
-            <div style='font-family: "Cormorant Garamond", serif; font-size: 1.75rem;
-                       font-weight: 300; color: var(--black); margin-bottom: 1rem;
-                       letter-spacing: 0.02em;'>
-                Démarrez votre première conversation
-            </div>
-            <div style='font-family: "Inter", sans-serif; font-size: 0.875rem;
-                       color: var(--gray-dark); font-weight: 300; line-height: 1.7;'>
-                Partagez vos pensées avec votre compagnon IA empathique
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown(
+            create_empty_state(
+                "Démarrez votre première conversation",
+                "Partagez vos pensées avec votre compagnon IA empathique"
+            ),
+            unsafe_allow_html=True
+        )
 
     # Divider minimaliste
-    st.markdown("<hr style='border: none; border-top: 1px solid var(--line-light); margin: 3rem 0;'>", unsafe_allow_html=True)
+    st.markdown(create_divider(), unsafe_allow_html=True)
 
     # Section 3: AI Insights
-    st.markdown("""
-    <h2 style='font-family: "Cormorant Garamond", serif; font-size: 2rem;
-               font-weight: 300; color: var(--black); margin-bottom: 1rem;
-               letter-spacing: 0.02em;'>
-        <i class="fa-solid fa-sparkles" style='margin-right: 0.75rem; opacity: 0.65; font-size: 1.75rem;'></i>
-        Vos Insights Personnalisés
-    </h2>
-    <p style='font-family: "Inter", sans-serif; color: var(--gray-dark);
-             margin-bottom: 2rem; font-size: 0.875rem; font-weight: 300; line-height: 1.7;'>
-        Découvrez des révélations actionnables sur votre bien-être mental
-    </p>
-    """, unsafe_allow_html=True)
+    st.markdown(
+        create_section_header(
+            "fa-solid fa-sparkles",
+            "Vos Insights Personnalisés",
+            "Découvrez des révélations actionnables sur votre bien-être mental"
+        ),
+        unsafe_allow_html=True
+    )
 
     # Vérifier si des données existent (au moins 1 check-in ou 1 conversation)
     checkin_count = len(mood_data) if mood_data else 0
     conv_count = len(conv_history) if conv_history else 0
 
     if checkin_count > 0 or conv_count > 0:
-        # Card minimaliste pour insights
-        st.markdown("""
-        <div style='background-color: var(--white); padding: 2rem;
-                    border: 1px solid var(--line-light); border-left: 2px solid var(--black);
-                    box-shadow: var(--shadow-subtle); margin-bottom: 1rem;
-                    animation: fadeInUp 0.5s ease-out;'>
-        """, unsafe_allow_html=True)
+        # Créer un conteneur pour tout le contenu de l'insight
+        insight_container = st.container()
 
-        # Loading skeleton pendant la génération
-        loading_placeholder = st.empty()
-        with loading_placeholder.container():
-            st.markdown("""
-            <div style='margin-bottom: 1rem;'>
-                <div class='skeleton' style='height: 1.5rem; width: 70%; margin-bottom: 1rem;'></div>
-                <div class='skeleton' style='height: 1rem; width: 100%; margin-bottom: 0.5rem;'></div>
-                <div class='skeleton' style='height: 1rem; width: 95%; margin-bottom: 0.5rem;'></div>
-                <div class='skeleton' style='height: 1rem; width: 85%;'></div>
-            </div>
-            <p style='color: var(--color-primary); font-size: 0.9rem; text-align: center; margin-top: 1.5rem;'>
-                Génération de vos insights personnalisés...
-            </p>
-            """, unsafe_allow_html=True)
+        with insight_container:
+            # Loading skeleton pendant la génération
+            loading_placeholder = st.empty()
+            with loading_placeholder.container():
+                # Afficher le conteneur avec skeleton
+                st.markdown("""
+                <div style='background-color: var(--white); padding: 2rem;
+                            border: 1px solid var(--line-light); border-left: 2px solid var(--black);
+                            box-shadow: var(--shadow-subtle); margin-bottom: 1rem;
+                            animation: fadeInUp 0.5s ease-out;'>
+                    <div style='margin-bottom: 1rem;'>
+                        <div class='skeleton' style='height: 1.5rem; width: 70%; margin-bottom: 1rem;'></div>
+                        <div class='skeleton' style='height: 1rem; width: 100%; margin-bottom: 0.5rem;'></div>
+                        <div class='skeleton' style='height: 1rem; width: 95%; margin-bottom: 0.5rem;'></div>
+                        <div class='skeleton' style='height: 1rem; width: 85%;'></div>
+                    </div>
+                    <p style='color: var(--color-primary); font-size: 0.9rem; text-align: center; margin-top: 1.5rem;'>
+                        Génération de vos insights personnalisés...
+                    </p>
+                </div>
+                """, unsafe_allow_html=True)
 
-        # Générer les insights
-        try:
-            user_id = get_current_user_id()
-            insights_gen = get_insights_generator(user_id)
-            insight_content = insights_gen.get_adaptive_insight()
+            # Générer les insights
+            try:
+                user_id = get_current_user_id()
+                insights_gen = get_insights_generator(user_id)
+                insight_content = insights_gen.get_adaptive_insight()
 
-            # Effacer le skeleton et afficher le contenu
-            loading_placeholder.empty()
+                # Effacer le skeleton
+                loading_placeholder.empty()
 
-            # Nettoyer le texte des emojis pour un style épuré
-            clean_content = remove_emojis(insight_content)
+                # Nettoyer le texte des emojis pour un style épuré
+                clean_content = remove_emojis(insight_content)
 
-            # Convertir le markdown en HTML pour un rendu correct
-            formatted_content = convert_markdown_to_html(clean_content)
+                # Convertir le markdown en HTML pour un rendu correct
+                formatted_content = convert_markdown_to_html(clean_content)
 
-            # Afficher l'insight avec style minimaliste
-            st.markdown(f"""
-            <div style='font-family: "Inter", sans-serif; color: var(--charcoal);
-                       line-height: 1.8; font-size: 0.9375rem; font-weight: 300;
-                       animation: fadeIn 0.5s ease-out;'>
-                {formatted_content}
-            </div>
-            """, unsafe_allow_html=True)
+                # Afficher l'insight avec conteneur complet
+                st.markdown(f"""
+                <div style='background-color: var(--white); padding: 2rem;
+                            border: 1px solid var(--line-light); border-left: 2px solid var(--black);
+                            box-shadow: var(--shadow-subtle); margin-bottom: 1rem;
+                            animation: fadeInUp 0.5s ease-out;'>
+                    <div style='font-family: "Inter", sans-serif; color: var(--charcoal);
+                               line-height: 1.8; font-size: 0.9375rem; font-weight: 300;
+                               animation: fadeIn 0.5s ease-out;'>
+                        {formatted_content}
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
 
-        except ValueError as e:
-            loading_placeholder.empty()
-            st.markdown("</div>", unsafe_allow_html=True)
-            st.error(f"Configuration manquante: {e}")
-            st.info("Assurez-vous que ANTHROPIC_API_KEY est définie dans votre fichier .env")
-            return
-        except Exception as e:
-            loading_placeholder.empty()
-            st.markdown("</div>", unsafe_allow_html=True)
-            st.error(f"Erreur lors de la génération des insights: {e}")
-            return
-
-        st.markdown("</div>", unsafe_allow_html=True)
+            except ValueError as e:
+                loading_placeholder.empty()
+                st.error(f"Configuration manquante: {e}")
+                st.info("Assurez-vous que ANTHROPIC_API_KEY est définie dans votre fichier .env")
+                return
+            except Exception as e:
+                loading_placeholder.empty()
+                st.error(f"Erreur lors de la génération des insights: {e}")
+                return
 
         # Metadata insight dans un expander subtil
         with st.expander("Détails de l'analyse", expanded=False):
@@ -572,21 +483,10 @@ def show_dashboard():
 
     else:
         # Empty state minimaliste
-        st.markdown("""
-        <div style='background-color: var(--ivory-dark); padding: 4rem 3rem;
-                    border: 1px solid var(--line-light); text-align: center;
-                    animation: fadeInUp 0.5s ease-out;'>
-            <div style='font-family: "Cormorant Garamond", serif; font-size: 1.75rem;
-                       font-weight: 300; color: var(--black); margin-bottom: 1rem;
-                       letter-spacing: 0.02em;'>
-                Aucune donnée disponible
-            </div>
-            <div style='font-family: "Inter", sans-serif; font-size: 0.875rem;
-                       color: var(--gray-dark); margin-bottom: 2rem; line-height: 1.8;
-                       font-weight: 300; max-width: 500px; margin-left: auto; margin-right: auto;'>
-                Commencez votre voyage vers le bien-être en créant votre premier check-in
-                ou en ayant une conversation avec votre compagnon IA
-            </div>
-            <div style='width: 80px; height: 1px; background-color: var(--line-dark); margin: 0 auto;'></div>
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown(
+            create_empty_state(
+                "Aucune donnée disponible",
+                "Commencez votre voyage vers le bien-être en créant votre premier check-in ou en ayant une conversation avec votre compagnon IA"
+            ),
+            unsafe_allow_html=True
+        )
