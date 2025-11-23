@@ -4,6 +4,7 @@ Phase 2.1 : Suivi Contextuel & Mémoire de l'IA
 """
 
 import streamlit as st
+import html
 from datetime import datetime, timedelta
 from src.database.db_manager import DatabaseManager
 from src.ui.auth import get_current_user_id
@@ -116,15 +117,19 @@ def action_card(action: dict, index: int) -> str:
     status_badge = get_status_badge(action["status"])
     source_badge = get_source_badge(action.get("source", "manual"))
 
+    # Échapper le titre et la description pour éviter l'injection HTML
+    safe_title = html.escape(action.get('title', ''))
+
     description_html = ""
     if action.get("description"):
+        safe_description = html.escape(action['description'])
         description_html = f"""
         <p style="
             color: {COLORS['charcoal']};
             margin: 0.75rem 0 0 0;
             font-size: 0.9rem;
             line-height: 1.5;
-        ">{action['description']}</p>
+        ">{safe_description}</p>
         """
 
     deadline_html = ""
@@ -164,7 +169,7 @@ def action_card(action: dict, index: int) -> str:
                 color: {COLORS['black']};
                 margin: 0;
                 flex: 1;
-            ">{action['title']}</h3>
+            ">{safe_title}</h3>
             <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: flex-end;">
                 {status_badge}
                 {source_badge}
@@ -251,15 +256,19 @@ def proposed_action_card(proposal: dict, index: int) -> str:
     """
     proposed_date = format_datetime(proposal.get("proposed_at", ""))
 
+    # Échapper le titre et la description pour éviter l'injection HTML
+    safe_title = html.escape(proposal.get('title', ''))
+
     description_html = ""
     if proposal.get("description"):
+        safe_description = html.escape(proposal['description'])
         description_html = f"""
         <p style="
             color: {COLORS['charcoal']};
             margin: 0.75rem 0 0 0;
             font-size: 0.9rem;
             line-height: 1.5;
-        ">{proposal['description']}</p>
+        ">{safe_description}</p>
         """
 
     return f"""
@@ -279,7 +288,7 @@ def proposed_action_card(proposal: dict, index: int) -> str:
                 color: {COLORS['black']};
                 margin: 0;
                 flex: 1;
-            ">{proposal['title']}</h3>
+            ">{safe_title}</h3>
             <span style="
                 background: {COLORS['gray_dark']}20;
                 color: {COLORS['gray_dark']};
