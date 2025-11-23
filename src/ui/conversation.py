@@ -22,7 +22,8 @@ def get_database():
 def get_conversation_manager():
     """Singleton ConversationManager."""
     db = get_database()
-    return ConversationManager(db)
+    # Désactiver l'extraction automatique car on la fait manuellement dans l'UI
+    return ConversationManager(db, enable_action_extraction=False)
 
 
 def show_conversation():
@@ -73,6 +74,10 @@ def show_conversation():
         # Inverser pour afficher du plus ancien au plus récent
         st.session_state.conversation_history = list(history)
 
+    # Initialiser l'état pour les propositions
+    if 'last_proposals' not in st.session_state:
+        st.session_state.last_proposals = []
+
     # Afficher l'historique (avatars stylisés via CSS)
     for conv in st.session_state.conversation_history:
         with st.chat_message("Moi", avatar =":material/circle:"):
@@ -107,8 +112,27 @@ def show_conversation():
                     'ai_response': full_response
                 })
 
+                # Extraire les propositions manuellement et les stocker dans session_state
+                try:
+                    from src.llm.action_extractor import ActionExtractor
+                    db = get_database()
+                    extractor = ActionExtractor(db)
+
+                    # Récupérer le dernier conversation_id (celui qui vient d'être créé)
+                    history = db.get_conversation_history(user_id, limit=1)
+                    conversation_id = history[0]['id'] if history else None
+
+                    # Extraire les actions
+                    proposals = extractor.extract_actions_from_message(
+                        user_input, user_id, conversation_id
+                    )
+                    st.session_state.last_proposals = proposals or []
+                except Exception as e:
+                    print(f"Erreur extraction: {e}")
+                    st.session_state.last_proposals = []
+
                 # Afficher les propositions d'actions détectées
-                proposals = manager.get_last_extracted_proposals()
+                proposals = st.session_state.last_proposals
                 if proposals:
                     st.markdown("---")
                     st.markdown(f"""
