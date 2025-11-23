@@ -9,6 +9,7 @@ from src.ui.checkin import show_checkin
 from src.ui.conversation import show_conversation
 from src.ui.dashboard import show_dashboard
 from src.ui.profile import show_profile
+from src.ui.action_items import show_action_items
 from src.ui.styles.serene_styles import get_main_css
 
 # Configuration de la page
@@ -91,22 +92,23 @@ def show_home():
         st.markdown("""
         <div style='background-color: var(--white); padding: 2rem; border: 1px solid var(--line-light);
                     margin-top: 1rem; box-shadow: var(--shadow-subtle);
-                    transition: all 0.3s ease-out; animation: fadeInUp 0.9s ease-out;'
+                    transition: all 0.3s ease-out; animation: fadeInUp 0.75s ease-out;'
              onmouseover='this.style.boxShadow="var(--shadow-soft)";'
              onmouseout='this.style.boxShadow="var(--shadow-subtle)";'>
             <h4 style='font-family: "Inter", sans-serif; color: var(--black); margin-top: 0;
                        font-size: 0.75rem; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase;
                        margin-bottom: 1rem;'>
-                <i class="fa-solid fa-chart-line" style='margin-right: 0.5rem; opacity: 0.7;'></i>
-                Tableau de Bord
+                <i class="fa-solid fa-bullseye" style='margin-right: 0.5rem; opacity: 0.7;'></i>
+                Suivi d'Objectifs & Actions
             </h4>
             <p style='font-family: "Inter", sans-serif; color: var(--gray-dark); line-height: 1.8;
                      font-size: 0.875rem; font-weight: 300;'>
-                Visualisez vos tendances de bien-être avec des graphiques élégants.
-                Comprenez vos patterns émotionnels en un coup d'œil.
+                L'IA détecte automatiquement vos objectifs et intentions pendant vos conversations.
+                Suivez vos actions, marquez vos progrès et célébrez vos réussites.
             </p>
         </div>
         """, unsafe_allow_html=True)
+
 
     with col2:
         st.markdown("""
@@ -125,6 +127,26 @@ def show_home():
                      font-size: 0.875rem; font-weight: 300;'>
                 Suivez votre humeur au quotidien en quelques secondes. Une pratique simple qui nourrit
                 vos insights personnalisés et vous aide à mieux vous comprendre.
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+
+        st.markdown("""
+        <div style='background-color: var(--white); padding: 2rem; border: 1px solid var(--line-light);
+                    margin-top: 1rem; box-shadow: var(--shadow-subtle);
+                    transition: all 0.3s ease-out; animation: fadeInUp 0.9s ease-out;'
+             onmouseover='this.style.boxShadow="var(--shadow-soft)";'
+             onmouseout='this.style.boxShadow="var(--shadow-subtle)";'>
+            <h4 style='font-family: "Inter", sans-serif; color: var(--black); margin-top: 0;
+                       font-size: 0.75rem; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase;
+                       margin-bottom: 1rem;'>
+                <i class="fa-solid fa-chart-line" style='margin-right: 0.5rem; opacity: 0.7;'></i>
+                Tableau de Bord
+            </h4>
+            <p style='font-family: "Inter", sans-serif; color: var(--gray-dark); line-height: 1.8;
+                     font-size: 0.875rem; font-weight: 300;'>
+                Visualisez vos tendances de bien-être avec des graphiques élégants.
+                Comprenez vos patterns émotionnels en un coup d'œil.
             </p>
         </div>
         """, unsafe_allow_html=True)
@@ -275,6 +297,7 @@ def main():
                 "Home": "Home",
                 "Check-in": "Check-in",
                 "Conversation": "Conversation",
+                "Actions": "Mes Actions",
                 "Dashboard": "Dashboard",
                 "Profil": "Profil"
             }
@@ -298,6 +321,8 @@ def main():
             show_checkin()
         elif page == "Conversation":
             show_conversation()
+        elif page == "Actions":
+            show_action_items()
         elif page == "Dashboard":
             show_dashboard()
         elif page == "Profil":
