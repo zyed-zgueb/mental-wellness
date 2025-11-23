@@ -131,8 +131,19 @@ def show_conversation():
                     print(f"Erreur extraction: {e}")
                     st.session_state.last_proposals = []
 
-                # Afficher les propositions d'actions détectées
-                proposals = st.session_state.last_proposals
+                # Afficher les propositions d'actions détectées (filtrer celles qui sont encore pending)
+                all_proposals = st.session_state.last_proposals
+                if all_proposals:
+                    # Vérifier le statut actuel dans la DB pour ne montrer que les propositions encore en attente
+                    db = get_database()
+                    user_pending = db.get_proposed_actions(user_id, status='pending')
+                    pending_ids = {p['id'] for p in user_pending}
+
+                    # Filtrer pour garder seulement les propositions qui sont toujours pending
+                    proposals = [prop for prop in all_proposals if prop['id'] in pending_ids]
+                else:
+                    proposals = []
+
                 if proposals:
                     st.markdown("---")
                     st.markdown(f"""
