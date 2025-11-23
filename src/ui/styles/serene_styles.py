@@ -990,22 +990,10 @@ def create_section_header(icon: str, title: str, subtitle: str = "") -> str:
     """
     subtitle_html = ""
     if subtitle:
-        subtitle_html = f"""
-        <p style='font-family: "Inter", sans-serif; color: var(--gray-dark);
-                 margin-bottom: 2rem; font-size: 0.875rem; font-weight: 300; line-height: 1.7;'>
-            {subtitle}
-        </p>
-        """
+        subtitle_html = f"<p style='font-family: \"Inter\", sans-serif; color: var(--gray-dark); margin-bottom: 2rem; font-size: 0.875rem; font-weight: 300; line-height: 1.7;'>{subtitle}</p>"
 
-    return f"""
-    <h2 style='font-family: "Cormorant Garamond", serif; font-size: 2rem;
-               font-weight: 300; color: var(--black); margin-bottom: {'1rem' if subtitle else '2rem'};
-               letter-spacing: 0.02em;'>
-        <i class="{icon}" style='margin-right: 0.75rem; opacity: 0.65; font-size: 1.75rem;'></i>
-        {title}
-    </h2>
-    {subtitle_html}
-    """
+    margin_bottom = '1rem' if subtitle else '2rem'
+    return f"<h2 style='font-family: \"Cormorant Garamond\", serif; font-size: 2rem; font-weight: 300; color: var(--black); margin-bottom: {margin_bottom}; letter-spacing: 0.02em;'><i class=\"{icon}\" style='margin-right: 0.75rem; opacity: 0.65; font-size: 1.75rem;'></i>{title}</h2>{subtitle_html}"
 
 
 def create_page_header(title: str, description: str) -> str:
@@ -1019,21 +1007,7 @@ def create_page_header(title: str, description: str) -> str:
     Returns:
         HTML de l'en-tête de page
     """
-    return f"""
-    <div style='animation: fadeInDown 0.4s ease-out; margin-bottom: 3rem;
-                padding-bottom: 2rem; border-bottom: 1px solid var(--line-light);'>
-        <h1 style='font-family: "Cormorant Garamond", serif; font-size: 3rem;
-                   color: var(--black); font-weight: 300; margin-bottom: 1rem;
-                   letter-spacing: 0.02em; line-height: 1.1;'>
-            {title}
-        </h1>
-        <p style='font-family: "Inter", sans-serif; font-size: 0.9375rem;
-                 color: var(--gray-dark); margin: 0; line-height: 1.8;
-                 font-weight: 300; max-width: 600px;'>
-            {description}
-        </p>
-    </div>
-    """
+    return f"<div style='animation: fadeInDown 0.4s ease-out; margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid var(--line-light);'><h1 style='font-family: \"Cormorant Garamond\", serif; font-size: 3rem; color: var(--black); font-weight: 300; margin-bottom: 1rem; letter-spacing: 0.02em; line-height: 1.1;'>{title}</h1><p style='font-family: \"Inter\", sans-serif; font-size: 0.9375rem; color: var(--gray-dark); margin: 0; line-height: 1.8; font-weight: 300; max-width: 600px;'>{description}</p></div>"
 
 
 def create_metric_card_large(label: str, value: str, unit: str, delta: float = None) -> str:
@@ -1075,25 +1049,7 @@ def create_metric_card_small(label: str, value: str, unit: str, animation_delay:
     Returns:
         HTML de la petite carte métrique
     """
-    return f"""
-    <div style='background-color: var(--white); padding: 1.5rem; text-align: center;
-                border: 1px solid var(--line-light); box-shadow: var(--shadow-subtle);
-                animation: fadeInUp {animation_delay} ease-out;'>
-        <div style='font-family: "Inter", sans-serif; color: var(--gray-light);
-                   font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.1em;
-                   margin-bottom: 0.75rem; font-weight: 400;'>
-            {label}
-        </div>
-        <div style='font-family: "Cormorant Garamond", serif; color: var(--black);
-                   font-size: 2.5rem; font-weight: 300;'>
-            {value}
-        </div>
-        <div style='font-family: "Inter", sans-serif; color: var(--gray-medium);
-                   font-size: 0.75rem; font-weight: 300;'>
-            {unit}
-        </div>
-    </div>
-    """
+    return f"<div style='background-color: var(--white); padding: 1.5rem; text-align: center; border: 1px solid var(--line-light); box-shadow: var(--shadow-subtle); animation: fadeInUp {animation_delay} ease-out;'><div style='font-family: \"Inter\", sans-serif; color: var(--gray-light); font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem; font-weight: 400;'>{label}</div><div style='font-family: \"Cormorant Garamond\", serif; color: var(--black); font-size: 2.5rem; font-weight: 300;'>{value}</div><div style='font-family: \"Inter\", sans-serif; color: var(--gray-medium); font-size: 0.75rem; font-weight: 300;'>{unit}</div></div>"
 
 
 def create_empty_state(title: str, description: str) -> str:
@@ -1107,21 +1063,7 @@ def create_empty_state(title: str, description: str) -> str:
     Returns:
         HTML de l'état vide
     """
-    return f"""
-    <div style='background-color: var(--ivory-dark); padding: 4rem 3rem;
-                border: 1px solid var(--line-light); text-align: center;
-                animation: fadeInUp 0.5s ease-out;'>
-        <div style='font-family: "Cormorant Garamond", serif; font-size: 1.75rem;
-                   font-weight: 300; color: var(--black); margin-bottom: 1rem;
-                   letter-spacing: 0.02em;'>
-            {title}
-        </div>
-        <div style='font-family: "Inter", sans-serif; font-size: 0.875rem;
-                   color: var(--gray-dark); font-weight: 300; line-height: 1.7;'>
-            {description}
-        </div>
-    </div>
-    """
+    return f"<div style='background-color: var(--ivory-dark); padding: 4rem 3rem; border: 1px solid var(--line-light); text-align: center; animation: fadeInUp 0.5s ease-out;'><div style='font-family: \"Cormorant Garamond\", serif; font-size: 1.75rem; font-weight: 300; color: var(--black); margin-bottom: 1rem; letter-spacing: 0.02em;'>{title}</div><div style='font-family: \"Inter\", sans-serif; font-size: 0.875rem; color: var(--gray-dark); font-weight: 300; line-height: 1.7;'>{description}</div></div>"
 
 
 def create_divider() -> str:
@@ -1141,12 +1083,7 @@ def create_insight_card_container() -> str:
     Returns:
         HTML d'ouverture du conteneur
     """
-    return """
-    <div style='background-color: var(--white); padding: 2rem;
-                border: 1px solid var(--line-light); border-left: 2px solid var(--black);
-                box-shadow: var(--shadow-subtle); margin-bottom: 1rem;
-                animation: fadeInUp 0.5s ease-out;'>
-    """
+    return "<div style='background-color: var(--white); padding: 2rem; border: 1px solid var(--line-light); border-left: 2px solid var(--black); box-shadow: var(--shadow-subtle); margin-bottom: 1rem; animation: fadeInUp 0.5s ease-out;'>"
 
 
 def create_insight_loading_skeleton() -> str:
@@ -1156,17 +1093,7 @@ def create_insight_loading_skeleton() -> str:
     Returns:
         HTML du skeleton de chargement
     """
-    return """
-    <div style='margin-bottom: 1rem;'>
-        <div class='skeleton' style='height: 1.5rem; width: 70%; margin-bottom: 1rem;'></div>
-        <div class='skeleton' style='height: 1rem; width: 100%; margin-bottom: 0.5rem;'></div>
-        <div class='skeleton' style='height: 1rem; width: 95%; margin-bottom: 0.5rem;'></div>
-        <div class='skeleton' style='height: 1rem; width: 85%;'></div>
-    </div>
-    <p style='color: var(--color-primary); font-size: 0.9rem; text-align: center; margin-top: 1.5rem;'>
-        Génération de vos insights personnalisés...
-    </p>
-    """
+    return "<div style='margin-bottom: 1rem;'><div class='skeleton' style='height: 1.5rem; width: 70%; margin-bottom: 1rem;'></div><div class='skeleton' style='height: 1rem; width: 100%; margin-bottom: 0.5rem;'></div><div class='skeleton' style='height: 1rem; width: 95%; margin-bottom: 0.5rem;'></div><div class='skeleton' style='height: 1rem; width: 85%;'></div></div><p style='color: var(--color-primary); font-size: 0.9rem; text-align: center; margin-top: 1.5rem;'>Génération de vos insights personnalisés...</p>"
 
 
 def create_insight_content(formatted_content: str) -> str:
@@ -1179,10 +1106,4 @@ def create_insight_content(formatted_content: str) -> str:
     Returns:
         HTML du contenu de l'insight
     """
-    return f"""
-    <div style='font-family: "Inter", sans-serif; color: var(--charcoal);
-               line-height: 1.8; font-size: 0.9375rem; font-weight: 300;
-               animation: fadeIn 0.5s ease-out;'>
-        {formatted_content}
-    </div>
-    """
+    return f"<div style='font-family: \"Inter\", sans-serif; color: var(--charcoal); line-height: 1.8; font-size: 0.9375rem; font-weight: 300; animation: fadeIn 0.5s ease-out;'>{formatted_content}</div>"
