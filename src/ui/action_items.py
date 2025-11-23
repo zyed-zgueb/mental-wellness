@@ -262,51 +262,25 @@ def proposed_action_card(proposal: dict, index: int) -> str:
     description_html = ""
     if proposal.get("description"):
         safe_description = html.escape(proposal['description'])
-        description_html = f"""
-        <p style="
-            color: {COLORS['charcoal']};
-            margin: 0.75rem 0 0 0;
-            font-size: 0.9rem;
-            line-height: 1.5;
-        ">{safe_description}</p>
-        """
+        description_html = f'<p style="color: {COLORS["charcoal"]}; margin: 0.75rem 0 0 0; font-size: 0.9rem; line-height: 1.5;">{safe_description}</p>'
 
-    return f"""
-    <div style="
-        background: linear-gradient(135deg, {COLORS['ivory']}30 0%, white 100%);
-        border: 2px solid {COLORS['gray_dark']}30;
-        border-radius: 8px;
-        padding: 1.5rem;
-        margin-bottom: 1rem;
-        transition: all 0.2s ease;
-    ">
-        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
-            <h3 style="
-                font-family: 'Cormorant Garamond', serif;
-                font-size: 1.25rem;
-                font-weight: 500;
-                color: {COLORS['black']};
-                margin: 0;
-                flex: 1;
-            ">{safe_title}</h3>
-            <span style="
-                background: {COLORS['gray_dark']}20;
-                color: {COLORS['gray_dark']};
-                padding: 0.25rem 0.75rem;
-                border-radius: 12px;
-                font-size: 0.75rem;
-                font-weight: 500;
-                letter-spacing: 0.02em;
-            ">✨ Proposé par l'IA</span>
-        </div>
-
-        <div style="color: {COLORS['gray_medium']}; font-size: 0.85rem; margin-bottom: 0.5rem;">
-            Proposé le {proposed_date}
-        </div>
-
-        {description_html}
-    </div>
-    """
+    # Générer le HTML sans sauts de ligne inutiles
+    return (
+        f'<div style="background: linear-gradient(135deg, {COLORS["ivory"]}30 0%, white 100%); '
+        f'border: 2px solid {COLORS["gray_dark"]}30; border-radius: 8px; padding: 1.5rem; '
+        f'margin-bottom: 1rem; transition: all 0.2s ease;">'
+        f'<div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">'
+        f'<h3 style="font-family: \'Cormorant Garamond\', serif; font-size: 1.25rem; font-weight: 500; '
+        f'color: {COLORS["black"]}; margin: 0; flex: 1;">{safe_title}</h3>'
+        f'<span style="background: {COLORS["gray_dark"]}20; color: {COLORS["gray_dark"]}; '
+        f'padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.75rem; font-weight: 500; '
+        f'letter-spacing: 0.02em;">✨ Proposé par l\'IA</span>'
+        f'</div>'
+        f'<div style="color: {COLORS["gray_medium"]}; font-size: 0.85rem; margin-bottom: 0.5rem;">'
+        f'Proposé le {proposed_date}</div>'
+        f'{description_html}'
+        f'</div>'
+    )
 
 
 def show_action_items():
