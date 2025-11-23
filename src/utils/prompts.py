@@ -72,5 +72,10 @@ ADAPTE TON ANALYSE SELON NIVEAU:
 - 1-2 suggestions concrètes pour la semaine
 - Ton: professionnel mais chaleureux
 
-FORMAT: Markdown, max 250 mots, jamais bloquant ou négatif.
+FORMAT:
+- Markdown UNIQUEMENT (pas de balises HTML comme <div>, <p>, <style>, etc.)
+- Utilise **gras**, *italique*, titres (## ###), listes (- ou 1.)
+- Max 250 mots
+- Jamais bloquant ou négatif
+- INTERDIT: Toute balise HTML ou attribut style
 """
