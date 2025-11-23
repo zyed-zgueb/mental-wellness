@@ -42,6 +42,12 @@ cd mental-wellness
 python3.11 -m venv venv
 source venv/bin/activate  # Sur Windows: venv\Scripts\activate
 
+# Installer pip-tools (si pas déjà installé)
+pip install pip-tools
+
+# Compiler les dépendances depuis requirements.in
+pip-compile requirements.in
+
 # Installer les dépendances
 pip install -r requirements.txt
 
@@ -50,6 +56,37 @@ streamlit run app.py
 ```
 
 L'application sera accessible sur `http://localhost:8501`
+
+### Gestion des dépendances
+
+Ce projet utilise `pip-tools` pour gérer les dépendances Python de manière déterministe.
+
+**Fichiers :**
+- `requirements.in` : Liste des dépendances directes (à éditer manuellement)
+- `requirements.txt` : Fichier généré avec toutes les dépendances (avec versions fixées)
+
+**Ajouter une nouvelle dépendance :**
+
+```bash
+# 1. Ajouter la dépendance dans requirements.in
+echo "nouvelle-package" >> requirements.in
+
+# 2. Recompiler requirements.txt
+pip-compile requirements.in
+
+# 3. Installer les nouvelles dépendances
+pip install -r requirements.txt
+```
+
+**Mettre à jour les dépendances :**
+
+```bash
+# Mettre à jour toutes les dépendances
+pip-compile --upgrade requirements.in
+
+# Mettre à jour une dépendance spécifique
+pip-compile --upgrade-package streamlit requirements.in
+```
 
 ### Configuration (pour stories futures)
 
