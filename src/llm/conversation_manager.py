@@ -11,6 +11,11 @@ from src.utils.prompts import CONVERSATION_SYSTEM_PROMPT, CRISIS_KEYWORDS
 class ConversationManager:
     """Gestionnaire de conversations avec Claude API."""
 
+    # Configuration de la gestion du contexte
+    MAX_CONTEXT_TOKENS = 180000  # Limite de sécurité (Claude-4 supporte 200k)
+    MAX_HISTORY_MESSAGES = 50  # Nombre maximum de messages à récupérer
+    MIN_RECENT_MESSAGES = 10  # Toujours garder les N derniers messages
+
     def __init__(self, db_manager: DatabaseManager, enable_action_extraction: bool = True):
         """
         Initialiser le gestionnaire de conversations.
@@ -37,9 +42,69 @@ class ConversationManager:
             from src.llm.action_extractor import ActionExtractor
             self.action_extractor = ActionExtractor(db_manager)
 
+    def _estimate_tokens(self, text: str) -> int:
+        """
+        Estimer le nombre de tokens dans un texte.
+
+        Règle approximative : ~4 caractères = 1 token pour le français.
+
+        Args:
+            text: Texte à analyser.
+
+        Returns:
+            Nombre estimé de tokens.
+        """
+        return len(text) // 4
+
+    def _build_conversation_context(self, user_id: int, current_message: str) -> List[Dict[str, str]]:
+        """
+        Construire le contexte de conversation avec gestion intelligente de la limite de tokens.
+
+        Args:
+            user_id: ID de l'utilisateur.
+            current_message: Message actuel de l'utilisateur.
+
+        Returns:
+            Liste de messages formatés pour l'API Claude (role + content).
+        """
+        # Récupérer l'historique depuis la base de données
+        history = self.db.get_conversation_history(user_id, limit=self.MAX_HISTORY_MESSAGES)
+
+        # Construire les messages alternés user/assistant
+        messages = []
+        cumulative_tokens = self._estimate_tokens(self.system_prompt)
+
+        for conv in history:
+            user_msg = {"role": "user", "content": conv['user_message']}
+            assistant_msg = {"role": "assistant", "content": conv['ai_response']}
+
+            # Estimer les tokens pour ces messages
+            msg_tokens = self._estimate_tokens(conv['user_message']) + \
+                        self._estimate_tokens(conv['ai_response'])
+
+            # Vérifier si on peut ajouter ces messages sans dépasser la limite
+            if cumulative_tokens + msg_tokens < self.MAX_CONTEXT_TOKENS or \
+               len(messages) < self.MIN_RECENT_MESSAGES * 2:  # Toujours garder minimum messages
+                messages.append(user_msg)
+                messages.append(assistant_msg)
+                cumulative_tokens += msg_tokens
+            else:
+                # On a atteint la limite, arrêter d'ajouter des messages plus anciens
+                break
+
+        # Ajouter le message actuel
+        current_tokens = self._estimate_tokens(current_message)
+        messages.append({"role": "user", "content": current_message})
+        cumulative_tokens += current_tokens
+
+        # Log pour debugging (optionnel)
+        print(f"📊 Contexte construit: {len(messages)} messages, ~{cumulative_tokens} tokens estimés")
+
+        return messages
+
     def send_message(self, user_id: int, user_message: str) -> Generator[str, None, None]:
         """
-        Envoyer un message à Claude avec streaming.
+        Envoyer un message à Claude avec streaming et contexte complet.
 
         Args:
             user_id: ID de l'utilisateur.
@@ -52,11 +117,15 @@ class ConversationManager:
             Exception: En cas d'erreur API (retourne message d'erreur convivial).
         """
         try:
+            # Construire le contexte complet de la conversation
+            messages = self._build_conversation_context(user_id, user_message)
+
+            # Envoyer avec l'historique complet
             with self.client.messages.stream(
                 model="claude-sonnet-4-20250514",
-                max_tokens=1024,
+                max_tokens=2048,  # Augmenté pour des réponses plus complètes
                 system=self.system_prompt,
-                messages=[{"role": "user", "content": user_message}]
+                messages=messages  # ✅ Contexte complet !
             ) as stream:
                 response_text = ""
                 for text in stream.text_stream:
