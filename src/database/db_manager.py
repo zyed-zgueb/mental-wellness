@@ -57,6 +57,37 @@ class DatabaseManager:
                 tokens_used INTEGER
             );
             CREATE INDEX IF NOT EXISTS idx_insights_log_type_created ON insights_log(insight_type, created_at DESC);
+
+            CREATE TABLE IF NOT EXISTS action_items (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                title TEXT NOT NULL,
+                description TEXT,
+                status TEXT DEFAULT 'pending' CHECK(status IN ('pending', 'in_progress', 'completed', 'abandoned')),
+                source TEXT DEFAULT 'manual',
+                conversation_id INTEGER,
+                deadline DATETIME,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                completed_at DATETIME,
+                updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            );
+            CREATE INDEX IF NOT EXISTS idx_action_items_user_id ON action_items(user_id);
+            CREATE INDEX IF NOT EXISTS idx_action_items_status ON action_items(status);
+            CREATE INDEX IF NOT EXISTS idx_action_items_created_at ON action_items(created_at DESC);
+
+            CREATE TABLE IF NOT EXISTS proposed_actions (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                title TEXT NOT NULL,
+                description TEXT,
+                status TEXT DEFAULT 'pending' CHECK(status IN ('pending', 'accepted', 'rejected')),
+                conversation_id INTEGER,
+                proposed_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                reviewed_at DATETIME
+            );
+            CREATE INDEX IF NOT EXISTS idx_proposed_actions_user_id ON proposed_actions(user_id);
+            CREATE INDEX IF NOT EXISTS idx_proposed_actions_status ON proposed_actions(status);
+            CREATE INDEX IF NOT EXISTS idx_proposed_actions_proposed_at ON proposed_actions(proposed_at DESC);
             """
         else:
             # Pour les DB sur disque, charger depuis schema.sql
@@ -851,6 +882,219 @@ class DatabaseManager:
             stats["total"] += row["count"]
 
         return stats
+
+    # ===== Proposed Actions Methods =====
+
+    def save_proposed_action(
+        self,
+        user_id: int,
+        title: str,
+        description: str = "",
+        conversation_id: Optional[int] = None,
+    ) -> int:
+        """
+        Enregistrer une nouvelle proposition d'action par l'IA.
+
+        Args:
+            user_id: ID de l'utilisateur.
+            title: Titre de l'action proposée.
+            description: Description détaillée (optionnelle).
+            conversation_id: ID de la conversation d'origine.
+
+        Returns:
+            ID de la proposition créée.
+
+        Raises:
+            ValueError: Si les paramètres sont invalides.
+        """
+        if not title:
+            raise ValueError("Le titre ne peut pas être vide")
+
+        if not user_id:
+            raise ValueError("user_id est requis")
+
+        try:
+            cursor = self.conn.execute(
+                """
+                INSERT INTO proposed_actions (user_id, title, description, conversation_id)
+                VALUES (?, ?, ?, ?)
+                """,
+                (user_id, title, description, conversation_id),
+            )
+            self.conn.commit()
+            return cursor.lastrowid
+        except sqlite3.IntegrityError as e:
+            raise ValueError(f"Erreur d'intégrité de la base de données: {e}")
+
+    def get_proposed_actions(
+        self, user_id: int, status: Optional[str] = None, limit: int = 100
+    ) -> List[Dict[str, Any]]:
+        """
+        Récupérer les propositions d'actions d'un utilisateur.
+
+        Args:
+            user_id: ID de l'utilisateur.
+            status: Filtrer par statut (optionnel: 'pending', 'accepted', 'rejected').
+            limit: Nombre maximum de propositions à récupérer (défaut: 100).
+
+        Returns:
+            Liste de dicts contenant les informations des propositions.
+            Trié par date de proposition (plus récent en premier).
+        """
+        if status:
+            cursor = self.conn.execute(
+                """
+                SELECT id, user_id, title, description, status,
+                       conversation_id, proposed_at, reviewed_at
+                FROM proposed_actions
+                WHERE user_id = ? AND status = ?
+                ORDER BY proposed_at DESC
+                LIMIT ?
+                """,
+                (user_id, status, limit),
+            )
+        else:
+            cursor = self.conn.execute(
+                """
+                SELECT id, user_id, title, description, status,
+                       conversation_id, proposed_at, reviewed_at
+                FROM proposed_actions
+                WHERE user_id = ?
+                ORDER BY proposed_at DESC
+                LIMIT ?
+                """,
+                (user_id, limit),
+            )
+
+        return [dict(row) for row in cursor.fetchall()]
+
+    def accept_proposed_action(self, proposal_id: int, deadline: Optional[str] = None) -> int:
+        """
+        Accepter une proposition d'action (créer l'action et marquer la proposition comme acceptée).
+
+        Args:
+            proposal_id: ID de la proposition.
+            deadline: Date limite optionnelle pour l'action créée.
+
+        Returns:
+            ID de l'action créée.
+
+        Raises:
+            ValueError: Si la proposition n'existe pas ou est déjà traitée.
+        """
+        # Récupérer la proposition
+        cursor = self.conn.execute(
+            """
+            SELECT id, user_id, title, description, status, conversation_id
+            FROM proposed_actions
+            WHERE id = ?
+            """,
+            (proposal_id,),
+        )
+        proposal = cursor.fetchone()
+
+        if not proposal:
+            raise ValueError(f"Proposition {proposal_id} introuvable")
+
+        if proposal["status"] != "pending":
+            raise ValueError(f"Proposition déjà traitée (statut: {proposal['status']})")
+
+        # Créer l'action
+        action_id = self.save_action_item(
+            user_id=proposal["user_id"],
+            title=proposal["title"],
+            description=proposal["description"],
+            source="ai_extracted",
+            conversation_id=proposal["conversation_id"],
+            deadline=deadline,
+        )
+
+        # Marquer la proposition comme acceptée
+        self.conn.execute(
+            """
+            UPDATE proposed_actions
+            SET status = 'accepted', reviewed_at = ?
+            WHERE id = ?
+            """,
+            (datetime.now().isoformat(), proposal_id),
+        )
+        self.conn.commit()
+
+        return action_id
+
+    def reject_proposed_action(self, proposal_id: int) -> None:
+        """
+        Rejeter une proposition d'action.
+
+        Args:
+            proposal_id: ID de la proposition.
+
+        Raises:
+            ValueError: Si la proposition n'existe pas ou est déjà traitée.
+        """
+        # Vérifier que la proposition existe et est en attente
+        cursor = self.conn.execute(
+            """
+            SELECT status FROM proposed_actions WHERE id = ?
+            """,
+            (proposal_id,),
+        )
+        result = cursor.fetchone()
+
+        if not result:
+            raise ValueError(f"Proposition {proposal_id} introuvable")
+
+        if result["status"] != "pending":
+            raise ValueError(f"Proposition déjà traitée (statut: {result['status']})")
+
+        # Marquer comme rejetée
+        self.conn.execute(
+            """
+            UPDATE proposed_actions
+            SET status = 'rejected', reviewed_at = ?
+            WHERE id = ?
+            """,
+            (datetime.now().isoformat(), proposal_id),
+        )
+        self.conn.commit()
+
+    def get_proposed_actions_count(self, user_id: int, status: str = "pending") -> int:
+        """
+        Obtenir le nombre de propositions d'actions pour un utilisateur.
+
+        Args:
+            user_id: ID de l'utilisateur.
+            status: Statut des propositions à compter (défaut: 'pending').
+
+        Returns:
+            Nombre de propositions.
+        """
+        cursor = self.conn.execute(
+            """
+            SELECT COUNT(*) as count
+            FROM proposed_actions
+            WHERE user_id = ? AND status = ?
+            """,
+            (user_id, status),
+        )
+        result = cursor.fetchone()
+        return result["count"] if result else 0
+
+    def delete_proposed_action(self, proposal_id: int) -> None:
+        """
+        Supprimer une proposition d'action.
+
+        Args:
+            proposal_id: ID de la proposition à supprimer.
+        """
+        self.conn.execute(
+            """
+            DELETE FROM proposed_actions
+            WHERE id = ?
+            """,
+            (proposal_id,),
+        )
+        self.conn.commit()
 
     def close(self):
         """Fermer la connexion à la base de données."""

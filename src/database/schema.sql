@@ -85,3 +85,22 @@ CREATE TABLE IF NOT EXISTS action_items (
 CREATE INDEX IF NOT EXISTS idx_action_items_user_id ON action_items(user_id);
 CREATE INDEX IF NOT EXISTS idx_action_items_status ON action_items(status);
 CREATE INDEX IF NOT EXISTS idx_action_items_created_at ON action_items(created_at DESC);
+
+-- Table: proposed_actions - Actions proposées par l'IA en attente d'approbation
+CREATE TABLE IF NOT EXISTS proposed_actions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    title TEXT NOT NULL,
+    description TEXT,
+    status TEXT DEFAULT 'pending' CHECK(status IN ('pending', 'accepted', 'rejected')),
+    conversation_id INTEGER,  -- Référence à la conversation d'origine
+    proposed_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    reviewed_at DATETIME,  -- Date de l'acceptation/rejet
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (conversation_id) REFERENCES conversations(id) ON DELETE SET NULL
+);
+
+-- Index pour améliorer les performances des requêtes de propositions
+CREATE INDEX IF NOT EXISTS idx_proposed_actions_user_id ON proposed_actions(user_id);
+CREATE INDEX IF NOT EXISTS idx_proposed_actions_status ON proposed_actions(status);
+CREATE INDEX IF NOT EXISTS idx_proposed_actions_proposed_at ON proposed_actions(proposed_at DESC);

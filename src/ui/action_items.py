@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 from src.database.db_manager import DatabaseManager
 from src.ui.auth import get_current_user_id
 from src.ui.styles.serene_styles import COLORS
+from src.llm.action_suggester import ActionSuggester
 
 
 @st.cache_resource
@@ -237,6 +238,68 @@ def stats_card(stats: dict) -> str:
     """
 
 
+def proposed_action_card(proposal: dict, index: int) -> str:
+    """
+    Génère une carte HTML pour une proposition d'action.
+
+    Args:
+        proposal: Dict contenant les données de la proposition
+        index: Index de la proposition (pour la clé unique)
+
+    Returns:
+        HTML de la carte
+    """
+    proposed_date = format_datetime(proposal.get("proposed_at", ""))
+
+    description_html = ""
+    if proposal.get("description"):
+        description_html = f"""
+        <p style="
+            color: {COLORS['charcoal']};
+            margin: 0.75rem 0 0 0;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        ">{proposal['description']}</p>
+        """
+
+    return f"""
+    <div style="
+        background: linear-gradient(135deg, {COLORS['ivory']}30 0%, white 100%);
+        border: 2px solid {COLORS['gray_dark']}30;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        transition: all 0.2s ease;
+    ">
+        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
+            <h3 style="
+                font-family: 'Cormorant Garamond', serif;
+                font-size: 1.25rem;
+                font-weight: 500;
+                color: {COLORS['black']};
+                margin: 0;
+                flex: 1;
+            ">{proposal['title']}</h3>
+            <span style="
+                background: {COLORS['gray_dark']}20;
+                color: {COLORS['gray_dark']};
+                padding: 0.25rem 0.75rem;
+                border-radius: 12px;
+                font-size: 0.75rem;
+                font-weight: 500;
+                letter-spacing: 0.02em;
+            ">✨ Proposé par l'IA</span>
+        </div>
+
+        <div style="color: {COLORS['gray_medium']}; font-size: 0.85rem; margin-bottom: 0.5rem;">
+            Proposé le {proposed_date}
+        </div>
+
+        {description_html}
+    </div>
+    """
+
+
 def show_action_items():
     """Afficher la page de gestion des objectifs et actions."""
 
@@ -269,6 +332,136 @@ def show_action_items():
     # Afficher les statistiques
     stats = db.get_action_items_stats(user_id)
     st.markdown(stats_card(stats), unsafe_allow_html=True)
+
+    # ==================== PROPOSITIONS D'ACTIONS EN ATTENTE ====================
+
+    # Récupérer les propositions en attente
+    pending_proposals = db.get_proposed_actions(user_id, status="pending")
+
+    if pending_proposals:
+        st.markdown(f"""
+        <div style="
+            background: linear-gradient(135deg, {COLORS['ivory']}40 0%, {COLORS['ivory_dark']}20 100%);
+            border-left: 4px solid {COLORS['gray_dark']};
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        ">
+            <h2 style="
+                font-family: 'Cormorant Garamond', serif;
+                font-size: 2rem;
+                font-weight: 300;
+                color: {COLORS['black']};
+                margin: 0 0 0.5rem 0;
+                letter-spacing: 0.02em;
+            ">✨ Actions proposées par l'IA</h2>
+            <p style="
+                color: {COLORS['charcoal']};
+                font-size: 0.95rem;
+                line-height: 1.6;
+                margin: 0;
+            ">
+                L'IA a détecté {len(pending_proposals)} action(s) potentielle(s) dans vos conversations.
+                Acceptez-les pour les ajouter à vos objectifs, ou rejetez-les si elles ne correspondent pas.
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+
+        # Afficher chaque proposition
+        for i, proposal in enumerate(pending_proposals):
+            st.markdown(proposed_action_card(proposal, i), unsafe_allow_html=True)
+
+            # Boutons d'action pour la proposition
+            col1, col2, col3, col4 = st.columns([3, 2, 2, 1])
+
+            with col1:
+                # Option d'ajouter une deadline lors de l'acceptation
+                deadline_key = f"deadline_{proposal['id']}"
+                deadline = st.date_input(
+                    "Échéance (optionnel)",
+                    value=None,
+                    min_value=datetime.now().date(),
+                    key=deadline_key,
+                    label_visibility="collapsed"
+                )
+
+            with col2:
+                if st.button("✓ Accepter", key=f"accept_{proposal['id']}", type="primary"):
+                    try:
+                        deadline_str = deadline.isoformat() if deadline else None
+                        action_id = db.accept_proposed_action(proposal["id"], deadline=deadline_str)
+                        st.success(f"✅ Action ajoutée avec succès !")
+                        st.rerun()
+                    except ValueError as e:
+                        st.error(f"❌ Erreur: {e}")
+                    except Exception as e:
+                        st.error(f"❌ Erreur lors de l'acceptation: {e}")
+
+            with col3:
+                if st.button("✕ Rejeter", key=f"reject_{proposal['id']}"):
+                    try:
+                        db.reject_proposed_action(proposal["id"])
+                        st.info("Action rejetée")
+                        st.rerun()
+                    except ValueError as e:
+                        st.error(f"❌ Erreur: {e}")
+                    except Exception as e:
+                        st.error(f"❌ Erreur lors du rejet: {e}")
+
+            with col4:
+                if st.button("🗑", key=f"delete_proposal_{proposal['id']}", help="Supprimer"):
+                    db.delete_proposed_action(proposal["id"])
+                    st.rerun()
+
+            st.markdown("<br>", unsafe_allow_html=True)
+
+        st.divider()
+
+    # ==================== DEMANDER DES SUGGESTIONS À L'IA ====================
+
+    st.markdown(f"""
+    <div style="
+        background: linear-gradient(135deg, {COLORS['gray_dark']}10 0%, {COLORS['charcoal']}05 100%);
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    ">
+        <h2 style="
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            font-weight: 300;
+            color: {COLORS['black']};
+            margin: 0 0 0.5rem 0;
+            letter-spacing: 0.02em;
+        ">💡 Besoin d'inspiration ?</h2>
+        <p style="
+            color: {COLORS['charcoal']};
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin: 0 0 1rem 0;
+        ">
+            Laisse l'IA analyser ton historique et te suggérer des actions personnalisées pour améliorer ton bien-être.
+        </p>
+    """, unsafe_allow_html=True)
+
+    if st.button("✨ Demander des suggestions à l'IA", type="secondary", use_container_width=True):
+        with st.spinner("L'IA analyse ton historique et prépare des suggestions..."):
+            try:
+                suggester = ActionSuggester(db)
+                result = suggester.suggest_actions(user_id)
+
+                if result and result.get("count", 0) > 0:
+                    st.success(f"✅ {result['count']} action(s) suggérée(s) !")
+                    if result.get("message"):
+                        st.info(f"💬 {result['message']}")
+                    st.balloons()
+                    st.rerun()
+                else:
+                    st.warning("L'IA n'a pas pu générer de suggestions pour le moment. Essaie de partager plus de détails dans tes conversations ou check-ins.")
+            except Exception as e:
+                st.error(f"❌ Erreur lors de la génération de suggestions: {e}")
+
+    st.markdown("</div>", unsafe_allow_html=True)
 
     # ==================== FORMULAIRE D'AJOUT D'ACTION ====================
 

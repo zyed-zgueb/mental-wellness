@@ -59,27 +59,26 @@ class ActionExtractor:
             result = json.loads(response_text)
             extracted_actions = result.get("actions", [])
 
-            # Sauvegarder les actions dans la base de données
-            saved_actions = []
+            # Sauvegarder les actions comme propositions dans la base de données
+            saved_proposals = []
             for action in extracted_actions:
                 if action.get("title"):
-                    action_id = self.db_manager.save_action_item(
+                    proposal_id = self.db_manager.save_proposed_action(
                         user_id=user_id,
                         title=action["title"],
                         description=action.get("description", ""),
-                        source="ai_extracted",
                         conversation_id=conversation_id,
                     )
 
-                    saved_actions.append(
+                    saved_proposals.append(
                         {
-                            "id": action_id,
+                            "id": proposal_id,
                             "title": action["title"],
                             "description": action.get("description", ""),
                         }
                     )
 
-            return saved_actions
+            return saved_proposals
 
         except json.JSONDecodeError as e:
             print(f"Erreur de parsing JSON: {e}")
