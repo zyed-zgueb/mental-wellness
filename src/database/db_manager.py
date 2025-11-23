@@ -598,6 +598,19 @@ class DatabaseManager:
         )
         insights = [dict(row) for row in cursor.fetchall()]
 
+        # Get all action items
+        cursor = self.conn.execute(
+            """
+            SELECT id, title, description, status, source, conversation_id,
+                   deadline, created_at, completed_at, updated_at
+            FROM action_items
+            WHERE user_id = ?
+            ORDER BY created_at DESC
+            """,
+            (user_id,),
+        )
+        action_items = [dict(row) for row in cursor.fetchall()]
+
         # Parse preferences if available
         if user_data.get("preferences"):
             try:
@@ -610,8 +623,234 @@ class DatabaseManager:
             "check_ins": check_ins,
             "conversations": conversations,
             "insights": insights,
+            "action_items": action_items,
             "export_timestamp": datetime.now().isoformat(),
         }
+
+    # ===== Action Items Methods =====
+
+    def save_action_item(
+        self,
+        user_id: int,
+        title: str,
+        description: str = "",
+        source: str = "manual",
+        conversation_id: Optional[int] = None,
+        deadline: Optional[str] = None,
+    ) -> int:
+        """
+        Enregistrer un nouvel objectif/action.
+
+        Args:
+            user_id: ID de l'utilisateur.
+            title: Titre de l'action.
+            description: Description détaillée (optionnelle).
+            source: Source de l'action ('manual' ou 'ai_extracted').
+            conversation_id: ID de la conversation d'origine si extrait par l'IA.
+            deadline: Date limite au format ISO (optionnelle).
+
+        Returns:
+            ID de l'action créée.
+
+        Raises:
+            ValueError: Si les paramètres sont invalides.
+        """
+        if not title:
+            raise ValueError("Le titre ne peut pas être vide")
+
+        if not user_id:
+            raise ValueError("user_id est requis")
+
+        if source not in ["manual", "ai_extracted"]:
+            raise ValueError("source doit être 'manual' ou 'ai_extracted'")
+
+        try:
+            cursor = self.conn.execute(
+                """
+                INSERT INTO action_items (user_id, title, description, source, conversation_id, deadline)
+                VALUES (?, ?, ?, ?, ?, ?)
+                """,
+                (user_id, title, description, source, conversation_id, deadline),
+            )
+            self.conn.commit()
+            return cursor.lastrowid
+        except sqlite3.IntegrityError as e:
+            raise ValueError(f"Erreur d'intégrité de la base de données: {e}")
+
+    def get_action_items(
+        self, user_id: int, status: Optional[str] = None, limit: int = 100
+    ) -> List[Dict[str, Any]]:
+        """
+        Récupérer les actions d'un utilisateur.
+
+        Args:
+            user_id: ID de l'utilisateur.
+            status: Filtrer par statut (optionnel: 'pending', 'in_progress', 'completed', 'abandoned').
+            limit: Nombre maximum d'actions à récupérer (défaut: 100).
+
+        Returns:
+            Liste de dicts contenant les informations des actions.
+            Trié par date de création (plus récent en premier).
+        """
+        if status:
+            cursor = self.conn.execute(
+                """
+                SELECT id, user_id, title, description, status, source,
+                       conversation_id, deadline, created_at, completed_at, updated_at
+                FROM action_items
+                WHERE user_id = ? AND status = ?
+                ORDER BY created_at DESC
+                LIMIT ?
+                """,
+                (user_id, status, limit),
+            )
+        else:
+            cursor = self.conn.execute(
+                """
+                SELECT id, user_id, title, description, status, source,
+                       conversation_id, deadline, created_at, completed_at, updated_at
+                FROM action_items
+                WHERE user_id = ?
+                ORDER BY created_at DESC
+                LIMIT ?
+                """,
+                (user_id, limit),
+            )
+
+        return [dict(row) for row in cursor.fetchall()]
+
+    def update_action_item(
+        self,
+        action_id: int,
+        title: Optional[str] = None,
+        description: Optional[str] = None,
+        status: Optional[str] = None,
+        deadline: Optional[str] = None,
+    ) -> None:
+        """
+        Mettre à jour une action.
+
+        Args:
+            action_id: ID de l'action.
+            title: Nouveau titre (optionnel).
+            description: Nouvelle description (optionnelle).
+            status: Nouveau statut (optionnel).
+            deadline: Nouvelle deadline (optionnelle).
+
+        Raises:
+            ValueError: Si le statut est invalide.
+        """
+        if status and status not in ["pending", "in_progress", "completed", "abandoned"]:
+            raise ValueError(
+                "status doit être 'pending', 'in_progress', 'completed' ou 'abandoned'"
+            )
+
+        # Build dynamic update query
+        updates = ["updated_at = ?"]
+        params = [datetime.now().isoformat()]
+
+        if title is not None:
+            updates.append("title = ?")
+            params.append(title)
+
+        if description is not None:
+            updates.append("description = ?")
+            params.append(description)
+
+        if status is not None:
+            updates.append("status = ?")
+            params.append(status)
+            # Set completed_at timestamp if status is completed
+            if status == "completed":
+                updates.append("completed_at = ?")
+                params.append(datetime.now().isoformat())
+            elif status in ["pending", "in_progress", "abandoned"]:
+                # Reset completed_at if status is changed back
+                updates.append("completed_at = ?")
+                params.append(None)
+
+        if deadline is not None:
+            updates.append("deadline = ?")
+            params.append(deadline)
+
+        params.append(action_id)
+        query = f"UPDATE action_items SET {', '.join(updates)} WHERE id = ?"
+
+        self.conn.execute(query, params)
+        self.conn.commit()
+
+    def delete_action_item(self, action_id: int) -> None:
+        """
+        Supprimer une action.
+
+        Args:
+            action_id: ID de l'action à supprimer.
+        """
+        self.conn.execute(
+            """
+            DELETE FROM action_items
+            WHERE id = ?
+            """,
+            (action_id,),
+        )
+        self.conn.commit()
+
+    def get_action_item_by_id(self, action_id: int) -> Optional[Dict[str, Any]]:
+        """
+        Récupérer une action par son ID.
+
+        Args:
+            action_id: ID de l'action.
+
+        Returns:
+            Dict contenant les informations de l'action, ou None si non trouvée.
+        """
+        cursor = self.conn.execute(
+            """
+            SELECT id, user_id, title, description, status, source,
+                   conversation_id, deadline, created_at, completed_at, updated_at
+            FROM action_items
+            WHERE id = ?
+            """,
+            (action_id,),
+        )
+
+        result = cursor.fetchone()
+        return dict(result) if result else None
+
+    def get_action_items_stats(self, user_id: int) -> Dict[str, int]:
+        """
+        Obtenir des statistiques sur les actions d'un utilisateur.
+
+        Args:
+            user_id: ID de l'utilisateur.
+
+        Returns:
+            Dict avec le nombre d'actions par statut.
+        """
+        cursor = self.conn.execute(
+            """
+            SELECT status, COUNT(*) as count
+            FROM action_items
+            WHERE user_id = ?
+            GROUP BY status
+            """,
+            (user_id,),
+        )
+
+        stats = {
+            "pending": 0,
+            "in_progress": 0,
+            "completed": 0,
+            "abandoned": 0,
+            "total": 0,
+        }
+
+        for row in cursor.fetchall():
+            stats[row["status"]] = row["count"]
+            stats["total"] += row["count"]
+
+        return stats
 
     def close(self):
         """Fermer la connexion à la base de données."""

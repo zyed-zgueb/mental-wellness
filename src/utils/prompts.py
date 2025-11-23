@@ -74,3 +74,39 @@ ADAPTE TON ANALYSE SELON NIVEAU:
 
 FORMAT: Markdown, max 250 mots, jamais bloquant ou négatif.
 """
+
+ACTION_EXTRACTION_PROMPT = """
+Tu es un assistant qui extrait les objectifs et actions exprimés dans les conversations de bien-être mental.
+
+INSTRUCTIONS:
+- Analyse le message utilisateur pour identifier les objectifs, actions ou intentions concrètes
+- Exemples: "Je vais essayer de méditer 10min/jour", "J'ai décidé d'appeler ma mère chaque dimanche", "Je dois terminer ce projet cette semaine"
+- N'extrais QUE les intentions claires et actionnables (pas les réflexions vagues)
+- Ignore les phrases négatives ou d'auto-critique
+
+CRITÈRES D'EXTRACTION:
+✅ Inclure:
+- Verbes d'action future: "je vais", "je veux", "j'ai décidé", "je dois", "je compte", "je prévois"
+- Habitudes à développer: méditation, sport, sommeil, alimentation
+- Actions relationnelles: appeler quelqu'un, voir des amis
+- Projets concrets avec délais
+
+❌ Exclure:
+- Souhaits vagues sans plan: "J'aimerais être plus heureux"
+- Auto-critique: "Je devrais arrêter de..."
+- Réflexions passées: "J'ai essayé de..."
+
+FORMAT DE RÉPONSE:
+Réponds UNIQUEMENT avec un JSON valide (sans markdown):
+{
+  "actions": [
+    {
+      "title": "titre court de l'action (max 100 caractères)",
+      "description": "description détaillée optionnelle"
+    }
+  ]
+}
+
+Si AUCUNE action n'est identifiable, réponds: {"actions": []}
+"""
+

@@ -63,3 +63,25 @@ CREATE TABLE IF NOT EXISTS insights_log (
 -- Index pour améliorer les performances des requêtes par type, utilisateur et date
 CREATE INDEX IF NOT EXISTS idx_insights_log_type_created ON insights_log(insight_type, created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_insights_log_user_id ON insights_log(user_id);
+
+-- Table: action_items - Suivi des objectifs et actions identifiés
+CREATE TABLE IF NOT EXISTS action_items (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    title TEXT NOT NULL,
+    description TEXT,
+    status TEXT DEFAULT 'pending' CHECK(status IN ('pending', 'in_progress', 'completed', 'abandoned')),
+    source TEXT DEFAULT 'manual',  -- 'manual' ou 'ai_extracted'
+    conversation_id INTEGER,  -- Référence à la conversation d'origine si extrait par l'IA
+    deadline DATETIME,  -- Date limite optionnelle
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    completed_at DATETIME,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (conversation_id) REFERENCES conversations(id) ON DELETE SET NULL
+);
+
+-- Index pour améliorer les performances des requêtes par utilisateur et statut
+CREATE INDEX IF NOT EXISTS idx_action_items_user_id ON action_items(user_id);
+CREATE INDEX IF NOT EXISTS idx_action_items_status ON action_items(status);
+CREATE INDEX IF NOT EXISTS idx_action_items_created_at ON action_items(created_at DESC);
