@@ -45,6 +45,31 @@ def remove_emojis(text: str) -> str:
     return emoji_pattern.sub('', text).strip()
 
 
+def strip_html_tags(text: str) -> str:
+    """
+    Supprime les balises HTML brutes du texte généré par l'IA.
+
+    Cette fonction nettoie le HTML que l'IA pourrait générer malgré les instructions,
+    en le convertissant en texte brut avant la conversion markdown.
+
+    Args:
+        text: Le texte potentiellement avec des balises HTML
+
+    Returns:
+        Le texte sans balises HTML
+    """
+    # Supprimer les balises HTML avec attributs style (ex: <div style="...">)
+    text = re.sub(r'<(\w+)[^>]*style\s*=\s*["\'][^"\']*["\'][^>]*>', '', text)
+
+    # Supprimer les balises HTML fermantes
+    text = re.sub(r'</(\w+)>', '', text)
+
+    # Supprimer les balises HTML simples restantes (ex: <div>, <p>)
+    text = re.sub(r'<(\w+)[^>]*>', '', text)
+
+    return text.strip()
+
+
 def convert_markdown_to_html(text: str) -> str:
     """
     Convertit les marqueurs markdown en HTML pour un rendu correct.
@@ -420,6 +445,9 @@ def show_dashboard():
 
                 # Nettoyer le texte des emojis pour un style épuré
                 clean_content = remove_emojis(insight_content)
+
+                # Supprimer les balises HTML brutes que l'IA pourrait avoir générées
+                clean_content = strip_html_tags(clean_content)
 
                 # Convertir le markdown en HTML pour un rendu correct
                 formatted_content = convert_markdown_to_html(clean_content)
