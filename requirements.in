@@ -1,0 +1,8 @@
+streamlit
+pytest
+pytest-mock
+streamlit-shadcn-ui
+anthropic
+python-dotenv0
+plotly0
+pandas
