@@ -51,10 +51,10 @@ def get_status_badge(status: str) -> str:
         HTML du badge
     """
     status_config = {
-        "pending": {"label": "À faire", "color": COLORS["sage"]},
-        "in_progress": {"label": "En cours", "color": COLORS["terracotta"]},
-        "completed": {"label": "Terminé", "color": COLORS["moss"]},
-        "abandoned": {"label": "Abandonné", "color": COLORS["stone"]},
+        "pending": {"label": "À faire", "color": COLORS["gray_medium"]},
+        "in_progress": {"label": "En cours", "color": COLORS["charcoal"]},
+        "completed": {"label": "Terminé", "color": COLORS["black"]},
+        "abandoned": {"label": "Abandonné", "color": COLORS["gray_light"]},
     }
 
     config = status_config.get(status, {"label": status, "color": COLORS["charcoal"]})
@@ -85,8 +85,8 @@ def get_source_badge(source: str) -> str:
     if source == "ai_extracted":
         return f"""
         <span style="
-            background: {COLORS['gold']}20;
-            color: {COLORS['gold']};
+            background: {COLORS['gray_dark']}20;
+            color: {COLORS['gray_dark']};
             padding: 0.25rem 0.75rem;
             border-radius: 12px;
             font-size: 0.75rem;
@@ -130,7 +130,7 @@ def action_card(action: dict, index: int) -> str:
     if deadline:
         deadline_html = f"""
         <div style="margin-top: 0.75rem;">
-            <span style="color: {COLORS['stone']}; font-size: 0.85rem;">
+            <span style="color: {COLORS['gray_medium']}; font-size: 0.85rem;">
                 📅 Échéance: {deadline}
             </span>
         </div>
@@ -140,7 +140,7 @@ def action_card(action: dict, index: int) -> str:
     if completed_date:
         completed_html = f"""
         <div style="margin-top: 0.75rem;">
-            <span style="color: {COLORS['moss']}; font-size: 0.85rem;">
+            <span style="color: {COLORS['black']}; font-size: 0.85rem;">
                 ✓ Complété le {completed_date}
             </span>
         </div>
@@ -149,7 +149,7 @@ def action_card(action: dict, index: int) -> str:
     return f"""
     <div style="
         background: white;
-        border: 1px solid {COLORS['stone']}40;
+        border: 1px solid {COLORS['gray_lighter']}40;
         border-radius: 8px;
         padding: 1.5rem;
         margin-bottom: 1rem;
@@ -170,7 +170,7 @@ def action_card(action: dict, index: int) -> str:
             </div>
         </div>
 
-        <div style="color: {COLORS['stone']}; font-size: 0.85rem; margin-bottom: 0.5rem;">
+        <div style="color: {COLORS['gray_medium']}; font-size: 0.85rem; margin-bottom: 0.5rem;">
             Créé le {created_date}
         </div>
 
@@ -193,11 +193,11 @@ def stats_card(stats: dict) -> str:
     """
     return f"""
     <div style="
-        background: linear-gradient(135deg, {COLORS['sage']}15 0%, {COLORS['moss']}15 100%);
+        background: linear-gradient(135deg, {COLORS['ivory']}15 0%, {COLORS['ivory_dark']}15 100%);
         border-radius: 12px;
         padding: 1.5rem;
         margin-bottom: 2rem;
-        border: 1px solid {COLORS['sage']}30;
+        border: 1px solid {COLORS['gray_lighter']}30;
     ">
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1.5rem;">
             <div style="text-align: center;">
@@ -209,7 +209,7 @@ def stats_card(stats: dict) -> str:
                 </div>
             </div>
             <div style="text-align: center;">
-                <div style="font-size: 2rem; font-weight: 600; color: {COLORS['sage']};">
+                <div style="font-size: 2rem; font-weight: 600; color: {COLORS['gray_medium']};">
                     {stats['pending']}
                 </div>
                 <div style="color: {COLORS['charcoal']}; font-size: 0.85rem; margin-top: 0.25rem;">
@@ -217,7 +217,7 @@ def stats_card(stats: dict) -> str:
                 </div>
             </div>
             <div style="text-align: center;">
-                <div style="font-size: 2rem; font-weight: 600; color: {COLORS['terracotta']};">
+                <div style="font-size: 2rem; font-weight: 600; color: {COLORS['charcoal']};">
                     {stats['in_progress']}
                 </div>
                 <div style="color: {COLORS['charcoal']}; font-size: 0.85rem; margin-top: 0.25rem;">
@@ -225,7 +225,7 @@ def stats_card(stats: dict) -> str:
                 </div>
             </div>
             <div style="text-align: center;">
-                <div style="font-size: 2rem; font-weight: 600; color: {COLORS['moss']};">
+                <div style="font-size: 2rem; font-weight: 600; color: {COLORS['black']};">
                     {stats['completed']}
                 </div>
                 <div style="color: {COLORS['charcoal']}; font-size: 0.85rem; margin-top: 0.25rem;">
@@ -368,7 +368,7 @@ def show_action_items():
 
     if actions:
         st.markdown(f"""
-        <p style="color: {COLORS['stone']}; font-size: 0.9rem; margin-bottom: 1rem;">
+        <p style="color: {COLORS['gray_medium']}; font-size: 0.9rem; margin-bottom: 1rem;">
             {len(actions)} action(s) affichée(s)
         </p>
         """, unsafe_allow_html=True)
@@ -411,7 +411,7 @@ def show_action_items():
         <div style="
             text-align: center;
             padding: 3rem 2rem;
-            background: {COLORS['sand']}40;
+            background: {COLORS['ivory_dark']}40;
             border-radius: 12px;
             margin: 2rem 0;
         ">
@@ -437,7 +437,7 @@ def show_action_items():
                 margin-right: auto;
             ">
                 <p style="
-                    color: {COLORS['gold']};
+                    color: {COLORS['gray_dark']};
                     font-weight: 500;
                     margin-bottom: 0.5rem;
                 ">💡 Astuce</p>
