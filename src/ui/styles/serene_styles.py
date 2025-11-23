@@ -1049,36 +1049,17 @@ def create_metric_card_large(label: str, value: str, unit: str, delta: float = N
     Returns:
         HTML de la carte métrique
     """
-    delta_html = ""
+    delta_section = ""
     if delta is not None:
-        delta_html = f"""
-        <div style='width: 60px; height: 1px; background-color: var(--line-dark); margin: 1.5rem auto;'></div>
-        <div style='font-family: "Inter", sans-serif; color: var(--charcoal);
-                   font-size: 0.875rem; margin-top: 1rem; font-weight: 300;'>
-            {'+' if delta >= 0 else ''}{delta:.1f} vs moyenne
-        </div>
-        """
+        delta_sign = '+' if delta >= 0 else ''
+        delta_section = f"<div style='width: 60px; height: 1px; background-color: var(--line-dark); margin: 1.5rem auto;'></div><div style='font-family: \"Inter\", sans-serif; color: var(--charcoal); font-size: 0.875rem; margin-top: 1rem; font-weight: 300;'>{delta_sign}{delta:.1f} vs moyenne</div>"
 
-    return f"""
-    <div style='background-color: var(--white); padding: 3rem 2rem;
-                border: 1px solid var(--line-light); text-align: center;
-                margin-bottom: 2rem; box-shadow: var(--shadow-subtle);'>
-        <div style='font-family: "Inter", sans-serif; color: var(--gray-medium);
-                   font-size: 0.75rem; font-weight: 400; letter-spacing: 0.1em;
-                   text-transform: uppercase; margin-bottom: 1rem;'>
-            {label}
-        </div>
-        <div style='font-family: "Cormorant Garamond", serif; color: var(--black);
-                   font-size: 5rem; font-weight: 300; line-height: 1; margin-bottom: 0.5rem;'>
-            {value}
-        </div>
-        <div style='font-family: "Inter", sans-serif; color: var(--gray-medium);
-                   font-size: 0.875rem; font-weight: 300; margin-bottom: 1.5rem;'>
-            {unit}
-        </div>
-        {delta_html}
-    </div>
-    """
+    return f"""<div style='background-color: var(--white); padding: 3rem 2rem; border: 1px solid var(--line-light); text-align: center; margin-bottom: 2rem; box-shadow: var(--shadow-subtle);'>
+        <div style='font-family: "Inter", sans-serif; color: var(--gray-medium); font-size: 0.75rem; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1rem;'>{label}</div>
+        <div style='font-family: "Cormorant Garamond", serif; color: var(--black); font-size: 5rem; font-weight: 300; line-height: 1; margin-bottom: 0.5rem;'>{value}</div>
+        <div style='font-family: "Inter", sans-serif; color: var(--gray-medium); font-size: 0.875rem; font-weight: 300; margin-bottom: 1.5rem;'>{unit}</div>
+        {delta_section}
+    </div>"""
 
 
 def create_metric_card_small(label: str, value: str, unit: str, animation_delay: str = "0.5s") -> str:
