@@ -6,6 +6,9 @@ CREATE TABLE IF NOT EXISTS users (
     email TEXT NOT NULL UNIQUE,
     password_hash TEXT NOT NULL,
     display_name TEXT,
+    full_name TEXT,  -- Nom complet de l'utilisateur
+    birth_year INTEGER,  -- Année de naissance
+    timezone TEXT,  -- Fuseau horaire / zone géographique
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     last_login DATETIME,
     preferences TEXT  -- JSON string pour stocker les préférences utilisateur
