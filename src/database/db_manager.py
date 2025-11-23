@@ -497,6 +497,122 @@ class DatabaseManager:
         )
         self.conn.commit()
 
+    def update_user_profile(
+        self,
+        user_id: int,
+        display_name: Optional[str] = None,
+        full_name: Optional[str] = None,
+        birth_year: Optional[int] = None,
+        timezone: Optional[str] = None,
+    ) -> None:
+        """
+        Update user profile information.
+
+        Args:
+            user_id: User's ID.
+            display_name: Display name (optional).
+            full_name: Full name (optional).
+            birth_year: Birth year (optional).
+            timezone: Timezone/location (optional).
+        """
+        # Build dynamic update query based on provided fields
+        updates = []
+        params = []
+
+        if display_name is not None:
+            updates.append("display_name = ?")
+            params.append(display_name)
+
+        if full_name is not None:
+            updates.append("full_name = ?")
+            params.append(full_name)
+
+        if birth_year is not None:
+            updates.append("birth_year = ?")
+            params.append(birth_year)
+
+        if timezone is not None:
+            updates.append("timezone = ?")
+            params.append(timezone)
+
+        if not updates:
+            return  # Nothing to update
+
+        params.append(user_id)
+        query = f"UPDATE users SET {', '.join(updates)} WHERE id = ?"
+
+        self.conn.execute(query, params)
+        self.conn.commit()
+
+    def export_user_data(self, user_id: int) -> Dict[str, Any]:
+        """
+        Export all user data for RGPD compliance.
+
+        Args:
+            user_id: User's ID.
+
+        Returns:
+            Dict containing all user data including profile, check-ins, conversations, and insights.
+        """
+        # Get user profile
+        user = self.get_user_by_id(user_id)
+        if not user:
+            raise ValueError(f"Utilisateur {user_id} introuvable")
+
+        # Remove password_hash from export
+        user_data = {k: v for k, v in user.items() if k != "password_hash"}
+
+        # Get all check-ins
+        cursor = self.conn.execute(
+            """
+            SELECT id, timestamp, mood_score, notes, created_at
+            FROM check_ins
+            WHERE user_id = ?
+            ORDER BY timestamp DESC
+            """,
+            (user_id,),
+        )
+        check_ins = [dict(row) for row in cursor.fetchall()]
+
+        # Get all conversations
+        cursor = self.conn.execute(
+            """
+            SELECT id, timestamp, user_message, ai_response, tokens_used, created_at
+            FROM conversations
+            WHERE user_id = ?
+            ORDER BY timestamp DESC
+            """,
+            (user_id,),
+        )
+        conversations = [dict(row) for row in cursor.fetchall()]
+
+        # Get all insights
+        cursor = self.conn.execute(
+            """
+            SELECT id, created_at, insight_type, content, based_on_data, tokens_used
+            FROM insights_log
+            WHERE user_id = ?
+            ORDER BY created_at DESC
+            """,
+            (user_id,),
+        )
+        insights = [dict(row) for row in cursor.fetchall()]
+
+        # Parse preferences if available
+        if user_data.get("preferences"):
+            try:
+                user_data["preferences"] = json.loads(user_data["preferences"])
+            except json.JSONDecodeError:
+                pass
+
+        return {
+            "user_profile": user_data,
+            "check_ins": check_ins,
+            "conversations": conversations,
+            "insights": insights,
+            "export_timestamp": datetime.now().isoformat(),
+        }
+
     def close(self):
         """Fermer la connexion à la base de données."""
         if self.conn:

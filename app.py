@@ -8,6 +8,7 @@ from src.ui.auth import show_auth, is_authenticated, show_user_menu
 from src.ui.checkin import show_checkin
 from src.ui.conversation import show_conversation
 from src.ui.dashboard import show_dashboard
+from src.ui.profile import show_profile
 from src.ui.styles.serene_styles import get_main_css
 
 # Configuration de la page
@@ -274,7 +275,8 @@ def main():
                 "Home": "Home",
                 "Check-in": "Check-in",
                 "Conversation": "Conversation",
-                "Dashboard": "Dashboard"
+                "Dashboard": "Dashboard",
+                "Profil": "Profil"
             }
 
             for key, label in pages.items():
@@ -298,6 +300,8 @@ def main():
             show_conversation()
         elif page == "Dashboard":
             show_dashboard()
+        elif page == "Profil":
+            show_profile()
 
 
 if __name__ == "__main__":
