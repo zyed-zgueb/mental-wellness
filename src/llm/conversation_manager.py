@@ -31,6 +31,7 @@ class ConversationManager:
         self.system_prompt = CONVERSATION_SYSTEM_PROMPT
         self.enable_action_extraction = enable_action_extraction
         self.action_extractor = None
+        self.last_extracted_proposals = []  # Stocker les dernières propositions créées
 
         # Lazy load action extractor pour éviter import circulaire
         if enable_action_extraction:
@@ -70,12 +71,14 @@ class ConversationManager:
                     user_id, user_message, response_text, tokens
                 )
 
-                # Extraire les actions automatiquement
+                # Extraire les actions automatiquement et stocker les propositions
+                self.last_extracted_proposals = []  # Réinitialiser
                 if self.enable_action_extraction and self.action_extractor:
                     try:
-                        self.action_extractor.extract_actions_from_message(
+                        proposals = self.action_extractor.extract_actions_from_message(
                             user_message, user_id, conversation_id
                         )
+                        self.last_extracted_proposals = proposals or []
                     except Exception as e:
                         print(f"Erreur extraction d'actions: {e}")
                         # Ne pas bloquer la conversation si l'extraction échoue
@@ -98,3 +101,12 @@ class ConversationManager:
         """
         message_lower = message.lower()
         return any(keyword in message_lower for keyword in CRISIS_KEYWORDS)
+
+    def get_last_extracted_proposals(self) -> List[Dict]:
+        """
+        Récupérer les propositions extraites lors du dernier message.
+
+        Returns:
+            Liste des propositions créées (vide si aucune).
+        """
+        return self.last_extracted_proposals

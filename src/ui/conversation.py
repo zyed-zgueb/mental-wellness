@@ -1,6 +1,7 @@
 """Interface de conversation avec l'IA - Gallery Minimalist Style"""
 
 import streamlit as st
+import html
 from dotenv import load_dotenv
 from src.database.db_manager import DatabaseManager
 from src.ui.auth import get_current_user_id
@@ -105,5 +106,82 @@ def show_conversation():
                     'user_message': user_input,
                     'ai_response': full_response
                 })
+
+                # Afficher les propositions d'actions détectées
+                proposals = manager.get_last_extracted_proposals()
+                if proposals:
+                    st.markdown("---")
+                    st.markdown(f"""
+                    <div style="
+                        background: linear-gradient(135deg, #F5F5F0 0%, #E8E8E0 100%);
+                        border-left: 4px solid #1A1A1A;
+                        border-radius: 8px;
+                        padding: 1rem 1.5rem;
+                        margin: 1rem 0;
+                    ">
+                        <p style="
+                            font-weight: 500;
+                            color: #1A1A1A;
+                            margin: 0;
+                            font-size: 0.95rem;
+                        ">✨ J'ai détecté {len(proposals)} action(s) dans votre message ! Voulez-vous les ajouter à votre liste ?</p>
+                    </div>
+                    """, unsafe_allow_html=True)
+
+                    for i, proposal in enumerate(proposals):
+                        # Échapper le HTML pour sécurité
+                        safe_title = html.escape(proposal.get('title', ''))
+                        safe_description = html.escape(proposal.get('description', ''))
+
+                        # Carte de proposition stylisée
+                        st.markdown(f"""
+                        <div style="
+                            background: white;
+                            border: 2px solid #6B6B6B30;
+                            border-radius: 8px;
+                            padding: 1.25rem;
+                            margin: 1rem 0;
+                        ">
+                            <h4 style="
+                                font-family: 'Cormorant Garamond', serif;
+                                font-size: 1.15rem;
+                                font-weight: 500;
+                                color: #1A1A1A;
+                                margin: 0 0 0.5rem 0;
+                            ">{safe_title}</h4>
+                            <p style="
+                                color: #6B6B6B;
+                                margin: 0;
+                                font-size: 0.9rem;
+                                line-height: 1.5;
+                            ">{safe_description}</p>
+                        </div>
+                        """, unsafe_allow_html=True)
+
+                        # Boutons d'action
+                        col1, col2, col3 = st.columns([1, 1, 3])
+                        with col1:
+                            if st.button("✓ Accepter", key=f"accept_prop_{proposal['id']}_{i}", type="primary", use_container_width=True):
+                                try:
+                                    db = get_database()
+                                    action_id = db.accept_proposed_action(proposal['id'])
+                                    st.success("✅ Action ajoutée à votre liste !")
+                                    st.rerun()
+                                except Exception as e:
+                                    st.error(f"Erreur: {e}")
+
+                        with col2:
+                            if st.button("✕ Rejeter", key=f"reject_prop_{proposal['id']}_{i}", use_container_width=True):
+                                try:
+                                    db = get_database()
+                                    db.reject_proposed_action(proposal['id'])
+                                    st.info("Action rejetée")
+                                    st.rerun()
+                                except Exception as e:
+                                    st.error(f"Erreur: {e}")
+
+                        if i < len(proposals) - 1:
+                            st.markdown("<div style='margin: 1rem 0;'></div>", unsafe_allow_html=True)
+
             except Exception as e:
                 st.error(f"Erreur: {e}")
