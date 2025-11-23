@@ -61,17 +61,7 @@ def get_status_badge(status: str) -> str:
 
     config = status_config.get(status, {"label": status, "color": COLORS["charcoal"]})
 
-    return f"""
-    <span style="
-        background: {config['color']}20;
-        color: {config['color']};
-        padding: 0.25rem 0.75rem;
-        border-radius: 12px;
-        font-size: 0.75rem;
-        font-weight: 500;
-        letter-spacing: 0.02em;
-    ">{config['label']}</span>
-    """
+    return f'<span style="background: {config["color"]}20; color: {config["color"]}; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.02em;">{config["label"]}</span>'
 
 
 def get_source_badge(source: str) -> str:
@@ -85,17 +75,7 @@ def get_source_badge(source: str) -> str:
         HTML du badge
     """
     if source == "ai_extracted":
-        return f"""
-        <span style="
-            background: {COLORS['gray_dark']}20;
-            color: {COLORS['gray_dark']};
-            padding: 0.25rem 0.75rem;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: 500;
-            letter-spacing: 0.02em;
-        ">✨ Détecté par l'IA</span>
-        """
+        return f'<span style="background: {COLORS["gray_dark"]}20; color: {COLORS["gray_dark"]}; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.02em;">✨ Détecté par l\'IA</span>'
     return ""
 
 
@@ -159,50 +139,29 @@ def stats_card(stats: dict) -> str:
     Returns:
         HTML de la carte
     """
-    return f"""
-    <div style="
-        background: linear-gradient(135deg, {COLORS['ivory']}15 0%, {COLORS['ivory_dark']}15 100%);
-        border-radius: 12px;
-        padding: 1.5rem;
-        margin-bottom: 2rem;
-        border: 1px solid {COLORS['gray_lighter']}30;
-    ">
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1.5rem;">
-            <div style="text-align: center;">
-                <div style="font-size: 2rem; font-weight: 600; color: {COLORS['black']};">
-                    {stats['total']}
-                </div>
-                <div style="color: {COLORS['charcoal']}; font-size: 0.85rem; margin-top: 0.25rem;">
-                    Total
-                </div>
-            </div>
-            <div style="text-align: center;">
-                <div style="font-size: 2rem; font-weight: 600; color: {COLORS['gray_medium']};">
-                    {stats['pending']}
-                </div>
-                <div style="color: {COLORS['charcoal']}; font-size: 0.85rem; margin-top: 0.25rem;">
-                    À faire
-                </div>
-            </div>
-            <div style="text-align: center;">
-                <div style="font-size: 2rem; font-weight: 600; color: {COLORS['charcoal']};">
-                    {stats['in_progress']}
-                </div>
-                <div style="color: {COLORS['charcoal']}; font-size: 0.85rem; margin-top: 0.25rem;">
-                    En cours
-                </div>
-            </div>
-            <div style="text-align: center;">
-                <div style="font-size: 2rem; font-weight: 600; color: {COLORS['black']};">
-                    {stats['completed']}
-                </div>
-                <div style="color: {COLORS['charcoal']}; font-size: 0.85rem; margin-top: 0.25rem;">
-                    Complétés
-                </div>
-            </div>
-        </div>
-    </div>
-    """
+    return (
+        f'<div style="background: linear-gradient(135deg, {COLORS["ivory"]}15 0%, {COLORS["ivory_dark"]}15 100%); '
+        f'border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; border: 1px solid {COLORS["gray_lighter"]}30;">'
+        f'<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1.5rem;">'
+        f'<div style="text-align: center;">'
+        f'<div style="font-size: 2rem; font-weight: 600; color: {COLORS["black"]};">{stats["total"]}</div>'
+        f'<div style="color: {COLORS["charcoal"]}; font-size: 0.85rem; margin-top: 0.25rem;">Total</div>'
+        f'</div>'
+        f'<div style="text-align: center;">'
+        f'<div style="font-size: 2rem; font-weight: 600; color: {COLORS["gray_medium"]};">{stats["pending"]}</div>'
+        f'<div style="color: {COLORS["charcoal"]}; font-size: 0.85rem; margin-top: 0.25rem;">À faire</div>'
+        f'</div>'
+        f'<div style="text-align: center;">'
+        f'<div style="font-size: 2rem; font-weight: 600; color: {COLORS["charcoal"]};">{stats["in_progress"]}</div>'
+        f'<div style="color: {COLORS["charcoal"]}; font-size: 0.85rem; margin-top: 0.25rem;">En cours</div>'
+        f'</div>'
+        f'<div style="text-align: center;">'
+        f'<div style="font-size: 2rem; font-weight: 600; color: {COLORS["black"]};">{stats["completed"]}</div>'
+        f'<div style="color: {COLORS["charcoal"]}; font-size: 0.85rem; margin-top: 0.25rem;">Complétés</div>'
+        f'</div>'
+        f'</div>'
+        f'</div>'
+    )
 
 
 def proposed_action_card(proposal: dict, index: int) -> str:
