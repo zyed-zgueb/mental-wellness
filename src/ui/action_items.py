@@ -123,68 +123,30 @@ def action_card(action: dict, index: int) -> str:
     description_html = ""
     if action.get("description"):
         safe_description = html.escape(action['description'])
-        description_html = f"""
-        <p style="
-            color: {COLORS['charcoal']};
-            margin: 0.75rem 0 0 0;
-            font-size: 0.9rem;
-            line-height: 1.5;
-        ">{safe_description}</p>
-        """
+        description_html = f'<p style="color: {COLORS["charcoal"]}; margin: 0.75rem 0 0 0; font-size: 0.9rem; line-height: 1.5;">{safe_description}</p>'
 
     deadline_html = ""
     if deadline:
-        deadline_html = f"""
-        <div style="margin-top: 0.75rem;">
-            <span style="color: {COLORS['gray_medium']}; font-size: 0.85rem;">
-                📅 Échéance: {deadline}
-            </span>
-        </div>
-        """
+        deadline_html = f'<div style="margin-top: 0.75rem;"><span style="color: {COLORS["gray_medium"]}; font-size: 0.85rem;">📅 Échéance: {deadline}</span></div>'
 
     completed_html = ""
     if completed_date:
-        completed_html = f"""
-        <div style="margin-top: 0.75rem;">
-            <span style="color: {COLORS['black']}; font-size: 0.85rem;">
-                ✓ Complété le {completed_date}
-            </span>
-        </div>
-        """
+        completed_html = f'<div style="margin-top: 0.75rem;"><span style="color: {COLORS["black"]}; font-size: 0.85rem;">✓ Complété le {completed_date}</span></div>'
 
-    return f"""
-    <div style="
-        background: white;
-        border: 1px solid {COLORS['gray_lighter']}40;
-        border-radius: 8px;
-        padding: 1.5rem;
-        margin-bottom: 1rem;
-        transition: all 0.2s ease;
-    ">
-        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
-            <h3 style="
-                font-family: 'Cormorant Garamond', serif;
-                font-size: 1.25rem;
-                font-weight: 500;
-                color: {COLORS['black']};
-                margin: 0;
-                flex: 1;
-            ">{safe_title}</h3>
-            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: flex-end;">
-                {status_badge}
-                {source_badge}
-            </div>
-        </div>
-
-        <div style="color: {COLORS['gray_medium']}; font-size: 0.85rem; margin-bottom: 0.5rem;">
-            Créé le {created_date}
-        </div>
-
-        {description_html}
-        {deadline_html}
-        {completed_html}
-    </div>
-    """
+    # Générer le HTML sans sauts de ligne inutiles
+    return (
+        f'<div style="background: white; border: 1px solid {COLORS["gray_lighter"]}40; '
+        f'border-radius: 8px; padding: 1.5rem; margin-bottom: 1rem; transition: all 0.2s ease;">'
+        f'<div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">'
+        f'<h3 style="font-family: \'Cormorant Garamond\', serif; font-size: 1.25rem; font-weight: 500; '
+        f'color: {COLORS["black"]}; margin: 0; flex: 1;">{safe_title}</h3>'
+        f'<div style="display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: flex-end;">'
+        f'{status_badge}{source_badge}</div></div>'
+        f'<div style="color: {COLORS["gray_medium"]}; font-size: 0.85rem; margin-bottom: 0.5rem;">'
+        f'Créé le {created_date}</div>'
+        f'{description_html}{deadline_html}{completed_html}'
+        f'</div>'
+    )
 
 
 def stats_card(stats: dict) -> str:
