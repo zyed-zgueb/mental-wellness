@@ -26,6 +26,27 @@ def show_auth():
     Stocke: user_id, email, display_name dans session_state après authentification réussie.
     """
 
+    # Prevent auto-scroll to first input field on page load
+    st.markdown("""
+    <script>
+    // Prevent automatic scroll to input fields when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        // Save current scroll position
+        const scrollY = window.scrollY;
+
+        // Restore scroll position after a brief delay (after Streamlit renders)
+        setTimeout(function() {
+            window.scrollTo(0, 0);
+        }, 100);
+    });
+
+    // Additional safeguard: prevent auto-focus scroll
+    window.addEventListener('load', function() {
+        window.scrollTo(0, 0);
+    });
+    </script>
+    """, unsafe_allow_html=True)
+
     # Header minimaliste
     st.markdown("""
     <div style='text-align: center; padding: 4rem 2rem 2rem 2rem; animation: fadeInDown 0.4s ease-out;'>
@@ -54,6 +75,9 @@ def show_auth():
         .stTabs [data-baseweb="tab-list"] {
             gap: 0;
             border-bottom: 1px solid var(--line-light);
+            scroll-margin-top: 2rem;
+            position: relative;
+            z-index: 10;
         }
 
         .stTabs [data-baseweb="tab"] {
@@ -76,6 +100,11 @@ def show_auth():
         .stTabs [aria-selected="true"] {
             color: var(--black);
             border-bottom-color: var(--black);
+        }
+
+        /* Prevent input auto-focus from scrolling past tabs */
+        input[type="text"], input[type="email"], input[type="password"] {
+            scroll-margin-top: 200px;
         }
         </style>
         """, unsafe_allow_html=True)
