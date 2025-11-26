@@ -49,13 +49,13 @@ def show_auth():
 
     # Header minimaliste
     st.markdown("""
-    <div style='text-align: center; padding: 4rem 2rem 2rem 2rem; animation: fadeInDown 0.4s ease-out;'>
-        <h1 style='font-family: "Cormorant Garamond", serif; font-size: 4rem;
-                   color: var(--black); font-weight: 300; margin-bottom: 1rem;
+    <div style='text-align: center; padding: 1.5rem 2rem 1rem 2rem; animation: fadeInDown 0.4s ease-out;'>
+        <h1 style='font-family: "Cormorant Garamond", serif; font-size: 2.5rem;
+                   color: var(--black); font-weight: 300; margin-bottom: 0.75rem;
                    letter-spacing: 0.05em;'>
             SERENE
         </h1>
-        <div style='width: 80px; height: 1px; background-color: var(--line-dark); margin: 1.5rem auto;'></div>
+        <div style='width: 80px; height: 1px; background-color: var(--line-dark); margin: 1rem auto;'></div>
         <p style='font-family: "Inter", sans-serif; font-size: 0.9375rem;
                  color: var(--gray-dark); margin: 0; line-height: 1.8;
                  font-weight: 300;'>
