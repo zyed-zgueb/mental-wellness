@@ -180,18 +180,18 @@ def show_signup_form():
             key="signup_password"
         )
 
-        # Display password requirements
-        with st.expander("📋 Exigences du mot de passe", expanded=False):
-            requirements = get_password_requirements()
-            for req in requirements:
-                st.markdown(f"- {req}")
-
         password_confirm = st.text_input(
             "Confirmer le mot de passe",
             type="password",
             placeholder="••••••••",
             key="signup_password_confirm"
         )
+
+        # Display password requirements
+        with st.expander("📋 Exigences du mot de passe", expanded=False):
+            requirements = get_password_requirements()
+            for req in requirements:
+                st.markdown(f"- {req}")
 
         st.markdown("<div style='margin-top: 2rem;'></div>", unsafe_allow_html=True)
 
