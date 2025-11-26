@@ -152,7 +152,7 @@ def show_signup_form():
 
     st.markdown("<div style='margin-top: 2rem;'></div>", unsafe_allow_html=True)
 
-    with st.form("signup_form", clear_on_submit=True):
+    with st.form("signup_form", clear_on_submit=False):
         st.markdown("""
         <h3 style='font-family: "Cormorant Garamond", serif; font-size: 1.5rem;
                    font-weight: 300; color: var(--black); margin-bottom: 2rem;
