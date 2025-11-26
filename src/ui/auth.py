@@ -2,6 +2,11 @@
 
 import streamlit as st
 from src.database.db_manager import DatabaseManager
+from src.utils.password_validator import (
+    validate_password_strength,
+    get_password_requirements,
+    get_password_feedback
+)
 
 
 @st.cache_resource
@@ -138,7 +143,7 @@ def show_login_form():
 
 
 def show_signup_form():
-    """Afficher le formulaire d'inscription."""
+    """Afficher le formulaire d'inscription avec validation de mot de passe robuste."""
 
     st.markdown("<div style='margin-top: 2rem;'></div>", unsafe_allow_html=True)
 
@@ -167,9 +172,14 @@ def show_signup_form():
             "Mot de passe",
             type="password",
             placeholder="••••••••",
-            key="signup_password",
-            help="Utilisez un mot de passe fort"
+            key="signup_password"
         )
+
+        # Display password requirements
+        with st.expander("📋 Exigences du mot de passe", expanded=False):
+            requirements = get_password_requirements()
+            for req in requirements:
+                st.markdown(f"- {req}")
 
         password_confirm = st.text_input(
             "Confirmer le mot de passe",
@@ -187,20 +197,29 @@ def show_signup_form():
         )
 
         if submit:
-            # Validation
+            # Basic validation
             if not email or not password:
-                st.error("Email et mot de passe sont requis")
+                st.error("📧 Email et mot de passe sont requis")
                 return
 
             if password != password_confirm:
-                st.error("Les mots de passe ne correspondent pas")
+                st.error("🔒 Les mots de passe ne correspondent pas")
                 return
 
-            if len(password) < 6:
-                st.error("Le mot de passe doit contenir au moins 6 caractères")
+            # Strong password validation
+            is_valid, message = validate_password_strength(password)
+            if not is_valid:
+                st.error(f"❌ **Mot de passe invalide**: {message}")
+
+                # Show detailed feedback
+                feedback = get_password_feedback(password)
+                if feedback["messages"]:
+                    st.warning("**Améliorations nécessaires:**")
+                    for msg in feedback["messages"]:
+                        st.write(f"  • {msg}")
                 return
 
-            # Créer l'utilisateur
+            # Create user
             db = get_database()
             try:
                 user_id = db.create_user(
@@ -210,7 +229,7 @@ def show_signup_form():
                 )
 
                 st.success("✅ Compte créé avec succès !")
-                st.info("Vous pouvez maintenant vous connecter dans l'onglet 'Connexion'")
+                st.info("👉 Vous pouvez maintenant vous connecter dans l'onglet 'Connexion'")
 
             except ValueError as e:
                 st.error(f"❌ Erreur: {e}")

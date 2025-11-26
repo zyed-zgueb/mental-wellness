@@ -4,6 +4,11 @@ import streamlit as st
 import json
 from datetime import datetime
 from src.database.db_manager import DatabaseManager
+from src.utils.password_validator import (
+    validate_password_strength,
+    get_password_requirements,
+    get_password_feedback
+)
 
 
 @st.cache_resource
@@ -350,9 +355,14 @@ def show_security_section(user, db):
         new_password = st.text_input(
             "Nouveau mot de passe",
             type="password",
-            placeholder="••••••••",
-            help="Minimum 6 caractères"
+            placeholder="••••••••"
         )
+
+        # Display password requirements
+        with st.expander("📋 Exigences du mot de passe", expanded=False):
+            requirements = get_password_requirements()
+            for req in requirements:
+                st.markdown(f"- {req}")
 
         confirm_password = st.text_input(
             "Confirmer le nouveau mot de passe",
@@ -371,7 +381,7 @@ def show_security_section(user, db):
         if submit:
             # Validation
             if not current_password or not new_password or not confirm_password:
-                st.error("Veuillez remplir tous les champs")
+                st.error("⚠️ Veuillez remplir tous les champs")
                 return
 
             # Verify current password
@@ -380,13 +390,21 @@ def show_security_section(user, db):
                 st.error("❌ Mot de passe actuel incorrect")
                 return
 
-            # Check new password
-            if len(new_password) < 6:
-                st.error("❌ Le nouveau mot de passe doit contenir au moins 6 caractères")
+            # Strong password validation
+            is_valid, message = validate_password_strength(new_password)
+            if not is_valid:
+                st.error(f"❌ **Nouveau mot de passe invalide**: {message}")
+
+                # Show detailed feedback
+                feedback = get_password_feedback(new_password)
+                if feedback["messages"]:
+                    st.warning("**Améliorations nécessaires:**")
+                    for msg in feedback["messages"]:
+                        st.write(f"  • {msg}")
                 return
 
             if new_password != confirm_password:
-                st.error("❌ Les mots de passe ne correspondent pas")
+                st.error("🔒 Les mots de passe ne correspondent pas")
                 return
 
             try:
