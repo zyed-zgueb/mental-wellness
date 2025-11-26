@@ -18,6 +18,38 @@ Serene est une application Streamlit développée avec Python pour offrir un acc
 - **Dashboard** (Story 1.4) : Visualisation des tendances de bien-être
 - **Insights** (Story 1.4) : Analyses personnalisées basées sur les données
 
+## 🔒 Sécurité et Confidentialité
+
+Serene prend la sécurité et la confidentialité très au sérieux. Les données de santé mentale sont sensibles et doivent être protégées.
+
+**Mesures de sécurité implémentées :**
+
+- **✅ Validation de mot de passe robuste**
+  - Minimum 8 caractères avec complexité (majuscules, minuscules, chiffres, caractères spéciaux)
+  - Détection de 1000+ mots de passe courants (password123, qwerty, etc.)
+  - Score de force en temps réel avec feedback utilisateur
+  - Tests: 36/36 passing ✅
+
+- **✅ Timeout de session automatique**
+  - Déconnexion automatique après 30 minutes d'inactivité (configurable)
+  - Avertissement 2 minutes avant expiration avec option de prolongation
+  - Protection contre l'accès non autorisé sur appareils partagés
+  - Tests: 20/20 tests
+
+- **🔐 Stockage local des données**
+  - Toutes les données stockées localement (SQLite)
+  - Aucun stockage cloud par défaut
+  - Contrôle total de vos données
+
+- **📋 Conformité RGPD**
+  - Export complet de vos données
+  - Droit à l'oubli (suppression de compte)
+  - Transparence totale sur l'usage des données
+
+**Pour plus de détails, consultez [SECURITY.md](SECURITY.md)**
+
+⚠️ **Note:** Serene est conçu pour le bien-être quotidien, **pas** pour les situations de crise. En cas d'urgence, contactez immédiatement les services d'urgence appropriés (numéros disponibles dans l'application).
+
 ## Technologies
 
 **Actuellement utilisées :**

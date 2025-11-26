@@ -4,7 +4,7 @@ Main Streamlit application entry point
 """
 import streamlit as st
 from src.ui.disclaimer import show_disclaimer
-from src.ui.auth import show_auth, is_authenticated, show_user_menu
+from src.ui.auth import show_auth, is_authenticated, show_user_menu, handle_session_timeout
 from src.ui.checkin import show_checkin
 from src.ui.conversation import show_conversation
 from src.ui.dashboard import show_dashboard
@@ -206,127 +206,129 @@ def main():
         show_auth()
         return
 
+    # Étape 2.5: Vérifier le timeout de session (auto-logout après inactivité)
+    handle_session_timeout()
+
     # Étape 3: Utilisateur authentifié et disclaimer accepté - afficher l'application
-    else:
-        # Afficher le menu de navigation dans la sidebar - Gallery minimalist
-        with st.sidebar:
-            # Logo et titre minimaliste
-            st.markdown("""
-            <div style='text-align: left; padding: 0 0 2rem 0; margin-bottom: 2rem;
-                        border-bottom: 1px solid var(--line-light);'>
-                <h1 style='font-family: "Cormorant Garamond", serif; font-size: 1.75rem;
-                          color: var(--black); margin: 0; font-weight: 300; letter-spacing: 0.05em;
-                          text-transform: uppercase;'>Serene</h1>
-            </div>
-            """, unsafe_allow_html=True)
+    # Afficher le menu de navigation dans la sidebar - Gallery minimalist
+    with st.sidebar:
+        # Logo et titre minimaliste
+        st.markdown("""
+        <div style='text-align: left; padding: 0 0 2rem 0; margin-bottom: 2rem;
+                    border-bottom: 1px solid var(--line-light);'>
+            <h1 style='font-family: "Cormorant Garamond", serif; font-size: 1.75rem;
+                      color: var(--black); margin: 0; font-weight: 300; letter-spacing: 0.05em;
+                      text-transform: uppercase;'>Serene</h1>
+        </div>
+        """, unsafe_allow_html=True)
 
-            # Menu utilisateur (affiche nom + logout)
-            show_user_menu()
+        # Menu utilisateur (affiche nom + logout)
+        show_user_menu()
 
-            # Initialiser la page courante si nécessaire
-            if 'current_page' not in st.session_state:
-                st.session_state.current_page = "Home"
+        # Initialiser la page courante si nécessaire
+        if 'current_page' not in st.session_state:
+            st.session_state.current_page = "Home"
 
-            # Style CSS pour les boutons de navigation - Textes simples avec barre
-            st.markdown("""
-            <style>
-            /* Navigation - Textes simples avec barre fine, pas de flèches */
-            section[data-testid="stSidebar"] button[kind="secondary"] {
-                background-color: transparent !important;
-                border: none !important;
-                border-left: 1px solid transparent !important;
-                border-radius: 0 !important;
-                color: var(--gray-medium) !important;
-                font-family: 'Inter', sans-serif !important;
-                font-size: 0.875rem !important;
-                font-weight: 300 !important;
-                letter-spacing: 0.03em !important;
-                text-transform: uppercase !important;
-                padding: 0.75rem 0 0.75rem 1rem !important;
-                text-align: left !important;
-                box-shadow: none !important;
-            }
+        # Style CSS pour les boutons de navigation - Textes simples avec barre
+        st.markdown("""
+        <style>
+        /* Navigation - Textes simples avec barre fine, pas de flèches */
+        section[data-testid="stSidebar"] button[kind="secondary"] {
+            background-color: transparent !important;
+            border: none !important;
+            border-left: 1px solid transparent !important;
+            border-radius: 0 !important;
+            color: var(--gray-medium) !important;
+            font-family: 'Inter', sans-serif !important;
+            font-size: 0.875rem !important;
+            font-weight: 300 !important;
+            letter-spacing: 0.03em !important;
+            text-transform: uppercase !important;
+            padding: 0.75rem 0 0.75rem 1rem !important;
+            text-align: left !important;
+            box-shadow: none !important;
+        }
 
-            section[data-testid="stSidebar"] button[kind="secondary"]:hover {
-                background-color: transparent !important;
-                border-left-color: var(--gray-lighter) !important;
-                color: var(--charcoal) !important;
-            }
+        section[data-testid="stSidebar"] button[kind="secondary"]:hover {
+            background-color: transparent !important;
+            border-left-color: var(--gray-lighter) !important;
+            color: var(--charcoal) !important;
+        }
 
-            /* État sélectionné - Texte noir, pas blanc */
-            section[data-testid="stSidebar"] button[kind="primary"],
-            section[data-testid="stSidebar"] button[kind="primary"]:active,
-            section[data-testid="stSidebar"] button[kind="primary"]:focus {
-                background-color: transparent !important;
-                border: none !important;
-                border-left: 2px solid var(--black) !important;
-                border-radius: 0 !important;
-                color: var(--black) !important;
-                font-family: 'Inter', sans-serif !important;
-                font-size: 0.875rem !important;
-                font-weight: 400 !important;
-                letter-spacing: 0.03em !important;
-                text-transform: uppercase !important;
-                padding: 0.75rem 0 0.75rem 1rem !important;
-                text-align: left !important;
-                box-shadow: none !important;
-            }
+        /* État sélectionné - Texte noir, pas blanc */
+        section[data-testid="stSidebar"] button[kind="primary"],
+        section[data-testid="stSidebar"] button[kind="primary"]:active,
+        section[data-testid="stSidebar"] button[kind="primary"]:focus {
+            background-color: transparent !important;
+            border: none !important;
+            border-left: 2px solid var(--black) !important;
+            border-radius: 0 !important;
+            color: var(--black) !important;
+            font-family: 'Inter', sans-serif !important;
+            font-size: 0.875rem !important;
+            font-weight: 400 !important;
+            letter-spacing: 0.03em !important;
+            text-transform: uppercase !important;
+            padding: 0.75rem 0 0.75rem 1rem !important;
+            text-align: left !important;
+            box-shadow: none !important;
+        }
 
-            /* Forcer la couleur du texte intérieur à noir pour l'état sélectionné */
-            section[data-testid="stSidebar"] button[kind="primary"] p,
-            section[data-testid="stSidebar"] button[kind="primary"] div,
-            section[data-testid="stSidebar"] button[kind="primary"] span {
-                color: var(--black) !important;
-            }
+        /* Forcer la couleur du texte intérieur à noir pour l'état sélectionné */
+        section[data-testid="stSidebar"] button[kind="primary"] p,
+        section[data-testid="stSidebar"] button[kind="primary"] div,
+        section[data-testid="stSidebar"] button[kind="primary"] span {
+            color: var(--black) !important;
+        }
 
-            section[data-testid="stSidebar"] button[kind="primary"]:hover {
-                background-color: transparent !important;
-            }
+        section[data-testid="stSidebar"] button[kind="primary"]:hover {
+            background-color: transparent !important;
+        }
 
-            /* Pas de flèches pour la navigation */
-            section[data-testid="stSidebar"] button::after,
-            section[data-testid="stSidebar"] button::before {
-                content: none !important;
-                display: none !important;
-            }
-            </style>
-            """, unsafe_allow_html=True)
+        /* Pas de flèches pour la navigation */
+        section[data-testid="stSidebar"] button::after,
+        section[data-testid="stSidebar"] button::before {
+            content: none !important;
+            display: none !important;
+        }
+        </style>
+        """, unsafe_allow_html=True)
 
-            # Navigation avec boutons épurés
-            pages = {
-                "Home": "Home",
-                "Check-in": "Check-in",
-                "Conversation": "Conversation",
-                "Actions": "Mes Actions",
-                "Dashboard": "Dashboard",
-                "Profil": "Profil"
-            }
+        # Navigation avec boutons épurés
+        pages = {
+            "Home": "Home",
+            "Check-in": "Check-in",
+            "Conversation": "Conversation",
+            "Actions": "Mes Actions",
+            "Dashboard": "Dashboard",
+            "Profil": "Profil"
+        }
 
-            for key, label in pages.items():
-                if st.button(
-                    label,
-                    key=f"nav_{key}",
-                    type="primary" if st.session_state.current_page == key else "secondary",
-                    use_container_width=True
-                ):
-                    st.session_state.current_page = key
-                    st.rerun()
+        for key, label in pages.items():
+            if st.button(
+                label,
+                key=f"nav_{key}",
+                type="primary" if st.session_state.current_page == key else "secondary",
+                use_container_width=True
+            ):
+                st.session_state.current_page = key
+                st.rerun()
 
-            page = st.session_state.current_page
+        page = st.session_state.current_page
 
-        # Afficher la page appropriée
-        if page == "Home":
-            show_home()
-        elif page == "Check-in":
-            show_checkin()
-        elif page == "Conversation":
-            show_conversation()
-        elif page == "Actions":
-            show_action_items()
-        elif page == "Dashboard":
-            show_dashboard()
-        elif page == "Profil":
-            show_profile()
+    # Afficher la page appropriée
+    if page == "Home":
+        show_home()
+    elif page == "Check-in":
+        show_checkin()
+    elif page == "Conversation":
+        show_conversation()
+    elif page == "Actions":
+        show_action_items()
+    elif page == "Dashboard":
+        show_dashboard()
+    elif page == "Profil":
+        show_profile()
 
 
 if __name__ == "__main__":
