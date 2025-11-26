@@ -44,48 +44,14 @@ def show_auth():
     col1, col2, col3 = st.columns([1, 2, 1])
 
     with col2:
-        # Tabs pour Login / Signup avec style minimaliste
-        st.markdown("""
-        <style>
-        /* Style des tabs */
-        .stTabs [data-baseweb="tab-list"] {
-            gap: 0;
-            border-bottom: 1px solid var(--line-light);
-            scroll-margin-top: 2rem;
-            position: relative;
-            z-index: 10;
-        }
+        # Initialize auth_page in session state if not exists (login or signup)
+        if "auth_page" not in st.session_state:
+            st.session_state.auth_page = "login"
 
-        .stTabs [data-baseweb="tab"] {
-            font-family: "Inter", sans-serif;
-            font-size: 0.75rem;
-            font-weight: 400;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: var(--gray-medium);
-            background-color: transparent;
-            border: none;
-            border-bottom: 2px solid transparent;
-            padding: 1rem 2rem;
-        }
-
-        .stTabs [data-baseweb="tab"]:hover {
-            color: var(--charcoal);
-        }
-
-        .stTabs [aria-selected="true"] {
-            color: var(--black);
-            border-bottom-color: var(--black);
-        }
-        </style>
-        """, unsafe_allow_html=True)
-
-        tab1, tab2 = st.tabs(["Connexion", "Inscription"])
-
-        with tab1:
+        # Show appropriate page based on auth_page state
+        if st.session_state.auth_page == "login":
             show_login_form()
-
-        with tab2:
+        else:
             show_signup_form()
 
 
@@ -146,6 +112,29 @@ def show_login_form():
                 st.rerun()
             else:
                 st.error("Email ou mot de passe incorrect")
+
+    # Lien discret pour s'inscrire (en dehors du formulaire)
+    st.markdown("<div style='margin-top: 2rem; text-align: center;'></div>", unsafe_allow_html=True)
+
+    st.markdown("""
+    <div style='text-align: center;'>
+        <span style='color: var(--gray-medium); font-family: "Inter", sans-serif; font-size: 0.875rem;'>
+            Pas encore de compte ?
+        </span>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # Lien texte simple au lieu d'un gros bouton
+    col_left, col_center, col_right = st.columns([1, 1, 1])
+    with col_center:
+        if st.button(
+            "S'inscrire",
+            key="goto_signup",
+            use_container_width=True,
+            type="tertiary"
+        ):
+            st.session_state.auth_page = "signup"
+            st.rerun()
 
 
 def show_signup_form():
@@ -264,10 +253,37 @@ def show_signup_form():
             )
 
             st.success("✅ Compte créé avec succès !")
-            st.info("👉 Vous pouvez maintenant vous connecter dans l'onglet 'Connexion'")
+            st.info("🔄 Redirection vers la page de connexion...")
+
+            # Redirect to login page after successful signup
+            st.session_state.auth_page = "login"
+            st.rerun()
 
         except ValueError as e:
             st.error(f"❌ Erreur: {e}")
+
+    # Lien discret pour retourner à la connexion
+    st.markdown("<div style='margin-top: 2rem; text-align: center;'></div>", unsafe_allow_html=True)
+
+    st.markdown("""
+    <div style='text-align: center;'>
+        <span style='color: var(--gray-medium); font-family: "Inter", sans-serif; font-size: 0.875rem;'>
+            Déjà un compte ?
+        </span>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # Lien texte simple
+    col_left, col_center, col_right = st.columns([1, 1, 1])
+    with col_center:
+        if st.button(
+            "Se connecter",
+            key="goto_login",
+            use_container_width=True,
+            type="tertiary"
+        ):
+            st.session_state.auth_page = "login"
+            st.rerun()
 
 
 def show_user_menu():
@@ -297,7 +313,7 @@ def show_user_menu():
 
     if st.button("Se déconnecter", use_container_width=True, type="secondary"):
         # Clear session state
-        keys_to_clear = ["user_id", "user_email", "user_display_name", "authenticated", "current_page"]
+        keys_to_clear = ["user_id", "user_email", "user_display_name", "authenticated", "current_page", "auth_page"]
         for key in keys_to_clear:
             if key in st.session_state:
                 del st.session_state[key]
@@ -463,7 +479,7 @@ def handle_session_timeout():
         )
 
         # Clear session state
-        keys_to_clear = ["user_id", "user_email", "user_display_name", "authenticated", "current_page", "last_activity_time"]
+        keys_to_clear = ["user_id", "user_email", "user_display_name", "authenticated", "current_page", "last_activity_time", "auth_page"]
         for key in keys_to_clear:
             if key in st.session_state:
                 del st.session_state[key]
@@ -503,7 +519,8 @@ def logout_user():
         "user_display_name",
         "authenticated",
         "current_page",
-        "last_activity_time"
+        "last_activity_time",
+        "auth_page"
     ]
     for key in keys_to_clear:
         if key in st.session_state:
