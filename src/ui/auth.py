@@ -152,92 +152,121 @@ def show_signup_form():
 
     st.markdown("<div style='margin-top: 2rem;'></div>", unsafe_allow_html=True)
 
-    with st.form("signup_form", clear_on_submit=False):
-        st.markdown("""
-        <h3 style='font-family: "Cormorant Garamond", serif; font-size: 1.5rem;
-                   font-weight: 300; color: var(--black); margin-bottom: 2rem;
-                   letter-spacing: 0.02em;'>
-            Créer un compte
-        </h3>
-        """, unsafe_allow_html=True)
+    st.markdown("""
+    <h3 style='font-family: "Cormorant Garamond", serif; font-size: 1.5rem;
+               font-weight: 300; color: var(--black); margin-bottom: 2rem;
+               letter-spacing: 0.02em;'>
+        Créer un compte
+    </h3>
+    """, unsafe_allow_html=True)
 
-        email = st.text_input(
-            "Email",
-            placeholder="votre@email.com",
-            key="signup_email"
-        )
+    # Email and display name
+    email = st.text_input(
+        "Email",
+        placeholder="votre@email.com",
+        key="signup_email_input"
+    )
 
-        display_name = st.text_input(
-            "Nom d'affichage (optionnel)",
-            placeholder="Comment souhaitez-vous être appelé ?",
-            key="signup_display_name"
-        )
+    display_name = st.text_input(
+        "Nom d'affichage (optionnel)",
+        placeholder="Comment souhaitez-vous être appelé ?",
+        key="signup_display_name_input"
+    )
 
-        password = st.text_input(
-            "Mot de passe",
-            type="password",
-            placeholder="••••••••",
-            key="signup_password"
-        )
+    # Password with real-time validation
+    password = st.text_input(
+        "Mot de passe",
+        type="password",
+        placeholder="••••••••",
+        key="signup_password_input"
+    )
 
-        password_confirm = st.text_input(
-            "Confirmer le mot de passe",
-            type="password",
-            placeholder="••••••••",
-            key="signup_password_confirm"
-        )
+    password_confirm = st.text_input(
+        "Confirmer le mot de passe",
+        type="password",
+        placeholder="••••••••",
+        key="signup_password_confirm_input"
+    )
 
-        # Display password requirements
-        with st.expander("📋 Exigences du mot de passe", expanded=False):
-            requirements = get_password_requirements()
-            for req in requirements:
-                st.markdown(f"- {req}")
+    # Display password requirements with real-time checkmarks
+    st.markdown("""
+    <div style='background-color: #f8f9fa; padding: 1rem; border-left: 3px solid #6CB4A4; margin: 1rem 0;'>
+        <strong style='font-size: 0.875rem;'>📋 Exigences du mot de passe</strong>
+    </div>
+    """, unsafe_allow_html=True)
 
-        st.markdown("<div style='margin-top: 2rem;'></div>", unsafe_allow_html=True)
+    # Check requirements in real-time
+    if password:
+        feedback = get_password_feedback(password)
 
-        submit = st.form_submit_button(
-            "Créer mon compte",
-            use_container_width=True,
-            type="primary"
-        )
+        # Display each requirement with checkmark or cross
+        requirements_status = {
+            "Au moins 8 caractères": len(password) >= 8,
+            "Au moins une majuscule (A-Z)": any(c.isupper() for c in password),
+            "Au moins une minuscule (a-z)": any(c.islower() for c in password),
+            "Au moins un chiffre (0-9)": any(c.isdigit() for c in password),
+            f"Au moins un caractère spécial": any(c in "@#$%^&+=!?*()-_[]{}|;:,.<>/~`" for c in password),
+            "Ne doit pas être un mot de passe courant": not check_common_passwords(password)
+        }
 
-        if submit:
-            # Basic validation
-            if not email or not password:
-                st.error("📧 Email et mot de passe sont requis")
-                return
+        for requirement, is_met in requirements_status.items():
+            if is_met:
+                st.markdown(f"✅ {requirement}")
+            else:
+                st.markdown(f"❌ {requirement}")
+    else:
+        # Show requirements without checkmarks when password is empty
+        requirements = get_password_requirements()
+        for req in requirements:
+            st.markdown(f"⚪ {req}")
 
-            if password != password_confirm:
-                st.error("🔒 Les mots de passe ne correspondent pas")
-                return
+    st.markdown("<div style='margin-top: 2rem;'></div>", unsafe_allow_html=True)
 
-            # Strong password validation
-            is_valid, message = validate_password_strength(password)
-            if not is_valid:
-                st.error(f"❌ **Mot de passe invalide**: {message}")
+    # Submit button
+    submit = st.button(
+        "Créer mon compte",
+        use_container_width=True,
+        type="primary",
+        key="signup_submit_button"
+    )
 
-                # Show detailed feedback
-                feedback = get_password_feedback(password)
-                if feedback["messages"]:
-                    st.warning("**Améliorations nécessaires:**")
-                    for msg in feedback["messages"]:
-                        st.write(f"  • {msg}")
-                return
+    if submit:
+        # Basic validation
+        if not email or not password:
+            st.error("📧 Email et mot de passe sont requis")
+            return
 
-            # Create user
-            db = get_database()
-            try:
-                user_id = db.create_user(
-                    email=email,
-                    password=password,
-                    display_name=display_name if display_name else None
-                )
+        if password != password_confirm:
+            st.error("🔒 Les mots de passe ne correspondent pas")
+            return
 
-                st.success("✅ Compte créé avec succès !")
-                st.info("👉 Vous pouvez maintenant vous connecter dans l'onglet 'Connexion'")
+        # Strong password validation
+        is_valid, message = validate_password_strength(password)
+        if not is_valid:
+            st.error(f"❌ **Mot de passe invalide**: {message}")
 
-            except ValueError as e:
-                st.error(f"❌ Erreur: {e}")
+            # Show detailed feedback
+            feedback = get_password_feedback(password)
+            if feedback["messages"]:
+                st.warning("**Améliorations nécessaires:**")
+                for msg in feedback["messages"]:
+                    st.write(f"  • {msg}")
+            return
+
+        # Create user
+        db = get_database()
+        try:
+            user_id = db.create_user(
+                email=email,
+                password=password,
+                display_name=display_name if display_name else None
+            )
+
+            st.success("✅ Compte créé avec succès !")
+            st.info("👉 Vous pouvez maintenant vous connecter dans l'onglet 'Connexion'")
+
+        except ValueError as e:
+            st.error(f"❌ Erreur: {e}")
 
 
 def show_user_menu():
