@@ -1,6 +1,8 @@
 """Interface d'authentification (Login/Signup) - Gallery Minimalist Style"""
 
 import streamlit as st
+import os
+from datetime import datetime, timedelta
 from src.database.db_manager import DatabaseManager
 from src.utils.password_validator import (
     validate_password_strength,
@@ -135,6 +137,9 @@ def show_login_form():
                 st.session_state.user_email = user["email"]
                 st.session_state.user_display_name = user.get("display_name") or email.split("@")[0]
                 st.session_state.authenticated = True
+
+                # Initialize session timeout tracking
+                init_session_timeout()
 
                 st.success(f"Bienvenue, {st.session_state.user_display_name} !")
                 st.rerun()
@@ -287,3 +292,189 @@ def get_current_user_id() -> int:
         User ID si authentifié, None sinon.
     """
     return st.session_state.get("user_id")
+
+
+# ============================================================================
+# SESSION TIMEOUT MANAGEMENT
+# ============================================================================
+
+def get_timeout_config():
+    """
+    Get session timeout configuration from environment variables.
+
+    Returns:
+        dict: Configuration with timeout_minutes and warning_minutes
+    """
+    try:
+        timeout_minutes = int(os.getenv("SESSION_TIMEOUT_MINUTES", "30"))
+    except (ValueError, TypeError):
+        timeout_minutes = 30  # Default to 30 minutes
+
+    try:
+        warning_minutes = int(os.getenv("SESSION_WARNING_MINUTES", "2"))
+    except (ValueError, TypeError):
+        warning_minutes = 2  # Default to 2 minutes
+
+    return {
+        "timeout_minutes": timeout_minutes,
+        "warning_minutes": warning_minutes
+    }
+
+
+def init_session_timeout():
+    """
+    Initialize session timeout tracking.
+
+    Sets the initial last_activity_time if not already set.
+    Should be called on login.
+    """
+    if "last_activity_time" not in st.session_state:
+        st.session_state.last_activity_time = datetime.now()
+
+
+def update_activity_timestamp():
+    """
+    Update the last activity timestamp.
+
+    Should be called on every user interaction.
+    """
+    st.session_state.last_activity_time = datetime.now()
+
+
+def get_idle_minutes() -> float:
+    """
+    Calculate minutes since last activity.
+
+    Returns:
+        float: Minutes since last activity, or 0 if no activity recorded
+    """
+    if "last_activity_time" not in st.session_state:
+        return 0
+
+    now = datetime.now()
+    last_activity = st.session_state.last_activity_time
+    idle_time = now - last_activity
+    return idle_time.total_seconds() / 60
+
+
+def is_session_expired(timeout_minutes: int = None) -> bool:
+    """
+    Check if session has expired due to inactivity.
+
+    Args:
+        timeout_minutes: Custom timeout in minutes (uses config if None)
+
+    Returns:
+        bool: True if session is expired, False otherwise
+    """
+    if "last_activity_time" not in st.session_state:
+        return False  # Fresh session, not expired
+
+    if timeout_minutes is None:
+        config = get_timeout_config()
+        timeout_minutes = config["timeout_minutes"]
+
+    idle_minutes = get_idle_minutes()
+    return idle_minutes >= timeout_minutes
+
+
+def should_show_warning(timeout_minutes: int = None, warning_minutes: int = None) -> bool:
+    """
+    Check if warning should be shown to user.
+
+    Shows warning when user is close to session expiration.
+
+    Args:
+        timeout_minutes: Custom timeout in minutes (uses config if None)
+        warning_minutes: Minutes before expiration to show warning (uses config if None)
+
+    Returns:
+        bool: True if warning should be shown
+    """
+    if "last_activity_time" not in st.session_state:
+        return False
+
+    config = get_timeout_config()
+    if timeout_minutes is None:
+        timeout_minutes = config["timeout_minutes"]
+    if warning_minutes is None:
+        warning_minutes = config["warning_minutes"]
+
+    idle_minutes = get_idle_minutes()
+    warning_threshold = timeout_minutes - warning_minutes
+
+    return idle_minutes >= warning_threshold and idle_minutes < timeout_minutes
+
+
+def handle_session_timeout():
+    """
+    Handle session timeout logic.
+
+    Checks if session is expired and logs out user if necessary.
+    Shows warning if user is approaching timeout.
+    Provides "Extend session" button in warning.
+
+    Should be called at the beginning of each page render.
+    """
+    # Skip if user is not authenticated
+    if not st.session_state.get("authenticated", False):
+        return
+
+    config = get_timeout_config()
+    timeout_minutes = config["timeout_minutes"]
+    warning_minutes = config["warning_minutes"]
+
+    # Check if session has expired
+    if is_session_expired(timeout_minutes):
+        # Log out user
+        st.warning(
+            f"⏱️ Votre session a expiré après {timeout_minutes} minutes d'inactivité. "
+            "Vous avez été déconnecté pour des raisons de sécurité."
+        )
+
+        # Clear session state
+        keys_to_clear = ["user_id", "user_email", "user_display_name", "authenticated", "current_page", "last_activity_time"]
+        for key in keys_to_clear:
+            if key in st.session_state:
+                del st.session_state[key]
+
+        st.rerun()
+        return
+
+    # Show warning if approaching timeout
+    if should_show_warning(timeout_minutes, warning_minutes):
+        idle_minutes = get_idle_minutes()
+        remaining_minutes = timeout_minutes - idle_minutes
+
+        col1, col2 = st.columns([3, 1])
+
+        with col1:
+            st.warning(
+                f"⚠️ Votre session va expirer dans {int(remaining_minutes)} minute(s) "
+                f"en raison de l'inactivité."
+            )
+
+        with col2:
+            if st.button("🔄 Prolonger", type="primary", use_container_width=True):
+                update_activity_timestamp()
+                st.success("✅ Session prolongée !")
+                st.rerun()
+
+
+def logout_user():
+    """
+    Log out the current user and clear session state.
+
+    Clears all authentication-related session data.
+    """
+    keys_to_clear = [
+        "user_id",
+        "user_email",
+        "user_display_name",
+        "authenticated",
+        "current_page",
+        "last_activity_time"
+    ]
+    for key in keys_to_clear:
+        if key in st.session_state:
+            del st.session_state[key]

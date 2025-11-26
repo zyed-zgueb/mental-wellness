@@ -4,7 +4,7 @@ Main Streamlit application entry point
 """
 import streamlit as st
 from src.ui.disclaimer import show_disclaimer
-from src.ui.auth import show_auth, is_authenticated, show_user_menu
+from src.ui.auth import show_auth, is_authenticated, show_user_menu, handle_session_timeout
 from src.ui.checkin import show_checkin
 from src.ui.conversation import show_conversation
 from src.ui.dashboard import show_dashboard
@@ -205,6 +205,9 @@ def main():
     if not is_authenticated():
         show_auth()
         return
+
+    # Étape 2.5: Vérifier le timeout de session (auto-logout après inactivité)
+    handle_session_timeout()
 
     # Étape 3: Utilisateur authentifié et disclaimer accepté - afficher l'application
     else:
