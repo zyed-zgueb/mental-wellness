@@ -174,7 +174,7 @@ def show_signup_form():
         key="signup_display_name_input"
     )
 
-    # Password with validation feedback
+    # Password with real-time validation
     password = st.text_input(
         "Mot de passe",
         type="password",
@@ -182,37 +182,44 @@ def show_signup_form():
         key="signup_password_input"
     )
 
-    # Display password requirements with checkmarks
-    st.markdown("""
-    <div style='background-color: #f8f9fa; padding: 1rem; border-left: 3px solid #6CB4A4; margin: 1rem 0;'>
-        <strong style='font-size: 0.875rem;'>📋 Exigences du mot de passe</strong>
-    </div>
-    """, unsafe_allow_html=True)
-
-    # Check requirements and display with visual feedback
-    if password:
-        requirements_status = [
-            ("Au moins 8 caractères", len(password) >= 8),
-            ("Au moins une majuscule (A-Z)", any(c.isupper() for c in password)),
-            ("Au moins une minuscule (a-z)", any(c.islower() for c in password)),
-            ("Au moins un chiffre (0-9)", any(c.isdigit() for c in password)),
-            ("Au moins un caractère spécial", any(c in "@#$%^&+=!?*()-_[]{}|;:,.<>/~`" for c in password)),
-            ("Ne doit pas être un mot de passe courant", not check_common_passwords(password))
-        ]
-        for req_text, is_met in requirements_status:
-            icon = '✅' if is_met else '❌'
-            st.markdown(f"{icon} {req_text}")
-    else:
-        requirements = get_password_requirements()
-        for req in requirements:
-            st.markdown(f"⚪ {req}")
-
     password_confirm = st.text_input(
         "Confirmer le mot de passe",
         type="password",
         placeholder="••••••••",
         key="signup_password_confirm_input"
     )
+
+    # Display password requirements with real-time checkmarks
+    st.markdown("""
+    <div style='background-color: #f8f9fa; padding: 1rem; border-left: 3px solid #6CB4A4; margin: 1rem 0;'>
+        <strong style='font-size: 0.875rem;'>📋 Exigences du mot de passe</strong>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # Check requirements in real-time
+    if password:
+        feedback = get_password_feedback(password)
+
+        # Display each requirement with checkmark or cross
+        requirements_status = {
+            "Au moins 8 caractères": len(password) >= 8,
+            "Au moins une majuscule (A-Z)": any(c.isupper() for c in password),
+            "Au moins une minuscule (a-z)": any(c.islower() for c in password),
+            "Au moins un chiffre (0-9)": any(c.isdigit() for c in password),
+            f"Au moins un caractère spécial": any(c in "@#$%^&+=!?*()-_[]{}|;:,.<>/~`" for c in password),
+            "Ne doit pas être un mot de passe courant": not check_common_passwords(password)
+        }
+
+        for requirement, is_met in requirements_status.items():
+            if is_met:
+                st.markdown(f"✅ {requirement}")
+            else:
+                st.markdown(f"❌ {requirement}")
+    else:
+        # Show requirements without checkmarks when password is empty
+        requirements = get_password_requirements()
+        for req in requirements:
+            st.markdown(f"⚪ {req}")
 
     st.markdown("<div style='margin-top: 2rem;'></div>", unsafe_allow_html=True)
 
