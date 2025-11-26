@@ -7,7 +7,8 @@ from src.database.db_manager import DatabaseManager
 from src.utils.password_validator import (
     validate_password_strength,
     get_password_requirements,
-    get_password_feedback
+    get_password_feedback,
+    check_common_passwords
 )
 
 
