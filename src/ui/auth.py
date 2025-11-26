@@ -26,77 +26,6 @@ def show_auth():
     Stocke: user_id, email, display_name dans session_state après authentification réussie.
     """
 
-    # Prevent auto-scroll to first input field on page load
-    st.markdown("""
-    <script>
-    (function() {
-        // Keep track of initial load
-        let isInitialLoad = true;
-        let scrollLocked = true;
-
-        // Function to prevent scroll
-        function preventScroll() {
-            if (scrollLocked) {
-                window.scrollTo(0, 0);
-            }
-        }
-
-        // Prevent scroll on initial load
-        preventScroll();
-
-        // Monitor for scroll attempts during initial render
-        let scrollAttempts = 0;
-        const maxScrollAttempts = 20;
-        const scrollCheckInterval = setInterval(function() {
-            preventScroll();
-            scrollAttempts++;
-
-            if (scrollAttempts >= maxScrollAttempts) {
-                scrollLocked = false;
-                clearInterval(scrollCheckInterval);
-            }
-        }, 50);
-
-        // Use MutationObserver to detect Streamlit re-renders
-        const observer = new MutationObserver(function(mutations) {
-            if (isInitialLoad) {
-                // On first mutations, ensure we're at top
-                preventScroll();
-                setTimeout(preventScroll, 50);
-                setTimeout(preventScroll, 100);
-                isInitialLoad = false;
-            }
-        });
-
-        // Start observing when DOM is ready
-        if (document.body) {
-            observer.observe(document.body, {
-                childList: true,
-                subtree: true
-            });
-        } else {
-            document.addEventListener('DOMContentLoaded', function() {
-                observer.observe(document.body, {
-                    childList: true,
-                    subtree: true
-                });
-            });
-        }
-
-        // Additional safeguards
-        window.addEventListener('load', preventScroll);
-        document.addEventListener('DOMContentLoaded', preventScroll);
-
-        // Prevent focus-induced scrolling
-        document.addEventListener('focus', function(e) {
-            if (scrollLocked && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) {
-                setTimeout(preventScroll, 0);
-            }
-        }, true);
-    })();
-    </script>
-    """, unsafe_allow_html=True)
-
     # Header minimaliste
     st.markdown("""
     <div style='text-align: center; padding: 1.5rem 2rem 1rem 2rem; animation: fadeInDown 0.4s ease-out;'>
@@ -147,11 +76,6 @@ def show_auth():
         .stTabs [aria-selected="true"] {
             color: var(--black);
             border-bottom-color: var(--black);
-        }
-
-        /* Prevent input auto-focus from scrolling past tabs */
-        input[type="text"], input[type="email"], input[type="password"] {
-            scroll-margin-top: 200px;
         }
         </style>
         """, unsafe_allow_html=True)
