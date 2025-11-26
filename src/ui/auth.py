@@ -29,21 +29,71 @@ def show_auth():
     # Prevent auto-scroll to first input field on page load
     st.markdown("""
     <script>
-    // Prevent automatic scroll to input fields when page loads
-    document.addEventListener('DOMContentLoaded', function() {
-        // Save current scroll position
-        const scrollY = window.scrollY;
+    (function() {
+        // Keep track of initial load
+        let isInitialLoad = true;
+        let scrollLocked = true;
 
-        // Restore scroll position after a brief delay (after Streamlit renders)
-        setTimeout(function() {
-            window.scrollTo(0, 0);
-        }, 100);
-    });
+        // Function to prevent scroll
+        function preventScroll() {
+            if (scrollLocked) {
+                window.scrollTo(0, 0);
+            }
+        }
 
-    // Additional safeguard: prevent auto-focus scroll
-    window.addEventListener('load', function() {
-        window.scrollTo(0, 0);
-    });
+        // Prevent scroll on initial load
+        preventScroll();
+
+        // Monitor for scroll attempts during initial render
+        let scrollAttempts = 0;
+        const maxScrollAttempts = 20;
+        const scrollCheckInterval = setInterval(function() {
+            preventScroll();
+            scrollAttempts++;
+
+            if (scrollAttempts >= maxScrollAttempts) {
+                scrollLocked = false;
+                clearInterval(scrollCheckInterval);
+            }
+        }, 50);
+
+        // Use MutationObserver to detect Streamlit re-renders
+        const observer = new MutationObserver(function(mutations) {
+            if (isInitialLoad) {
+                // On first mutations, ensure we're at top
+                preventScroll();
+                setTimeout(preventScroll, 50);
+                setTimeout(preventScroll, 100);
+                isInitialLoad = false;
+            }
+        });
+
+        // Start observing when DOM is ready
+        if (document.body) {
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+        } else {
+            document.addEventListener('DOMContentLoaded', function() {
+                observer.observe(document.body, {
+                    childList: true,
+                    subtree: true
+                });
+            });
+        }
+
+        // Additional safeguards
+        window.addEventListener('load', preventScroll);
+        document.addEventListener('DOMContentLoaded', preventScroll);
+
+        // Prevent focus-induced scrolling
+        document.addEventListener('focus', function(e) {
+            if (scrollLocked && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) {
+                setTimeout(preventScroll, 0);
+            }
+        }, true);
+    })();
     </script>
     """, unsafe_allow_html=True)
 
