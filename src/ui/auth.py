@@ -38,16 +38,67 @@ def show_auth():
     .main .block-container {
         padding: 0 !important;
         max-width: 100% !important;
+        width: 100% !important;
+    }
+
+    /* Force columns container to be flex */
+    div[data-testid="stHorizontalBlock"] {
+        display: flex !important;
+        flex-direction: row !important;
+        width: 100vw !important;
+        min-height: 100vh !important;
+        gap: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* Column styling for full height and side by side */
+    div[data-testid="column"] {
+        flex: 1 !important;
+        min-height: 100vh !important;
+        padding: 3rem 2rem !important;
+        width: 50vw !important;
+        position: relative !important;
+    }
+
+    /* Left column - Gray background */
+    div[data-testid="column"]:first-of-type {
+        background-color: #F5F5F5 !important;
+    }
+
+    /* Right column - Gradient background */
+    div[data-testid="column"]:last-of-type {
+        background: linear-gradient(135deg, #7B9FD3 0%, #9FC4E7 50%, #A8E6CF 100%) !important;
+    }
+
+    /* Ensure all child elements don't override background except form card */
+    div[data-testid="column"] > div {
+        background: transparent !important;
+    }
+
+    div[data-testid="column"] div[data-testid="stVerticalBlock"],
+    div[data-testid="column"] div[data-testid="element-container"] {
+        background: transparent !important;
     }
 
     /* Custom input styling */
+    .stTextInput {
+        background: transparent !important;
+    }
+
     .stTextInput input {
-        padding-left: 48px !important;
+        padding-left: 1rem !important;
         border-radius: 12px !important;
         border: 1px solid #E0E0E0 !important;
         padding-top: 0.75rem !important;
         padding-bottom: 0.75rem !important;
         font-size: 0.9375rem !important;
+        background: white !important;
+    }
+
+    /* Form background transparent */
+    .stForm {
+        background: transparent !important;
     }
 
     .stTextInput input:focus {
@@ -76,13 +127,8 @@ def show_auth():
         background: #5A9E8E !important;
     }
 
-    /* Hide navigation buttons */
-    button[key="goto_signup"],
-    button[key="goto_login"],
-    button[key="goto_signup_from_login"],
-    button[key="goto_login_from_signup"],
-    button[key="goto_forgot_password"],
-    button[key="goto_login_from_forgot"] {
+    /* Hide ALL secondary buttons (navigation buttons) */
+    button[data-testid="baseButton-secondary"] {
         display: none !important;
     }
 
@@ -91,15 +137,18 @@ def show_auth():
         display: none !important;
     }
 
-    /* Column styling for full height */
-    div[data-testid="column"]:first-child {
-        background-color: #F5F5F5;
-        padding: 3rem 2rem !important;
-    }
-
-    div[data-testid="column"]:last-child {
-        background: linear-gradient(135deg, #7B9FD3 0%, #9FC4E7 50%, #A8E6CF 100%);
-        padding: 4rem 2rem !important;
+    /* Responsive: stack on mobile */
+    @media (max-width: 768px) {
+        div[data-testid="stHorizontalBlock"] {
+            flex-direction: column !important;
+        }
+        div[data-testid="column"] {
+            width: 100% !important;
+            min-height: auto !important;
+        }
+        div[data-testid="column"]:nth-child(2) {
+            display: none !important;
+        }
     }
     </style>
     """, unsafe_allow_html=True)
@@ -124,15 +173,18 @@ def show_login_form():
     left_col, right_col = st.columns([1, 1])
 
     with left_col:
-        # Form card
+        # Center the form vertically
+        st.markdown('<div style="display: flex; align-items: center; min-height: 80vh;">', unsafe_allow_html=True)
+        st.markdown('<div style="width: 100%; max-width: 440px; margin: 0 auto;">', unsafe_allow_html=True)
+
+        # Form card with title
         st.markdown("""
         <div style="background: white; border-radius: 24px; padding: 3rem 2.5rem;
-                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); max-width: 440px; margin: 0 auto;">
+                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
             <h1 style='font-family: "Inter", sans-serif; font-size: 1.75rem; font-weight: 600;
                        color: #1A1A1A; margin-bottom: 2rem; margin-top: 0; line-height: 1.3;'>
                 Welcome Back to<br/>SereneMind.
             </h1>
-        </div>
         """, unsafe_allow_html=True)
 
         with st.form("login_form", clear_on_submit=False):
@@ -176,14 +228,28 @@ def show_login_form():
                 else:
                     st.error("Incorrect email or password")
 
-        # Forgot Password link
+        # Forgot Password link (styled as text link)
+        st.markdown("""
+        <div style='text-align: center; margin-top: 1.5rem; margin-bottom: 1rem;'>
+            <a href='#' style='color: #6CB4A4; font-size: 0.875rem; text-decoration: none; font-weight: 500;'
+               onclick='return false;'>Forgot Password?</a>
+        </div>
+        """, unsafe_allow_html=True)
+
+        # Hidden button for navigation
         if st.button("Forgot Password?", key="goto_forgot_password", type="secondary"):
             st.session_state.auth_page = "forgot_password"
             st.rerun()
 
-        st.markdown("<div style='text-align: center; margin: 1.5rem 0; color: #4A4A4A;'>Don't have an account?</div>", unsafe_allow_html=True)
+        # Sign up section
+        st.markdown("""
+        <div style='text-align: center; margin: 1.5rem 0; color: #4A4A4A; font-size: 0.9375rem;'>
+            Don't have an account? <a href='#' style='color: #6CB4A4; text-decoration: none; font-weight: 500;'
+            onclick='return false;'>Sign Up</a>
+        </div>
+        """, unsafe_allow_html=True)
 
-        # Sign up link
+        # Hidden button for Sign Up navigation
         if st.button("Sign Up", key="goto_signup_from_login", type="secondary"):
             st.session_state.auth_page = "signup"
             st.rerun()
@@ -192,9 +258,11 @@ def show_login_form():
         col1, col2 = st.columns(2)
         with col1:
             st.markdown("""
-            <div style='padding: 0.75rem; border: 1px solid #E0E0E0; border-radius: 12px;
-                        background: white; text-align: center; cursor: pointer; margin-top: 1rem;'>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <div style='padding: 0.875rem; border: 1px solid #E0E0E0; border-radius: 12px;
+                        background: white; text-align: center; cursor: pointer; margin-top: 0.5rem;
+                        transition: all 0.2s;' onmouseover='this.style.borderColor="#B0B0B0"'
+                        onmouseout='this.style.borderColor="#E0E0E0"'>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style="vertical-align: middle;">
                     <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
                     <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
                     <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
@@ -204,13 +272,18 @@ def show_login_form():
             """, unsafe_allow_html=True)
         with col2:
             st.markdown("""
-            <div style='padding: 0.75rem; border: 1px solid #E0E0E0; border-radius: 12px;
-                        background: white; text-align: center; cursor: pointer; margin-top: 1rem;'>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <div style='padding: 0.875rem; border: 1px solid #E0E0E0; border-radius: 12px;
+                        background: white; text-align: center; cursor: pointer; margin-top: 0.5rem;
+                        transition: all 0.2s;' onmouseover='this.style.borderColor="#B0B0B0"'
+                        onmouseout='this.style.borderColor="#E0E0E0"'>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style="vertical-align: middle;">
                     <path d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.08-.48-3.24 0-1.44.62-2.2.44-3.06-.4C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z" fill="#000000"/>
                 </svg>
             </div>
             """, unsafe_allow_html=True)
+
+        # Close the card and container divs
+        st.markdown("</div></div></div>", unsafe_allow_html=True)
 
     with right_col:
         # Right column - Illustration
