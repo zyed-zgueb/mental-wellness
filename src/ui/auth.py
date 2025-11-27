@@ -226,7 +226,11 @@ def show_auth():
 
     /* Hide navigation buttons */
     button[key="goto_signup"],
-    button[key="goto_login"] {
+    button[key="goto_login"],
+    button[key="goto_signup_from_login"],
+    button[key="goto_login_from_signup"],
+    button[key="goto_forgot_password"],
+    button[key="goto_login_from_forgot"] {
         display: none !important;
     }
 
@@ -237,21 +241,23 @@ def show_auth():
     </style>
     """, unsafe_allow_html=True)
 
-    # Initialize auth_page in session state if not exists (login or signup)
+    # Initialize auth_page in session state if not exists (login or signup or forgot_password)
     if "auth_page" not in st.session_state:
         st.session_state.auth_page = "login"
 
     # Show appropriate page based on auth_page state
     if st.session_state.auth_page == "login":
         show_login_form()
-    else:
+    elif st.session_state.auth_page == "signup":
         show_signup_form()
+    elif st.session_state.auth_page == "forgot_password":
+        show_forgot_password_form()
 
 
 def show_login_form():
     """Afficher le formulaire de connexion."""
 
-    # Add icons positioning CSS specific to login form
+    # Add icons positioning CSS and JavaScript for password toggle
     st.markdown("""
     <style>
     /* Position icons before email input */
@@ -277,9 +283,8 @@ def show_login_form():
         z-index: 10;
     }
 
-    /* Show button for password */
-    div[data-testid="stForm"] div[data-testid="stVerticalBlock"] > div:nth-child(2) .stTextInput::after {
-        content: 'Show';
+    /* Show/Hide button for password */
+    .password-toggle-btn {
         position: absolute;
         right: 16px;
         top: 50%;
@@ -289,8 +294,57 @@ def show_login_form():
         font-weight: 500;
         cursor: pointer;
         z-index: 10;
+        background: none;
+        border: none;
+        padding: 0;
+        font-family: 'Inter', sans-serif;
+    }
+
+    .password-toggle-btn:hover {
+        color: #5A9E8E;
     }
     </style>
+
+    <script>
+    function togglePasswordVisibility() {
+        // Find the password input
+        const passwordInputs = document.querySelectorAll('input[type="password"], input[data-password-toggle]');
+
+        passwordInputs.forEach(input => {
+            if (input.type === 'password') {
+                input.type = 'text';
+                input.setAttribute('data-password-toggle', 'text');
+                // Update button text
+                const btn = input.parentElement.querySelector('.password-toggle-btn');
+                if (btn) btn.textContent = 'Hide';
+            } else {
+                input.type = 'password';
+                input.setAttribute('data-password-toggle', 'password');
+                // Update button text
+                const btn = input.parentElement.querySelector('.password-toggle-btn');
+                if (btn) btn.textContent = 'Show';
+            }
+        });
+    }
+
+    // Add toggle button after page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() {
+            const passwordInputContainers = document.querySelectorAll('input[type="password"]');
+            passwordInputContainers.forEach(container => {
+                const parent = container.parentElement;
+                if (parent && !parent.querySelector('.password-toggle-btn')) {
+                    const btn = document.createElement('button');
+                    btn.className = 'password-toggle-btn';
+                    btn.textContent = 'Show';
+                    btn.onclick = togglePasswordVisibility;
+                    parent.style.position = 'relative';
+                    parent.appendChild(btn);
+                }
+            });
+        }, 100);
+    });
+    </script>
     """, unsafe_allow_html=True)
 
     # Create two-column layout
@@ -350,22 +404,56 @@ def show_login_form():
                 else:
                     st.error("Incorrect email or password")
 
-        # Forgot Password link
-        st.markdown("""
-        <div style='text-align: center; margin-top: 1rem; margin-bottom: 1.5rem;'>
-            <a href='#' style='color: #6CB4A4; font-size: 0.875rem; text-decoration: none; font-weight: 500;'>
-                Forgot Password?
-            </a>
-        </div>
-        """, unsafe_allow_html=True)
+        # Forgot Password link with functional click handler
+        col_forgot = st.columns([1])[0]
+        with col_forgot:
+            st.markdown("""
+            <div style='text-align: center; margin-top: 1rem; margin-bottom: 1.5rem;'>
+                <span id='forgot-password-link' style='color: #6CB4A4; font-size: 0.875rem; font-weight: 500; cursor: pointer;'>
+                    Forgot Password?
+                </span>
+            </div>
+            <script>
+            document.getElementById('forgot-password-link').addEventListener('click', function() {
+                const buttons = window.parent.document.querySelectorAll('button');
+                buttons.forEach(btn => {
+                    if (btn.innerText.includes('Go to forgot password')) {
+                        btn.click();
+                    }
+                });
+            });
+            </script>
+            """, unsafe_allow_html=True)
 
-        # Sign up link
-        st.markdown("""
-        <div style='text-align: center; margin-bottom: 1.5rem; font-size: 0.9375rem; color: #4A4A4A;'>
-            Don't have an account? <span style='color: #6CB4A4; font-weight: 500; cursor: pointer;'
-            onclick='window.location.reload()'>Sign Up</span>
-        </div>
-        """, unsafe_allow_html=True)
+            # Hidden button for forgot password navigation
+            if st.button("Go to forgot password", key="goto_forgot_password", type="secondary"):
+                st.session_state.auth_page = "forgot_password"
+                st.rerun()
+
+        # Sign up link with functional click handler
+        col_signup = st.columns([1])[0]
+        with col_signup:
+            st.markdown("""
+            <div style='text-align: center; margin-bottom: 1.5rem; font-size: 0.9375rem; color: #4A4A4A;'>
+                Don't have an account? <span id='signup-link-text' style='color: #6CB4A4; font-weight: 500; cursor: pointer;'>Sign Up</span>
+            </div>
+            <script>
+            document.getElementById('signup-link-text').addEventListener('click', function() {
+                // Find and click the hidden Streamlit button
+                const buttons = window.parent.document.querySelectorAll('button');
+                buttons.forEach(btn => {
+                    if (btn.innerText.includes('Go to signup page')) {
+                        btn.click();
+                    }
+                });
+            });
+            </script>
+            """, unsafe_allow_html=True)
+
+            # Hidden button that will be triggered by JavaScript
+            if st.button("Go to signup page", key="goto_signup_from_login", type="secondary"):
+                st.session_state.auth_page = "signup"
+                st.rerun()
 
         # Social login buttons
         col1, col2 = st.columns(2)
@@ -565,6 +653,109 @@ def show_signup_form():
         ):
             st.session_state.auth_page = "login"
             st.rerun()
+
+
+def show_forgot_password_form():
+    """Afficher le formulaire de réinitialisation de mot de passe."""
+
+    # Create two-column layout matching login page
+    left_col, right_col = st.columns([1, 1], gap="none")
+
+    with left_col:
+        # Left column - Forgot password form
+        st.markdown('<div style="min-height: 100vh; background-color: #F5F5F5; display: flex; align-items: center; justify-content: center; padding: 2rem;">', unsafe_allow_html=True)
+        st.markdown('<div style="background: white; border-radius: 24px; padding: 3rem 2.5rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); max-width: 440px; width: 100%;">', unsafe_allow_html=True)
+
+        # Title
+        st.markdown("""
+        <h1 style='font-family: "Inter", sans-serif; font-size: 1.75rem; font-weight: 600;
+                   color: #1A1A1A; margin-bottom: 1rem; line-height: 1.3;'>
+            Reset Your Password
+        </h1>
+        <p style='font-family: "Inter", sans-serif; font-size: 0.9375rem; color: #6B6B6B;
+                  margin-bottom: 2rem; line-height: 1.6;'>
+            Enter your email address and we'll send you instructions to reset your password.
+        </p>
+        """, unsafe_allow_html=True)
+
+        with st.form("forgot_password_form", clear_on_submit=False):
+            # Email input
+            email = st.text_input(
+                "Email",
+                placeholder="Email Address",
+                key="forgot_password_email",
+                label_visibility="collapsed"
+            )
+
+            submit = st.form_submit_button(
+                "Send Reset Link",
+                use_container_width=True,
+                type="primary"
+            )
+
+            if submit:
+                if not email:
+                    st.error("Please enter your email address")
+                    return
+
+                # Check if user exists
+                db = get_database()
+                # For now, just show a success message
+                # In production, you would send an actual email here
+                st.success(f"If an account exists for {email}, you will receive password reset instructions shortly.")
+                st.info("Note: Password reset functionality requires email configuration in production.")
+
+        # Back to login link
+        col_back = st.columns([1])[0]
+        with col_back:
+            st.markdown("""
+            <div style='text-align: center; margin-top: 2rem;'>
+                <span id='back-to-login-link' style='color: #6CB4A4; font-size: 0.875rem; font-weight: 500; cursor: pointer;'>
+                    ← Back to Login
+                </span>
+            </div>
+            <script>
+            document.getElementById('back-to-login-link').addEventListener('click', function() {
+                const buttons = window.parent.document.querySelectorAll('button');
+                buttons.forEach(btn => {
+                    if (btn.innerText.includes('Back to login page')) {
+                        btn.click();
+                    }
+                });
+            });
+            </script>
+            """, unsafe_allow_html=True)
+
+            # Hidden button for navigation
+            if st.button("Back to login page", key="goto_login_from_forgot", type="secondary"):
+                st.session_state.auth_page = "login"
+                st.rerun()
+
+        st.markdown("</div></div>", unsafe_allow_html=True)
+
+    with right_col:
+        # Right column - Same illustration as login page
+        st.markdown("""
+        <div style='min-height: 100vh; background: linear-gradient(135deg, #7B9FD3 0%, #9FC4E7 50%, #A8E6CF 100%);
+                    display: flex; align-items: center; justify-content: center; padding: 4rem; text-align: center;'>
+            <div>
+                <div style='max-width: 400px; margin: 0 auto;'>
+                    <svg width="300" height="300" viewBox="0 0 300 300" style='margin: 0 auto;'>
+                        <circle cx="150" cy="120" r="80" fill="rgba(255, 255, 255, 0.2)"/>
+                        <circle cx="150" cy="140" r="30" fill="rgba(255, 255, 255, 0.3)"/>
+                        <ellipse cx="150" cy="180" rx="40" ry="50" fill="rgba(255, 255, 255, 0.3)"/>
+                        <circle cx="80" cy="100" r="40" fill="rgba(167, 199, 231, 0.3)"/>
+                        <circle cx="220" cy="150" r="50" fill="rgba(168, 230, 207, 0.3)"/>
+                        <circle cx="100" cy="240" r="35" fill="rgba(167, 199, 231, 0.3)"/>
+                    </svg>
+                </div>
+                <h2 style='font-family: "Inter", sans-serif; font-size: 2.25rem; font-weight: 400;
+                           line-height: 1.4; margin-top: 2rem; color: white;'>
+                    Your daily path to mental<br/>clarity and balance.
+                </h2>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
 
 
 def show_user_menu():
