@@ -257,9 +257,43 @@ def show_auth():
 def show_login_form():
     """Afficher le formulaire de connexion."""
 
-    # Add icons positioning CSS and JavaScript for password toggle
+    # Add CSS for column backgrounds and form card
     st.markdown("""
     <style>
+    /* Style the columns directly */
+    div[data-testid="column"]:first-of-type {
+        background-color: #F5F5F5 !important;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem !important;
+    }
+
+    div[data-testid="column"]:last-of-type {
+        background: linear-gradient(135deg, #7B9FD3 0%, #9FC4E7 50%, #A8E6CF 100%) !important;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 4rem 2rem !important;
+    }
+
+    /* Style the vertical block inside left column as form card */
+    div[data-testid="column"]:first-of-type > div > div[data-testid="stVerticalBlock"] {
+        background: white !important;
+        border-radius: 24px !important;
+        padding: 3rem 2.5rem !important;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05) !important;
+        max-width: 440px !important;
+        width: 100% !important;
+    }
+
+    /* Make sure other nested divs are transparent */
+    div[data-testid="column"] div[data-testid="element-container"] {
+        background: transparent !important;
+    }
+
     /* Position icons before email input */
     div[data-testid="stForm"] div[data-testid="stVerticalBlock"] > div:nth-child(1) .stTextInput::before {
         content: '✉';
@@ -282,83 +316,17 @@ def show_login_form():
         font-size: 1.125rem;
         z-index: 10;
     }
-
-    /* Show/Hide button for password */
-    .password-toggle-btn {
-        position: absolute;
-        right: 16px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: #6CB4A4;
-        font-size: 0.875rem;
-        font-weight: 500;
-        cursor: pointer;
-        z-index: 10;
-        background: none;
-        border: none;
-        padding: 0;
-        font-family: 'Inter', sans-serif;
-    }
-
-    .password-toggle-btn:hover {
-        color: #5A9E8E;
-    }
     </style>
-
-    <script>
-    function togglePasswordVisibility() {
-        // Find the password input
-        const passwordInputs = document.querySelectorAll('input[type="password"], input[data-password-toggle]');
-
-        passwordInputs.forEach(input => {
-            if (input.type === 'password') {
-                input.type = 'text';
-                input.setAttribute('data-password-toggle', 'text');
-                // Update button text
-                const btn = input.parentElement.querySelector('.password-toggle-btn');
-                if (btn) btn.textContent = 'Hide';
-            } else {
-                input.type = 'password';
-                input.setAttribute('data-password-toggle', 'password');
-                // Update button text
-                const btn = input.parentElement.querySelector('.password-toggle-btn');
-                if (btn) btn.textContent = 'Show';
-            }
-        });
-    }
-
-    // Add toggle button after page loads
-    document.addEventListener('DOMContentLoaded', function() {
-        setTimeout(function() {
-            const passwordInputContainers = document.querySelectorAll('input[type="password"]');
-            passwordInputContainers.forEach(container => {
-                const parent = container.parentElement;
-                if (parent && !parent.querySelector('.password-toggle-btn')) {
-                    const btn = document.createElement('button');
-                    btn.className = 'password-toggle-btn';
-                    btn.textContent = 'Show';
-                    btn.onclick = togglePasswordVisibility;
-                    parent.style.position = 'relative';
-                    parent.appendChild(btn);
-                }
-            });
-        }, 100);
-    });
-    </script>
     """, unsafe_allow_html=True)
 
     # Create two-column layout
     left_col, right_col = st.columns([1, 1])
 
     with left_col:
-        # Left column - Login form with proper container
-        st.markdown('<div style="min-height: 100vh; background-color: #F5F5F5; display: flex; align-items: center; justify-content: center; padding: 2rem;">', unsafe_allow_html=True)
-        st.markdown('<div style="background: white; border-radius: 24px; padding: 3rem 2.5rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); max-width: 440px; width: 100%;">', unsafe_allow_html=True)
-
         # Title
         st.markdown("""
         <h1 style='font-family: "Inter", sans-serif; font-size: 1.75rem; font-weight: 600;
-                   color: #1A1A1A; margin-bottom: 2rem; line-height: 1.3;'>
+                   color: #1A1A1A; margin-bottom: 2rem; margin-top: 0; line-height: 1.3;'>
             Welcome Back to<br/>SereneMind.
         </h1>
         """, unsafe_allow_html=True)
@@ -479,29 +447,22 @@ def show_login_form():
             </div>
             """, unsafe_allow_html=True)
 
-        st.markdown("</div></div>", unsafe_allow_html=True)
-
     with right_col:
         # Right column - Illustration
         st.markdown("""
-        <div style='min-height: 100vh; background: linear-gradient(135deg, #7B9FD3 0%, #9FC4E7 50%, #A8E6CF 100%);
-                    display: flex; align-items: center; justify-content: center; padding: 4rem; text-align: center;'>
-            <div>
-                <div style='max-width: 400px; margin: 0 auto;'>
-                    <svg width="300" height="300" viewBox="0 0 300 300" style='margin: 0 auto;'>
-                        <circle cx="150" cy="120" r="80" fill="rgba(255, 255, 255, 0.2)"/>
-                        <circle cx="150" cy="140" r="30" fill="rgba(255, 255, 255, 0.3)"/>
-                        <ellipse cx="150" cy="180" rx="40" ry="50" fill="rgba(255, 255, 255, 0.3)"/>
-                        <circle cx="80" cy="100" r="40" fill="rgba(167, 199, 231, 0.3)"/>
-                        <circle cx="220" cy="150" r="50" fill="rgba(168, 230, 207, 0.3)"/>
-                        <circle cx="100" cy="240" r="35" fill="rgba(167, 199, 231, 0.3)"/>
-                    </svg>
-                </div>
-                <h2 style='font-family: "Inter", sans-serif; font-size: 2.25rem; font-weight: 400;
-                           line-height: 1.4; margin-top: 2rem; color: white;'>
-                    Your daily path to mental<br/>clarity and balance.
-                </h2>
-            </div>
+        <div style='text-align: center; color: white;'>
+            <svg width="300" height="300" viewBox="0 0 300 300" style='margin: 0 auto;'>
+                <circle cx="150" cy="120" r="80" fill="rgba(255, 255, 255, 0.2)"/>
+                <circle cx="150" cy="140" r="30" fill="rgba(255, 255, 255, 0.3)"/>
+                <ellipse cx="150" cy="180" rx="40" ry="50" fill="rgba(255, 255, 255, 0.3)"/>
+                <circle cx="80" cy="100" r="40" fill="rgba(167, 199, 231, 0.3)"/>
+                <circle cx="220" cy="150" r="50" fill="rgba(168, 230, 207, 0.3)"/>
+                <circle cx="100" cy="240" r="35" fill="rgba(167, 199, 231, 0.3)"/>
+            </svg>
+            <h2 style='font-family: "Inter", sans-serif; font-size: 2.25rem; font-weight: 400;
+                       line-height: 1.4; margin-top: 2rem;'>
+                Your daily path to mental<br/>clarity and balance.
+            </h2>
         </div>
         """, unsafe_allow_html=True)
 
@@ -658,13 +619,61 @@ def show_signup_form():
 def show_forgot_password_form():
     """Afficher le formulaire de réinitialisation de mot de passe."""
 
+    # Add CSS for column backgrounds and form card (same as login form)
+    st.markdown("""
+    <style>
+    /* Style the columns directly */
+    div[data-testid="column"]:first-of-type {
+        background-color: #F5F5F5 !important;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem !important;
+    }
+
+    div[data-testid="column"]:last-of-type {
+        background: linear-gradient(135deg, #7B9FD3 0%, #9FC4E7 50%, #A8E6CF 100%) !important;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 4rem 2rem !important;
+    }
+
+    /* Style the vertical block inside left column as form card */
+    div[data-testid="column"]:first-of-type > div > div[data-testid="stVerticalBlock"] {
+        background: white !important;
+        border-radius: 24px !important;
+        padding: 3rem 2.5rem !important;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05) !important;
+        max-width: 440px !important;
+        width: 100% !important;
+    }
+
+    /* Make sure other nested divs are transparent */
+    div[data-testid="column"] div[data-testid="element-container"] {
+        background: transparent !important;
+    }
+
+    /* Position icons before email input in forgot password form */
+    div[data-testid="stForm"] div[data-testid="stVerticalBlock"] > div:nth-child(1) .stTextInput::before {
+        content: '✉';
+        position: absolute;
+        left: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 1.125rem;
+        color: #9E9E9E;
+        z-index: 10;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
     # Create two-column layout matching login page
     left_col, right_col = st.columns([1, 1])
 
     with left_col:
-        # Left column - Forgot password form
-        st.markdown('<div style="min-height: 100vh; background-color: #F5F5F5; display: flex; align-items: center; justify-content: center; padding: 2rem;">', unsafe_allow_html=True)
-        st.markdown('<div style="background: white; border-radius: 24px; padding: 3rem 2.5rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); max-width: 440px; width: 100%;">', unsafe_allow_html=True)
 
         # Title
         st.markdown("""
@@ -731,29 +740,22 @@ def show_forgot_password_form():
                 st.session_state.auth_page = "login"
                 st.rerun()
 
-        st.markdown("</div></div>", unsafe_allow_html=True)
-
     with right_col:
         # Right column - Same illustration as login page
         st.markdown("""
-        <div style='min-height: 100vh; background: linear-gradient(135deg, #7B9FD3 0%, #9FC4E7 50%, #A8E6CF 100%);
-                    display: flex; align-items: center; justify-content: center; padding: 4rem; text-align: center;'>
-            <div>
-                <div style='max-width: 400px; margin: 0 auto;'>
-                    <svg width="300" height="300" viewBox="0 0 300 300" style='margin: 0 auto;'>
-                        <circle cx="150" cy="120" r="80" fill="rgba(255, 255, 255, 0.2)"/>
-                        <circle cx="150" cy="140" r="30" fill="rgba(255, 255, 255, 0.3)"/>
-                        <ellipse cx="150" cy="180" rx="40" ry="50" fill="rgba(255, 255, 255, 0.3)"/>
-                        <circle cx="80" cy="100" r="40" fill="rgba(167, 199, 231, 0.3)"/>
-                        <circle cx="220" cy="150" r="50" fill="rgba(168, 230, 207, 0.3)"/>
-                        <circle cx="100" cy="240" r="35" fill="rgba(167, 199, 231, 0.3)"/>
-                    </svg>
-                </div>
-                <h2 style='font-family: "Inter", sans-serif; font-size: 2.25rem; font-weight: 400;
-                           line-height: 1.4; margin-top: 2rem; color: white;'>
-                    Your daily path to mental<br/>clarity and balance.
-                </h2>
-            </div>
+        <div style='text-align: center; color: white;'>
+            <svg width="300" height="300" viewBox="0 0 300 300" style='margin: 0 auto;'>
+                <circle cx="150" cy="120" r="80" fill="rgba(255, 255, 255, 0.2)"/>
+                <circle cx="150" cy="140" r="30" fill="rgba(255, 255, 255, 0.3)"/>
+                <ellipse cx="150" cy="180" rx="40" ry="50" fill="rgba(255, 255, 255, 0.3)"/>
+                <circle cx="80" cy="100" r="40" fill="rgba(167, 199, 231, 0.3)"/>
+                <circle cx="220" cy="150" r="50" fill="rgba(168, 230, 207, 0.3)"/>
+                <circle cx="100" cy="240" r="35" fill="rgba(167, 199, 231, 0.3)"/>
+            </svg>
+            <h2 style='font-family: "Inter", sans-serif; font-size: 2.25rem; font-weight: 400;
+                       line-height: 1.4; margin-top: 2rem;'>
+                Your daily path to mental<br/>clarity and balance.
+            </h2>
         </div>
         """, unsafe_allow_html=True)
 
