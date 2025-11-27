@@ -348,7 +348,7 @@ def show_login_form():
     """, unsafe_allow_html=True)
 
     # Create two-column layout
-    left_col, right_col = st.columns([1, 1], gap="none")
+    left_col, right_col = st.columns([1, 1])
 
     with left_col:
         # Left column - Login form with proper container
@@ -659,7 +659,7 @@ def show_forgot_password_form():
     """Afficher le formulaire de réinitialisation de mot de passe."""
 
     # Create two-column layout matching login page
-    left_col, right_col = st.columns([1, 1], gap="none")
+    left_col, right_col = st.columns([1, 1])
 
     with left_col:
         # Left column - Forgot password form
